@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Convert image format — JPEG, PNG, WebP, AVIF | Pixelbench</title>
+<meta name="description" content="Convert images between JPEG, PNG, WebP, AVIF and BMP in your browser. Batch convert a whole folder at once. Nothing is uploaded.">
+<link rel="canonical" href="https://example.pages.dev/convert.html">
+<meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pixelbench">
+<meta property="og:title" content="Convert image format — JPEG, PNG, WebP, AVIF">
+<meta property="og:description" content="Batch convert images between formats without uploading them anywhere.">
+<meta property="og:url" content="https://example.pages.dev/convert.html">
+<meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+-->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Image format converter",
+      "url": "https://example.pages.dev/convert.html",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any modern browser",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
+      "description": "Convert images between JPEG, PNG, WebP, AVIF and BMP entirely in the browser."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Convert format", "item": "https://example.pages.dev/convert.html" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Which format should I convert to?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For photographs on the web, WebP at quality 80 is usually the best balance of size and appearance. Use JPEG when something old needs to open the file. Use PNG only when you need transparency or exact pixel fidelity, such as screenshots and logos." } },
+        { "@type": "Question", "name": "Why is my PNG larger than the JPEG it came from?",
+          "acceptedAnswer": { "@type": "Answer", "text": "PNG is lossless, so it must store every pixel exactly, including the compression artefacts already baked into the JPEG. Converting a photo from JPEG to PNG commonly triples the file size without improving quality." } },
+        { "@type": "Question", "name": "What happens to transparency when I convert to JPEG?",
+          "acceptedAnswer": { "@type": "Answer", "text": "JPEG has no alpha channel, so transparent areas are filled with a solid colour. The converter lets you choose that colour, defaulting to white." } },
+        { "@type": "Question", "name": "Does converting remove EXIF and GPS data?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. The image is redrawn from raw pixels, so EXIF, GPS coordinates, camera model and timestamps are all dropped from the output." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <a class="brand" href="/" aria-label="Pixelbench home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <rect x="2.5" y="4.5" width="19" height="15" rx="2"></rect>
+          <path d="M2.5 15.5 8 10l4.5 4.5L16 11l5.5 5.5"></path>
+          <circle cx="16" cy="8.5" r="1.5"></circle>
+        </svg>
+      </span>
+      <span class="brand-word">Pixel<em>bench</em></span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <a href="/#tools">Tools</a>
+      <a href="/convert.html" aria-current="page">Convert</a>
+      <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
+      <a href="/#faq">FAQ</a>
+    </nav>
+
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2"></circle>
+        <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"></path>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"></path>
+      </svg>
+    </button>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Show menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Convert format</span>
+    </nav>
+    <header class="page-head">
+      <h1>Convert image format</h1>
+      <p>
+        Move images between JPEG, PNG, WebP, AVIF and BMP. Drop in one file or a
+        hundred — they're decoded, redrawn and re-encoded on your own device, and
+        nothing is sent anywhere.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Output settings</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <label for="format">Convert to</label>
+              <select id="format" data-format>
+                <option value="image/jpeg" data-mime="image/jpeg" selected>JPEG (.jpg)</option>
+                <option value="image/png" data-mime="image/png">PNG (.png)</option>
+                <option value="image/webp" data-mime="image/webp">WebP (.webp)</option>
+                <option value="image/avif" data-mime="image/avif">AVIF (.avif)</option>
+                <option value="image/bmp" data-mime="image/bmp">BMP (.bmp)</option>
+              </select>
+              <p class="field-note" data-format-note>Lossy. Small files, no transparency.</p>
+            </div>
+
+            <div class="field" data-quality-field>
+              <label for="quality">Quality <output for="quality" data-quality-out>82</output></label>
+              <input type="range" id="quality" data-quality min="10" max="100" step="1" value="82">
+              <p class="field-note">Lower means smaller files and more visible artefacts. 75–85 suits most photos.</p>
+            </div>
+
+            <div class="field" data-matte-field hidden>
+              <label for="matte">Background behind transparency</label>
+              <div class="field-row">
+                <input type="text" id="matte" data-matte value="#FFFFFF" spellcheck="false" aria-describedby="matte-note">
+                <input type="color" data-matte-picker value="#ffffff" aria-label="Pick background colour" style="flex:0 0 3rem;height:2.6rem;padding:2px">
+              </div>
+              <p class="field-note" id="matte-note">This format has no alpha channel, so transparent pixels need a solid colour underneath.</p>
+            </div>
+
+            <div class="field">
+              <label class="check">
+                <input type="checkbox" data-limit-toggle>
+                Limit the longest edge
+              </label>
+              <div class="field-row" data-limit-field hidden style="margin-top:.5rem">
+                <input type="number" data-limit-value min="16" max="20000" step="1" value="2000" aria-label="Maximum pixels on the longest edge">
+              </div>
+              <p class="field-note">Optional. Shrinks oversized photos on the way through; smaller images are left alone.</p>
+            </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-convert disabled>Convert</button>
+
+            <div class="progress" data-progress hidden style="margin-top:.9rem">
+              <div class="progress-bar" data-progress-bar></div>
+            </div>
+            <p class="field-note" data-status role="status" aria-live="polite"></p>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="/compress.html">Compress</a>
+              <a href="/resize.html">Resize</a>
+              <a href="/metadata.html">Strip metadata</a>
+              <a href="/pdf.html">Images to PDF</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+        <div class="drop" data-drop>
+          <input type="file" id="pick" accept="image/*" multiple hidden data-drop-input>
+          <div class="drop-idle">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+              <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+            </svg>
+            <p class="drop-lede">Drop images here</p>
+            <p class="drop-hint">or <label class="link-btn" for="pick">choose files</label> · add as many as you like</p>
+          </div>
+          <p class="drop-error" data-drop-error role="alert" hidden></p>
+        </div>
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2 data-queue-title>Queue</h2></div>
+          <div class="panel-body">
+
+            <div class="btn-row" data-queue-actions hidden style="margin-bottom:1rem">
+              <button class="btn btn-sm" type="button" data-download-all disabled>Download all</button>
+              <button class="btn btn-sm btn-ghost" type="button" data-clear-all>Remove all</button>
+            </div>
+
+            <div class="empty" data-queue-empty>
+              <strong>No images yet</strong>
+              <p>Drop files above, paste an image with Ctrl&nbsp;+&nbsp;V, or choose them from disk. They'll appear here with their original size, ready to convert.</p>
+            </div>
+
+            <ul class="filelist" data-queue hidden></ul>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="convert-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ── Written content ───────────────────────────────── -->
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>Picking the right format</h2>
+        <p>
+          Most conversion decisions come down to one question: does this image need
+          to stay pixel-perfect, or does it just need to look right? Photographs
+          tolerate lossy compression well, because the eye doesn't miss small
+          gradients of sky. Screenshots, logos and line art don't, because the eye
+          absolutely does notice fuzz around hard edges and flat colour.
+        </p>
+
+        <h3>JPEG</h3>
+        <p>
+          Thirty years old and still the safest thing to hand someone. Lossy, no
+          transparency, and it degrades a little every time you re-save it. Choose it
+          for photographs going somewhere you don't control — an email attachment, a
+          government portal, an old print shop's upload form.
+        </p>
+
+        <h3>PNG</h3>
+        <p>
+          Lossless with a full alpha channel. Ideal for screenshots, diagrams, logos
+          and anything with sharp edges or transparency. Poor for photographs: a
+          camera JPEG saved as PNG will usually triple in size and look no better,
+          because lossless compression faithfully preserves the compression artefacts
+          that were already there.
+        </p>
+
+        <h3>WebP</h3>
+        <p>
+          Supported by every current browser, roughly 25–35% smaller than JPEG at
+          matching visual quality, and it handles transparency. If the image is
+          destined for a website you control, this is usually the right answer.
+        </p>
+
+        <h3>AVIF</h3>
+        <p>
+          The smallest of the four at a given quality, sometimes dramatically so on
+          flat illustrations. Browser support for <em>reading</em> AVIF is now broad,
+          but support for <em>writing</em> it varies, so this option only appears if
+          your browser can actually encode it. Encoding is also noticeably slower.
+        </p>
+
+        <h3>BMP</h3>
+        <p>
+          Uncompressed and enormous. Included because some industrial and embedded
+          tools still insist on it, not because you'd otherwise want it.
+        </p>
+
+        <hr>
+
+        <h2>What the converter does to your file</h2>
+        <p>
+          Each image is decoded into raw pixels, drawn onto a canvas, and re-encoded
+          in the target format. That has two side effects worth knowing about. First,
+          all metadata is dropped — EXIF, GPS coordinates, camera model, timestamps
+          and colour profiles do not survive, which is usually a feature but
+          occasionally a loss. Second, if the source was already lossy, its existing
+          artefacts get baked in permanently. Convert from your original wherever you
+          can, rather than from a copy that has already been through the mill.
+        </p>
+        <p>
+          Animated GIFs are flattened to their first frame. Rotation stored in EXIF is
+          applied before encoding, so portrait phone photos come out the right way up
+          rather than sideways.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>Why is my converted PNG bigger than the original?</summary>
+          <p>Because PNG is lossless. It has to record every pixel exactly, including the artefacts already introduced by the JPEG compression, and it can't throw anything away to save space. If you want a smaller file, convert to WebP instead.</p>
+        </details>
+        <details>
+          <summary>Can I convert HEIC photos from my iPhone?</summary>
+          <p>Only if your browser can decode HEIC, which today mostly means Safari on Apple devices. On Windows or Android you'll get an error. The simplest workaround is to change your iPhone's camera setting to "Most Compatible", which shoots JPEG instead.</p>
+        </details>
+        <details>
+          <summary>Is there a limit on how many files I can convert?</summary>
+          <p>No. The queue is limited only by your device's memory. Very large batches are processed one at a time so the tab stays responsive, and a few hundred photos is comfortable on a typical laptop.</p>
+        </details>
+        <details>
+          <summary>Why does "Download all" ask for permission?</summary>
+          <p>Browsers treat several downloads in a row from one page as something worth confirming. Allow it once and the rest of the batch will save normally. Each file downloads individually rather than as a ZIP, so nothing needs to be bundled first.</p>
+        </details>
+        <details>
+          <summary>Does the quality slider affect PNG or BMP?</summary>
+          <p>No. Both are lossless formats with no quality setting to adjust, so the slider is hidden when you select them. It applies to JPEG, WebP and AVIF only.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <div class="foot-brand">
+      <span class="brand-word">Pixel<em>bench</em></span>
+      <p>Image tools that run on your own device. Built as a static site, free to use, no account.</p>
+    </div>
+
+    <nav class="foot-col" aria-label="Tools">
+      <h2>Tools</h2>
+      <a href="/convert.html">Convert format</a>
+      <a href="/compress.html">Compress</a>
+      <a href="/resize.html">Resize</a>
+      <a href="/crop.html">Crop</a>
+      <a href="/pdf.html">Images to PDF</a>
+      <a href="/metadata.html">Metadata</a>
+    </nav>
+
+    <nav class="foot-col" aria-label="More tools">
+      <h2>More</h2>
+      <a href="/rotate.html">Rotate &amp; flip</a>
+      <a href="/watermark.html">Watermark</a>
+      <a href="/favicon.html">Favicon maker</a>
+      <a href="/palette.html">Colour palette</a>
+      <a href="/collage.html">Merge &amp; collage</a>
+      <a href="/base64.html">Base64 &amp; data URI</a>
+    </nav>
+
+    <nav class="foot-col" aria-label="Site">
+      <h2>Site</h2>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+    </nav>
+  </div>
+
+  <div class="wrap foot-base">
+    <p>&copy; <span data-year>2026</span> Pixelbench. Made in Western Australia.</p>
+    <p class="foot-note">Images are processed in your browser and are never uploaded.</p>
+  </div>
+</footer>
+
+<noscript>
+  <div class="noscript">This converter needs JavaScript, because the conversion runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+</noscript>
+
+<script src="/assets/js/app.js" defer></script>
+
+<script>
+/* ============================================================
+   Convert format — page logic
+   Depends on window.Pixelbench from /assets/js/app.js
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  // Formats that carry an alpha channel, and formats with a quality knob.
+  var ALPHA = { 'image/png': 1, 'image/webp': 1, 'image/avif': 1 };
+  var LOSSY = { 'image/jpeg': 1, 'image/webp': 1, 'image/avif': 1 };
+
+  var NOTES = {
+    'image/jpeg': 'Lossy. Small files, no transparency, opens anywhere.',
+    'image/png': 'Lossless with transparency. Best for screenshots and logos.',
+    'image/webp': 'Lossy or lossless, with transparency. Usually the best choice for the web.',
+    'image/avif': 'Smallest files at a given quality. Slower to encode.',
+    'image/bmp': 'Uncompressed and very large. Only for tools that demand it.'
+  };
+
+  var queue = [];
+  var seq = 0;
+  var running = false;
+
+  PB.ready(function () {
+    var els = {
+      drop: document.querySelector('[data-drop]'),
+      dropError: document.querySelector('[data-drop-error]'),
+      format: document.querySelector('[data-format]'),
+      formatNote: document.querySelector('[data-format-note]'),
+      qualityField: document.querySelector('[data-quality-field]'),
+      quality: document.querySelector('[data-quality]'),
+      qualityOut: document.querySelector('[data-quality-out]'),
+      matteField: document.querySelector('[data-matte-field]'),
+      matte: document.querySelector('[data-matte]'),
+      mattePicker: document.querySelector('[data-matte-picker]'),
+      limitToggle: document.querySelector('[data-limit-toggle]'),
+      limitField: document.querySelector('[data-limit-field]'),
+      limitValue: document.querySelector('[data-limit-value]'),
+      convert: document.querySelector('[data-convert]'),
+      progress: document.querySelector('[data-progress]'),
+      progressBar: document.querySelector('[data-progress-bar]'),
+      status: document.querySelector('[data-status]'),
+      queueTitle: document.querySelector('[data-queue-title]'),
+      queueActions: document.querySelector('[data-queue-actions]'),
+      queueEmpty: document.querySelector('[data-queue-empty]'),
+      list: document.querySelector('[data-queue]'),
+      downloadAll: document.querySelector('[data-download-all]'),
+      clearAll: document.querySelector('[data-clear-all]')
+    };
+
+    /* ---- Hide formats this browser can't actually write ---- */
+    Array.prototype.forEach.call(els.format.options, function (opt) {
+      PB.canEncode(opt.value).then(function (ok) {
+        if (ok) return;
+        opt.disabled = true;
+        opt.textContent = opt.textContent + ' — not supported here';
+        if (els.format.value === opt.value) {
+          els.format.value = 'image/png';
+          syncFormat();
+        }
+      });
+    });
+
+    /* ---- Control wiring ---- */
+
+    function syncFormat() {
+      var mime = els.format.value;
+      els.qualityField.hidden = !LOSSY[mime];
+      els.matteField.hidden = !!ALPHA[mime];
+      els.formatNote.textContent = NOTES[mime] || '';
+    }
+
+    els.format.addEventListener('change', syncFormat);
+    syncFormat();
+
+    els.quality.addEventListener('input', function () {
+      els.qualityOut.textContent = els.quality.value;
+    });
+
+    els.mattePicker.addEventListener('input', function () {
+      els.matte.value = els.mattePicker.value.toUpperCase();
+    });
+    els.matte.addEventListener('input', function () {
+      if (/^#[0-9a-f]{6}$/i.test(els.matte.value)) els.mattePicker.value = els.matte.value;
+    });
+
+    els.limitToggle.addEventListener('change', function () {
+      els.limitField.hidden = !els.limitToggle.checked;
+    });
+
+    /* ---- Queue rendering ---- */
+
+    function render() {
+      els.queueEmpty.hidden = queue.length > 0;
+      els.list.hidden = queue.length === 0;
+      els.queueActions.hidden = queue.length === 0;
+      els.queueTitle.textContent = queue.length
+        ? 'Queue — ' + queue.length + ' image' + (queue.length === 1 ? '' : 's')
+        : 'Queue';
+      els.convert.disabled = queue.length === 0 || running;
+      els.downloadAll.disabled = !queue.some(function (it) { return it.blob; });
+
+      els.list.innerHTML = '';
+      queue.forEach(function (item) {
+        var li = document.createElement('li');
+        li.className = 'filerow';
+
+        var thumb = document.createElement('div');
+        thumb.className = 'filerow-thumb';
+        if (item.thumbUrl) {
+          var img = document.createElement('img');
+          img.src = item.thumbUrl;
+          img.alt = '';
+          thumb.appendChild(img);
+        }
+
+        var meta = document.createElement('div');
+        meta.className = 'filerow-meta';
+        var name = document.createElement('strong');
+        name.textContent = item.blob ? item.outName : item.file.name;
+        var detail = document.createElement('span');
+        detail.textContent = describe(item);
+        meta.appendChild(name);
+        meta.appendChild(detail);
+
+        var actions = document.createElement('div');
+        actions.className = 'filerow-actions';
+
+        if (item.blob) {
+          var dl = document.createElement('button');
+          dl.type = 'button';
+          dl.className = 'btn btn-sm btn-primary';
+          dl.textContent = 'Save';
+          dl.addEventListener('click', function () {
+            PB.downloadBlob(item.blob, item.outName);
+          });
+          actions.appendChild(dl);
+        }
+
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn btn-sm btn-ghost';
+        rm.setAttribute('aria-label', 'Remove ' + item.file.name);
+        rm.textContent = '✕';
+        rm.addEventListener('click', function () { remove(item.id); });
+        actions.appendChild(rm);
+
+        li.appendChild(thumb);
+        li.appendChild(meta);
+        li.appendChild(actions);
+        els.list.appendChild(li);
+      });
+    }
+
+    function describe(item) {
+      if (item.error) return item.error;
+      if (item.blob) {
+        var delta = Math.round((1 - item.blob.size / item.file.size) * 100);
+        var change = delta > 0 ? delta + '% smaller' : delta < 0 ? Math.abs(delta) + '% larger' : 'same size';
+        return PB.formatBytes(item.file.size) + ' → ' + PB.formatBytes(item.blob.size) +
+               '  ·  ' + change + '  ·  ' + item.outDims;
+      }
+      return PB.typeLabel(item.file) + '  ·  ' + PB.formatBytes(item.file.size) +
+             (item.dims ? '  ·  ' + item.dims : '');
+    }
+
+    function add(files) {
+      files.forEach(function (file) {
+        var item = {
+          id: ++seq,
+          file: file,
+          thumbUrl: URL.createObjectURL(file),
+          dims: '',
+          blob: null,
+          outName: '',
+          outDims: '',
+          error: ''
+        };
+        queue.push(item);
+
+        // Read the true dimensions in the background.
+        PB.decodeImage(file).then(function (img) {
+          item.dims = img.width.toLocaleString() + ' × ' + img.height.toLocaleString();
+          img.release();
+          render();
+        }).catch(function () {
+          item.error = 'Couldn\'t be opened — this browser may not read ' + PB.typeLabel(file) + '.';
+          render();
+        });
+      });
+      render();
+    }
+
+    function remove(id) {
+      queue = queue.filter(function (it) {
+        if (it.id !== id) return true;
+        if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl);
+        return false;
+      });
+      render();
+    }
+
+    function clearAll() {
+      queue.forEach(function (it) { if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl); });
+      queue = [];
+      els.status.textContent = '';
+      render();
+    }
+
+    /* ---- Conversion ---- */
+
+    function convertOne(item, mime, quality, matte, limit) {
+      return PB.decodeImage(item.file).then(function (img) {
+        var w = img.width, h = img.height;
+
+        if (!w || !h) {
+          img.release();
+          throw new Error('This file has no fixed pixel size. Vector files need the resize tool instead.');
+        }
+
+        if (limit && Math.max(w, h) > limit) {
+          var scale = limit / Math.max(w, h);
+          w = Math.max(1, Math.round(w * scale));
+          h = Math.max(1, Math.round(h * scale));
+        }
+
+        var cv = document.createElement('canvas');
+        cv.width = w;
+        cv.height = h;
+        var ctx = cv.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        if (!ALPHA[mime]) {
+          ctx.fillStyle = /^#[0-9a-f]{6}$/i.test(matte) ? matte : '#FFFFFF';
+          ctx.fillRect(0, 0, w, h);
+        }
+
+        ctx.drawImage(img.source, 0, 0, w, h);
+        img.release();
+
+        return PB.canvasToBlob(cv, mime, LOSSY[mime] ? quality : undefined)
+          .then(function (blob) {
+            item.blob = blob;
+            item.outName = PB.renameExt(item.file.name, PB.extFor(mime));
+            item.outDims = w.toLocaleString() + ' × ' + h.toLocaleString();
+            item.error = '';
+          });
+      });
+    }
+
+    els.convert.addEventListener('click', function () {
+      if (running || !queue.length) return;
+
+      var mime = els.format.value;
+      var quality = parseInt(els.quality.value, 10) / 100;
+      var matte = els.matte.value.trim();
+      var limit = els.limitToggle.checked ? parseInt(els.limitValue.value, 10) : 0;
+
+      running = true;
+      els.convert.classList.add('is-busy');
+      els.convert.disabled = true;
+      els.progress.hidden = false;
+      els.progressBar.style.width = '0%';
+
+      var done = 0, failed = 0;
+
+      function step(i) {
+        if (i >= queue.length) return Promise.resolve();
+        var item = queue[i];
+        return convertOne(item, mime, quality, matte, limit)
+          .catch(function (err) {
+            failed++;
+            item.error = err.message || 'Conversion failed.';
+          })
+          .then(function () {
+            done++;
+            els.progressBar.style.width = Math.round((done / queue.length) * 100) + '%';
+            els.status.textContent = 'Converting ' + done + ' of ' + queue.length + '…';
+            render();
+            // Yield to the browser so the tab stays responsive.
+            return new Promise(function (r) { setTimeout(r, 0); }).then(function () {
+              return step(i + 1);
+            });
+          });
+      }
+
+      step(0).then(function () {
+        running = false;
+        els.convert.classList.remove('is-busy');
+        els.progress.hidden = true;
+        var ok = queue.length - failed;
+        els.status.textContent = failed
+          ? ok + ' converted, ' + failed + ' failed. See the notes on each row.'
+          : ok + ' image' + (ok === 1 ? '' : 's') + ' converted. Save them below.';
+        render();
+      });
+    });
+
+    /* ---- Downloads ---- */
+
+    els.downloadAll.addEventListener('click', function () {
+      var ready = queue.filter(function (it) { return it.blob; });
+      ready.forEach(function (item, i) {
+        setTimeout(function () { PB.downloadBlob(item.blob, item.outName); }, i * 320);
+      });
+      PB.toast('Saving ' + ready.length + ' file' + (ready.length === 1 ? '' : 's'));
+    });
+
+    els.clearAll.addEventListener('click', clearAll);
+
+    /* ---- Input ---- */
+
+    PB.createDropzone(els.drop, {
+      multiple: true,
+      onReject: function (message) {
+        els.dropError.textContent = message;
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.dropError.hidden = true;
+        add(files);
+      }
+    });
+
+    // Pick up anything dropped on the homepage.
+    PB.takeHandoff().then(function (files) {
+      if (files.length) add(files);
+    });
+
+    window.addEventListener('pagehide', function () {
+      queue.forEach(function (it) { if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl); });
+    });
+
+    render();
+  });
+})();
+</script>
+</body>
+</html>
