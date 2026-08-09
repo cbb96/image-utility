@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pixelbench — Image tools that run in your browser</title>
+<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
+<link rel="canonical" href="https://example.pages.dev/">
+<meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pixelbench">
+<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
+<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
+<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Icons (files come later in the build) -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+-->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Pixelbench",
+      "url": "https://example.pages.dev/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any modern browser",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
+      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Are my images uploaded to a server?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
+        { "@type": "Question", "name": "Is there a file size limit?",
+          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
+        { "@type": "Question", "name": "Does it work offline?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
+        { "@type": "Question", "name": "Which formats can I convert between?",
+          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <a class="brand" href="/" aria-label="Pixelbench home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <rect x="2.5" y="4.5" width="19" height="15" rx="2"></rect>
+          <path d="M2.5 15.5 8 10l4.5 4.5L16 11l5.5 5.5"></path>
+          <circle cx="16" cy="8.5" r="1.5"></circle>
+        </svg>
+      </span>
+      <span class="brand-word">Pixel<em>bench</em></span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <a href="#tools">Tools</a>
+      <a href="/convert.html">Convert</a>
+      <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2"></circle>
+        <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"></path>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"></path>
+      </svg>
+    </button>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Show menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ─────────── Hero: the drop zone is the demo ─────────── -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <p class="eyebrow">Nothing uploads · Everything runs locally</p>
+      <h1 class="hero-title">Your images never<br>leave this tab.</h1>
+      <p class="hero-sub">
+        Convert, resize, crop, compress, strip metadata and build PDFs — with the
+        same browser you're reading this in. No account, no upload, no queue.
+      </p>
+
+      <div class="drop" data-drop>
+        <input type="file" id="pick" accept="image/*" multiple hidden data-drop-input>
+
+        <!-- State 1: waiting -->
+        <div class="drop-idle" data-drop-idle>
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+            <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+          </svg>
+          <p class="drop-lede">Drop an image here</p>
+          <p class="drop-hint">or <label class="link-btn" for="pick">choose a file</label> · JPG, PNG, WebP, GIF, AVIF, BMP, HEIC, SVG</p>
+        </div>
+
+        <!-- State 2: file read locally, ready to hand off to a tool -->
+        <div class="drop-loaded" data-drop-loaded hidden>
+          <figure class="thumb" data-drop-thumb></figure>
+          <div class="readout">
+            <p class="readout-name" data-drop-name>—</p>
+            <dl class="readout-grid">
+              <div><dt>Dimensions</dt><dd data-drop-dims>—</dd></div>
+              <div><dt>Format</dt><dd data-drop-type>—</dd></div>
+              <div><dt>Size</dt><dd data-drop-size>—</dd></div>
+              <div><dt>Read from</dt><dd>This device</dd></div>
+            </dl>
+            <p class="readout-next">Send it to:</p>
+            <div class="chips">
+              <a class="chip" href="/convert.html" data-handoff>Convert</a>
+              <a class="chip" href="/resize.html" data-handoff>Resize</a>
+              <a class="chip" href="/crop.html" data-handoff>Crop</a>
+              <a class="chip" href="/compress.html" data-handoff>Compress</a>
+              <a class="chip" href="/pdf.html" data-handoff>To PDF</a>
+              <button class="chip chip-ghost" type="button" data-drop-clear>Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <p class="drop-error" data-drop-error role="alert" hidden></p>
+      </div>
+
+      <p class="hero-foot">
+        Free, no sign-up. Works offline once loaded.
+      </p>
+    </div>
+  </section>
+
+  <!-- Process control strip: a printer's colour bar, used as the page's rule -->
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <!-- ─────────── Tools ─────────── -->
+  <section class="section" id="tools">
+    <div class="wrap">
+      <header class="section-head">
+        <h2>The bench</h2>
+        <p>Thirteen tools, each one page, each doing one job properly.</p>
+      </header>
+
+      <ul class="tool-grid">
+        <li class="tool">
+          <a href="/convert.html">
+            <h3>Convert format</h3>
+            <p>Move between JPEG, PNG, WebP, AVIF, BMP and ICO. Batch the whole folder at once.</p>
+            <p class="io"><span>JPG PNG WEBP HEIC</span> → <span>ANY</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/compress.html">
+            <h3>Compress</h3>
+            <p>Trade quality for kilobytes with a live preview, or aim at a target file size.</p>
+            <p class="io"><span>4.2 MB</span> → <span>380 KB</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/resize.html">
+            <h3>Resize</h3>
+            <p>Pixels or percentage, ratio locked, with presets for common social and web sizes.</p>
+            <p class="io"><span>4032 × 3024</span> → <span>1600 × 1200</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/crop.html">
+            <h3>Crop</h3>
+            <p>Drag a selection freehand or snap to 1:1, 4:5, 16:9 and other fixed ratios.</p>
+            <p class="io"><span>FREEHAND</span> → <span>1:1 4:5 16:9</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/rotate.html">
+            <h3>Rotate &amp; flip</h3>
+            <p>Straighten by degree, spin in quarter turns, mirror horizontally or vertically.</p>
+            <p class="io"><span>−180°</span> → <span>+180°</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/pdf.html">
+            <h3>Images to PDF</h3>
+            <p>Drop a stack, drag to reorder, choose page size, orientation, margins and fit.</p>
+            <p class="io"><span>12 IMAGES</span> → <span>1 PDF</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/watermark.html">
+            <h3>Watermark</h3>
+            <p>Text or logo, positioned or tiled, with opacity, rotation and scale controls.</p>
+            <p class="io"><span>IMAGE + MARK</span> → <span>IMAGE</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/favicon.html">
+            <h3>Favicon &amp; app icons</h3>
+            <p>One square image becomes the full icon set, plus the manifest and HTML to paste.</p>
+            <p class="io"><span>512 × 512</span> → <span>ICO + PNG SET</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/metadata.html">
+            <h3>Metadata</h3>
+            <p>Read EXIF, GPS and camera data — then strip it before you share the photo.</p>
+            <p class="io"><span>EXIF GPS ICC</span> → <span>CLEAN</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/palette.html">
+            <h3>Colour palette</h3>
+            <p>Pull the dominant colours out of any image and copy them as HEX, RGB or HSL.</p>
+            <p class="io"><span>IMAGE</span> → <span>#0E1116 …</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/collage.html">
+            <h3>Merge &amp; collage</h3>
+            <p>Stack images into a strip or grid with adjustable spacing and background.</p>
+            <p class="io"><span>N IMAGES</span> → <span>1 CANVAS</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/base64.html">
+            <h3>Base64 &amp; data URI</h3>
+            <p>Turn an image into an inline data URI for CSS or HTML, and decode one back.</p>
+            <p class="io"><span>IMAGE</span> ⇄ <span>data:image/…</span></p>
+          </a>
+        </li>
+        <li class="tool">
+          <a href="/placeholder.html">
+            <h3>Placeholder maker</h3>
+            <p>Generate blank or labelled images at any size for mockups and layout testing.</p>
+            <p class="io"><span>800 × 600</span> → <span>PNG</span></p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Ad slot: in-content, below the fold. Labelled to keep it distinct from tools. -->
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="home-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ─────────── Why local ─────────── -->
+  <section class="section section-alt" id="how">
+    <div class="wrap">
+      <header class="section-head">
+        <h2>Why it works this way</h2>
+        <p>Most image sites upload your file, process it on a server and hand back a link. This one doesn't.</p>
+      </header>
+
+      <div class="why-grid">
+        <article class="why">
+          <span class="why-tag" data-channel="c">Privacy</span>
+          <h3>The file stays on your disk</h3>
+          <p>Your browser reads the image into memory, edits the pixels on a canvas and writes the result straight back to your downloads folder. There is no upload step to opt out of — passports, invoices, medical scans and client work never travel.</p>
+        </article>
+        <article class="why">
+          <span class="why-tag" data-channel="m">Speed</span>
+          <h3>No round trip, no queue</h3>
+          <p>A 4 MB photo doesn't need to climb your upload link and wait behind other people's jobs. Conversions finish in the time it takes to decode and re-encode locally, which on most machines is under a second.</p>
+        </article>
+        <article class="why">
+          <span class="why-tag" data-channel="y">Limits</span>
+          <h3>Batch as much as you like</h3>
+          <p>There's no free tier counting your files, no watermark on the output and no daily cap. The only real ceiling is your own device's memory, and you'll feel that long before any rule stops you.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── Format support ─────────── -->
+  <section class="section" id="formats">
+    <div class="wrap">
+      <header class="section-head">
+        <h2>Format support</h2>
+        <p>Decoding and encoding both depend on your browser. Each tool checks what yours can do and hides anything it can't deliver.</p>
+      </header>
+
+      <div class="table-scroll">
+        <table class="fmt">
+          <caption class="sr-only">Read and write support by image format</caption>
+          <thead>
+            <tr><th scope="col">Format</th><th scope="col">Open</th><th scope="col">Save as</th><th scope="col">Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">JPEG</th><td class="yes">Yes</td><td class="yes">Yes</td><td>Lossy. Best for photographs.</td></tr>
+            <tr><th scope="row">PNG</th><td class="yes">Yes</td><td class="yes">Yes</td><td>Lossless, keeps transparency.</td></tr>
+            <tr><th scope="row">WebP</th><td class="yes">Yes</td><td class="yes">Yes</td><td>Smaller than JPEG at matching quality.</td></tr>
+            <tr><th scope="row">AVIF</th><td class="yes">Yes</td><td class="part">Some browsers</td><td>Excellent compression; encoding support varies.</td></tr>
+            <tr><th scope="row">GIF</th><td class="yes">Yes</td><td class="part">First frame</td><td>Animation is flattened on save.</td></tr>
+            <tr><th scope="row">BMP</th><td class="yes">Yes</td><td class="yes">Yes</td><td>Uncompressed, large files.</td></tr>
+            <tr><th scope="row">ICO</th><td class="yes">Yes</td><td class="yes">Yes</td><td>Multi-size icons via the favicon tool.</td></tr>
+            <tr><th scope="row">SVG</th><td class="yes">Yes</td><td class="no">No</td><td>Rasterised on open at your chosen size.</td></tr>
+            <tr><th scope="row">HEIC / HEIF</th><td class="part">Safari, some others</td><td class="no">No</td><td>iPhone photos. Convert to JPEG to share.</td></tr>
+            <tr><th scope="row">TIFF</th><td class="part">Safari</td><td class="no">No</td><td>Limited browser support.</td></tr>
+            <tr><th scope="row">PDF</th><td class="no">No</td><td class="yes">Yes</td><td>Export only, via the Images to PDF tool.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── FAQ ─────────── -->
+  <section class="section section-alt" id="faq">
+    <div class="wrap wrap-narrow">
+      <header class="section-head">
+        <h2>Questions</h2>
+      </header>
+
+      <div class="faq">
+        <details>
+          <summary>Are my images uploaded anywhere?</summary>
+          <p>No. Everything happens inside the page using the File and Canvas APIs. You can prove it: open your browser's network panel, run a conversion, and watch that no request goes out. Disconnect from the internet and the tools keep working.</p>
+        </details>
+        <details>
+          <summary>Is there a file size limit?</summary>
+          <p>There's no imposed limit, because there's no server to protect. The practical ceiling is your device's memory. Photos up to roughly 50 megapixels are comfortable on a laptop; a very large scan or a long batch may struggle on an older phone.</p>
+        </details>
+        <details>
+          <summary>Why did my file get <em>bigger</em> after converting?</summary>
+          <p>Usually because you converted a lossy format to a lossless one. A JPEG saved as PNG has to store every pixel exactly, including all the compression artefacts, so it commonly triples in size. Going the other way, or to WebP, will shrink it.</p>
+        </details>
+        <details>
+          <summary>Does converting to JPEG lose quality?</summary>
+          <p>Yes, a little, every time. JPEG discards detail to save space, and re-saving an existing JPEG compounds the damage. Keep your original, edit from it, and export a fresh copy rather than repeatedly saving over the same file.</p>
+        </details>
+        <details>
+          <summary>Can I use these tools for commercial or client work?</summary>
+          <p>Yes. The tools are free to use for any purpose and nothing is added to your output — no watermark, no metadata tag, no attribution requirement. The images remain entirely yours.</p>
+        </details>
+        <details>
+          <summary>Do I need to install anything?</summary>
+          <p>No. It's an ordinary website. If you'd like it on your home screen or dock, most browsers will let you install it as an app, after which it runs offline.</p>
+        </details>
+        <details>
+          <summary>Does stripping metadata really remove the location?</summary>
+          <p>The metadata tool re-encodes the image from raw pixels, which drops EXIF, GPS coordinates, camera model and timestamps along with everything else in the header. What survives is only what's visible in the picture itself.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <div class="foot-brand">
+      <span class="brand-word">Pixel<em>bench</em></span>
+      <p>Image tools that run on your own device. Built as a static site, free to use, no account.</p>
+    </div>
+
+    <nav class="foot-col" aria-label="Tools">
+      <h2>Tools</h2>
+      <a href="/convert.html">Convert format</a>
+      <a href="/compress.html">Compress</a>
+      <a href="/resize.html">Resize</a>
+      <a href="/crop.html">Crop</a>
+      <a href="/pdf.html">Images to PDF</a>
+      <a href="/metadata.html">Metadata</a>
+    </nav>
+
+    <nav class="foot-col" aria-label="More tools">
+      <h2>More</h2>
+      <a href="/rotate.html">Rotate &amp; flip</a>
+      <a href="/watermark.html">Watermark</a>
+      <a href="/favicon.html">Favicon maker</a>
+      <a href="/palette.html">Colour palette</a>
+      <a href="/collage.html">Merge &amp; collage</a>
+      <a href="/base64.html">Base64 &amp; data URI</a>
+    </nav>
+
+    <nav class="foot-col" aria-label="Site">
+      <h2>Site</h2>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+    </nav>
+  </div>
+
+  <div class="wrap foot-base">
+    <p>&copy; <span data-year>2026</span> Pixelbench. Made in Western Australia.</p>
+    <p class="foot-note">Images are processed in your browser and are never uploaded.</p>
+  </div>
+</footer>
+
+<noscript>
+  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+</noscript>
+
+<script src="/assets/js/app.js" defer></script>
+</body>
+</html>
