@@ -3,35 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Merge &amp; collage images — grid or strip | Pixelbench</title>
+<meta name="description" content="Combine several images into one grid or strip with adjustable spacing and background, entirely in your browser. Nothing is uploaded.">
+<link rel="canonical" href="https://example.pages.dev/collage.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Merge &amp; collage images — grid or strip">
+<meta property="og:description" content="Combine several images into one grid or strip without uploading them anywhere.">
+<meta property="og:url" content="https://example.pages.dev/collage.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
 
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<!-- Page-specific: draggable reorder handle, same pattern as pdf.html -->
+<style>
+  .filerow[draggable="true"] { cursor: grab; }
+  .filerow.is-dragging { opacity: 0.4; }
+  .filerow.is-dragover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .filerow-index {
+    flex: none; width: 1.6rem; text-align: center;
+    font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted);
+  }
+  .filerow-reorder { flex: none; display: flex; flex-direction: column; gap: 2px; }
+  .filerow-reorder button {
+    width: 1.5rem; height: 1.2rem; padding: 0; line-height: 1;
+    font-size: 0.7rem; border-radius: 4px;
+  }
+</style>
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 -->
 
@@ -40,25 +54,32 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
+      "@type": "SoftwareApplication",
+      "name": "Merge & collage",
+      "url": "https://example.pages.dev/collage.html",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any modern browser",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+      "description": "Combine several images into one grid or strip, entirely in the browser."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Merge & collage", "item": "https://example.pages.dev/collage.html" }
+      ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+        { "@type": "Question", "name": "How many images can I combine?",
+          "acceptedAnswer": { "@type": "Answer", "text": "There's no fixed limit — the grid and both strip layouts work with any number of images, though a very large grid on a big cell size can produce a large canvas that's slow on an older device." } },
+        { "@type": "Question", "name": "Can I change the order of the images?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Drag a row in the queue to a new position, or use the up and down buttons, before building the collage." } },
+        { "@type": "Question", "name": "What's the difference between fit modes?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Contain shows the whole image inside its cell, which can leave a border if its proportions don't match the cell. Cover fills the cell completely, cropping whatever hangs over the edge. Stretch fills the cell exactly by ignoring the original proportions." } },
+        { "@type": "Question", "name": "Does it keep transparency?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Only if you save as PNG or WebP. Saving as JPEG flattens any transparent areas onto the background colour you choose." } }
       ]
     }
   ]
@@ -83,10 +104,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
       <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -107,37 +128,235 @@
 
 <main id="main">
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Collage</h1>
-                <p>Merge images into a grid or strip.</p>
-            </header>
-            <div class="tool-layout">
-                <div>
-                    <section class="panel">
-                        <div class="panel-head"><h2>Settings</h2></div>
-                        <div class="panel-body">
-                            <div class='field'><label>Spacing (px)</label><input type='number' value='10'></div>
-                            <button class="btn btn-primary btn-block" style="margin-top:1rem;">Process</button>
-                        </div>
-                    </section>
-                </div>
-                <div>
-                    <div class="drop" data-drop>
-                        <div class="drop-idle">
-                            <p class="drop-lede">Drop images here</p>
-                        </div>
-                    </div>
-                    <section class="panel" style="margin-top:1rem">
-                        <div class="panel-head"><h2>Queue</h2></div>
-                        <div class="panel-body">
-                            <div class="empty">No images yet</div>
-                        </div>
-                    </section>
-                </div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Merge &amp; collage</span>
+    </nav>
+    <header class="page-head">
+      <h1>Merge &amp; collage</h1>
+      <p>
+        Drop a batch of images and arrange them into a grid or a strip.
+        Drag to reorder, pick a fit and a gap, and save the result as one
+        image.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Layout</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <label for="layout">Arrangement</label>
+              <select id="layout" data-layout>
+                <option value="grid" selected>Grid</option>
+                <option value="row">Horizontal strip</option>
+                <option value="column">Vertical strip</option>
+              </select>
             </div>
+
+            <div class="field" data-columns-field>
+              <label class="check">
+                <input type="checkbox" data-columns-auto checked>
+                Choose column count automatically
+              </label>
+              <div class="field-row" data-columns-value-row hidden style="margin-top:.5rem">
+                <input type="number" data-columns min="1" max="12" step="1" value="3" aria-label="Number of columns">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="cellsize" data-cellsize-label>Cell size</label>
+              <input type="number" id="cellsize" data-cellsize min="40" max="2000" step="10" value="360">
+              <p class="field-note" data-cellsize-note>Each grid cell is this many pixels square.</p>
+            </div>
+
+            <div class="field">
+              <label for="fit">Fit inside each cell</label>
+              <select id="fit" data-fit>
+                <option value="cover" selected>Fill the cell (may crop)</option>
+                <option value="contain">Show the whole image (may border)</option>
+                <option value="stretch">Stretch to fill exactly</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="gap">Gap <output for="gap" data-gap-out>10</output>px</label>
+              <input type="range" id="gap" data-gap min="0" max="80" step="1" value="10">
+            </div>
+
+            <div class="field">
+              <label for="bg">Background colour</label>
+              <div class="field-row">
+                <input type="text" id="bg" data-bg value="#FFFFFF" spellcheck="false">
+                <input type="color" data-bg-picker value="#ffffff" aria-label="Pick background colour" style="flex:0 0 3rem;height:2.6rem;padding:2px">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="format">Save as</label>
+              <select id="format" data-format>
+                <option value="image/png" selected>PNG (.png)</option>
+                <option value="image/jpeg">JPEG (.jpg)</option>
+                <option value="image/webp">WebP (.webp)</option>
+              </select>
+            </div>
+
+            <div class="field" data-quality-field hidden>
+              <label for="quality">Quality <output for="quality" data-quality-out>90</output></label>
+              <input type="range" id="quality" data-quality min="10" max="100" step="1" value="90">
+            </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-build disabled>Build collage</button>
+            <p class="field-note" data-status role="status" aria-live="polite"></p>
+
+            <button class="btn btn-block" type="button" data-save style="margin-top:.6rem" disabled>Download image</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="/pdf.html">Images to PDF</a>
+              <a href="/resize.html">Resize</a>
+              <a href="/crop.html">Crop</a>
+              <a href="/compress.html">Compress</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+        <div class="drop" data-drop>
+          <input type="file" id="pick" accept="image/*" multiple hidden data-drop-input>
+          <div class="drop-idle">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+              <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+            </svg>
+            <p class="drop-lede">Drop images here</p>
+            <p class="drop-hint">or <label class="link-btn" for="pick">choose files</label> · added in the order you drop them</p>
+          </div>
+          <p class="drop-error" data-drop-error role="alert" hidden></p>
         </div>
-        
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2>Preview</h2></div>
+          <div class="panel-body">
+            <div class="stage" data-stage>
+              <div class="empty" data-stage-empty>
+                <strong>Nothing to preview yet</strong>
+                <p>Add at least two images below, then choose "Build collage".</p>
+              </div>
+              <canvas data-canvas hidden></canvas>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2 data-queue-title>Images</h2></div>
+          <div class="panel-body">
+
+            <div class="btn-row" data-queue-actions hidden style="margin-bottom:1rem">
+              <button class="btn btn-sm btn-ghost" type="button" data-clear-all>Remove all</button>
+            </div>
+
+            <div class="empty" data-queue-empty>
+              <strong>No images yet</strong>
+              <p>Drop images above. Drag a row, or use the arrows, to change the order they appear in the collage.</p>
+            </div>
+
+            <ul class="filelist" data-queue hidden></ul>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="collage-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ── Written content ───────────────────────────────── -->
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>Grid or strip</h2>
+        <p>
+          A grid arranges every image into equal-sized cells, wrapping to a
+          new row once the column count is reached — good for a contact
+          sheet or a set of product shots. A strip lines images up in a
+          single row or column at a shared height or width, which suits a
+          before-and-after pair or a short sequence read left to right.
+        </p>
+
+        <h3>Choosing a fit</h3>
+        <p>
+          Cover fills every cell with no border, cropping whatever doesn't
+          fit — the safest default when your source images are already
+          similar shapes. Contain guarantees nothing is cropped, at the cost
+          of a border on images that don't match the cell's proportions.
+          Stretch ignores the original aspect ratio entirely, which distorts
+          anything that isn't already the right shape.
+        </p>
+
+        <hr>
+
+        <h2>Why the order matters</h2>
+        <p>
+          Both the grid and the two strip layouts place images in the order
+          they appear in the queue below — left to right, then top to
+          bottom for a grid. Drag any row to reorder it, or use the arrow
+          buttons if you'd rather not drag. The preview updates the next
+          time you build the collage, so you can rearrange freely before
+          committing to a render.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>Why does the grid crop my images by default?</summary>
+          <p>The default fit is "Fill the cell," which gives the most even-looking grid when your photos are a mix of shapes. Switch to "Show the whole image" if cropping isn't acceptable for your source material.</p>
+        </details>
+        <details>
+          <summary>Can I use just two images?</summary>
+          <p>Yes — a two-image grid or strip works the same way as a larger batch, and is a common way to build a quick before-and-after comparison.</p>
+        </details>
+        <details>
+          <summary>How big is the final image?</summary>
+          <p>For a grid, roughly columns × cell size wide and rows × cell size tall, plus the gaps. For a strip, the combined width (or height) of every image scaled to the shared cell size, plus gaps.</p>
+        </details>
+        <details>
+          <summary>Does this tool resize my originals?</summary>
+          <p>No. Your source files are never modified — the collage is a new image built from copies drawn onto a canvas, the same way every tool on this site works.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-foot">
@@ -183,19 +402,419 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">This tool needs JavaScript, because the collage is drawn in your browser rather than on a server. Nothing is sent anywhere either way.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 
 <script>
-(function() {
-    var PB = window.Pixelbench;
-    if (!PB) return;
-    PB.ready(function() {
-        var drop = document.querySelector('[data-drop]');
-        if (drop) PB.createDropzone(drop, { onFiles: function(f) { PB.toast('Files loaded!'); }});
+/* ============================================================
+   Merge & collage — page logic
+   Depends on window.Pixelbench from /assets/js/app.js
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  var queue = [];
+  var seq = 0;
+  var dragId = null;
+  var resultBlob = null;
+  var resultName = 'collage.png';
+
+  PB.ready(function () {
+    var els = {
+      drop: document.querySelector('[data-drop]'),
+      dropError: document.querySelector('[data-drop-error]'),
+      layout: document.querySelector('[data-layout]'),
+      columnsAuto: document.querySelector('[data-columns-auto]'),
+      columnsValueRow: document.querySelector('[data-columns-value-row]'),
+      columns: document.querySelector('[data-columns]'),
+      cellsizeLabel: document.querySelector('[data-cellsize-label]'),
+      cellsize: document.querySelector('[data-cellsize]'),
+      cellsizeNote: document.querySelector('[data-cellsize-note]'),
+      fit: document.querySelector('[data-fit]'),
+      gap: document.querySelector('[data-gap]'),
+      gapOut: document.querySelector('[data-gap-out]'),
+      bg: document.querySelector('[data-bg]'),
+      bgPicker: document.querySelector('[data-bg-picker]'),
+      format: document.querySelector('[data-format]'),
+      qualityField: document.querySelector('[data-quality-field]'),
+      quality: document.querySelector('[data-quality]'),
+      qualityOut: document.querySelector('[data-quality-out]'),
+      build: document.querySelector('[data-build]'),
+      status: document.querySelector('[data-status]'),
+      save: document.querySelector('[data-save]'),
+      stage: document.querySelector('[data-stage]'),
+      stageEmpty: document.querySelector('[data-stage-empty]'),
+      canvas: document.querySelector('[data-canvas]'),
+      queueTitle: document.querySelector('[data-queue-title]'),
+      queueActions: document.querySelector('[data-queue-actions]'),
+      queueEmpty: document.querySelector('[data-queue-empty]'),
+      list: document.querySelector('[data-queue]'),
+      clearAll: document.querySelector('[data-clear-all]')
+    };
+
+    var LOSSY = { 'image/jpeg': 1, 'image/webp': 1 };
+    var ALPHA = { 'image/png': 1, 'image/webp': 1 };
+
+    /* ---- Controls ---- */
+
+    function syncLayout() {
+      var mode = els.layout.value;
+      els.columnsValueRow.hidden = els.columnsAuto.checked;
+      document.querySelector('[data-columns-field]').hidden = mode !== 'grid';
+      if (mode === 'grid') {
+        els.cellsizeLabel.textContent = 'Cell size';
+        els.cellsizeNote.textContent = 'Each grid cell is this many pixels square.';
+      } else if (mode === 'row') {
+        els.cellsizeLabel.textContent = 'Strip height';
+        els.cellsizeNote.textContent = 'Every image is scaled to this height, keeping its own proportions.';
+      } else {
+        els.cellsizeLabel.textContent = 'Strip width';
+        els.cellsizeNote.textContent = 'Every image is scaled to this width, keeping its own proportions.';
+      }
+    }
+    els.layout.addEventListener('change', syncLayout);
+    syncLayout();
+
+    els.columnsAuto.addEventListener('change', function () {
+      els.columnsValueRow.hidden = els.columnsAuto.checked;
     });
+
+    els.gap.addEventListener('input', function () { els.gapOut.textContent = els.gap.value; });
+    els.quality.addEventListener('input', function () { els.qualityOut.textContent = els.quality.value; });
+
+    els.bgPicker.addEventListener('input', function () { els.bg.value = els.bgPicker.value.toUpperCase(); });
+    els.bg.addEventListener('input', function () {
+      if (/^#[0-9a-f]{6}$/i.test(els.bg.value)) els.bgPicker.value = els.bg.value;
+    });
+
+    function syncFormat() {
+      els.qualityField.hidden = !LOSSY[els.format.value];
+    }
+    els.format.addEventListener('change', syncFormat);
+    syncFormat();
+
+    Array.prototype.forEach.call(els.format.options, function (opt) {
+      PB.canEncode(opt.value).then(function (ok) {
+        if (ok) return;
+        opt.disabled = true;
+        opt.textContent = opt.textContent + ' — not supported here';
+        if (els.format.value === opt.value) { els.format.value = 'image/png'; syncFormat(); }
+      });
+    });
+
+    function invalidateResult() {
+      resultBlob = null;
+      els.save.disabled = true;
+    }
+
+    /* ---- Queue ---- */
+
+    function render() {
+      els.queueEmpty.hidden = queue.length > 0;
+      els.list.hidden = queue.length === 0;
+      els.queueActions.hidden = queue.length === 0;
+      els.queueTitle.textContent = queue.length
+        ? 'Images — ' + queue.length + (queue.length === 1 ? '' : '')
+        : 'Images';
+      els.build.disabled = queue.length < 2;
+
+      els.list.innerHTML = '';
+      queue.forEach(function (item, i) {
+        var li = document.createElement('li');
+        li.className = 'filerow';
+        li.draggable = true;
+
+        li.addEventListener('dragstart', function (e) {
+          dragId = item.id;
+          li.classList.add('is-dragging');
+          if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(item.id)); }
+        });
+        li.addEventListener('dragend', function () { li.classList.remove('is-dragging'); });
+        li.addEventListener('dragover', function (e) { e.preventDefault(); li.classList.add('is-dragover'); });
+        li.addEventListener('dragleave', function () { li.classList.remove('is-dragover'); });
+        li.addEventListener('drop', function (e) {
+          e.preventDefault();
+          li.classList.remove('is-dragover');
+          if (dragId == null || dragId === item.id) return;
+          moveItem(dragId, item.id);
+        });
+
+        var index = document.createElement('span');
+        index.className = 'filerow-index';
+        index.textContent = String(i + 1);
+
+        var reorder = document.createElement('div');
+        reorder.className = 'filerow-reorder';
+        var up = document.createElement('button');
+        up.type = 'button'; up.className = 'btn btn-sm btn-ghost'; up.textContent = '↑';
+        up.setAttribute('aria-label', 'Move ' + item.file.name + ' earlier');
+        up.disabled = i === 0;
+        up.addEventListener('click', function () { moveBy(item.id, -1); });
+        var down = document.createElement('button');
+        down.type = 'button'; down.className = 'btn btn-sm btn-ghost'; down.textContent = '↓';
+        down.setAttribute('aria-label', 'Move ' + item.file.name + ' later');
+        down.disabled = i === queue.length - 1;
+        down.addEventListener('click', function () { moveBy(item.id, 1); });
+        reorder.appendChild(up);
+        reorder.appendChild(down);
+
+        var thumb = document.createElement('div');
+        thumb.className = 'filerow-thumb';
+        var img = document.createElement('img');
+        img.src = item.thumbUrl;
+        img.alt = '';
+        thumb.appendChild(img);
+
+        var meta = document.createElement('div');
+        meta.className = 'filerow-meta';
+        var name = document.createElement('strong');
+        name.textContent = item.file.name;
+        var detail = document.createElement('span');
+        detail.textContent = item.error || (PB.typeLabel(item.file) + '  ·  ' + PB.formatBytes(item.file.size));
+        meta.appendChild(name);
+        meta.appendChild(detail);
+
+        var actions = document.createElement('div');
+        actions.className = 'filerow-actions';
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn btn-sm btn-ghost';
+        rm.setAttribute('aria-label', 'Remove ' + item.file.name);
+        rm.textContent = '✕';
+        rm.addEventListener('click', function () { remove(item.id); });
+        actions.appendChild(rm);
+
+        li.appendChild(index);
+        li.appendChild(reorder);
+        li.appendChild(thumb);
+        li.appendChild(meta);
+        li.appendChild(actions);
+        els.list.appendChild(li);
+      });
+    }
+
+    function moveItem(fromId, toId) {
+      var fromIdx = queue.findIndex(function (it) { return it.id === fromId; });
+      var toIdx = queue.findIndex(function (it) { return it.id === toId; });
+      if (fromIdx === -1 || toIdx === -1) return;
+      var moved = queue.splice(fromIdx, 1)[0];
+      queue.splice(toIdx, 0, moved);
+      invalidateResult();
+      render();
+    }
+
+    function moveBy(id, delta) {
+      var idx = queue.findIndex(function (it) { return it.id === id; });
+      var target = idx + delta;
+      if (idx === -1 || target < 0 || target >= queue.length) return;
+      var moved = queue.splice(idx, 1)[0];
+      queue.splice(target, 0, moved);
+      invalidateResult();
+      render();
+    }
+
+    function add(files) {
+      files.forEach(function (file) {
+        queue.push({ id: ++seq, file: file, thumbUrl: URL.createObjectURL(file), error: '' });
+      });
+      invalidateResult();
+      render();
+    }
+
+    function remove(id) {
+      queue = queue.filter(function (it) {
+        if (it.id !== id) return true;
+        if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl);
+        return false;
+      });
+      invalidateResult();
+      render();
+    }
+
+    els.clearAll.addEventListener('click', function () {
+      queue.forEach(function (it) { if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl); });
+      queue = [];
+      els.status.textContent = '';
+      invalidateResult();
+      els.stageEmpty.hidden = false;
+      els.canvas.hidden = true;
+      render();
+    });
+
+    /* ---- Build ---- */
+
+    function drawInto(ctx, source, naturalW, naturalH, x, y, w, h, fit) {
+      var sx = 0, sy = 0, sw = naturalW, sh = naturalH, dx = x, dy = y, dw = w, dh = h;
+      if (fit === 'cover') {
+        var scale = Math.max(w / naturalW, h / naturalH);
+        var rw = naturalW * scale, rh = naturalH * scale;
+        dx = x + (w - rw) / 2; dy = y + (h - rh) / 2; dw = rw; dh = rh;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(x, y, w, h);
+        ctx.clip();
+        ctx.drawImage(source, sx, sy, sw, sh, dx, dy, dw, dh);
+        ctx.restore();
+        return;
+      }
+      if (fit === 'contain') {
+        var scaleC = Math.min(w / naturalW, h / naturalH);
+        var rw2 = naturalW * scaleC, rh2 = naturalH * scaleC;
+        dx = x + (w - rw2) / 2; dy = y + (h - rh2) / 2; dw = rw2; dh = rh2;
+      }
+      ctx.drawImage(source, sx, sy, sw, sh, dx, dy, dw, dh);
+    }
+
+    els.build.addEventListener('click', function () {
+      if (queue.length < 2) return;
+
+      els.build.classList.add('is-busy');
+      els.build.disabled = true;
+      els.status.textContent = 'Decoding images…';
+
+      var mode = els.layout.value;
+      var gap = parseInt(els.gap.value, 10) || 0;
+      var cell = Math.max(40, parseInt(els.cellsize.value, 10) || 360);
+      var fit = els.fit.value;
+      var bg = /^#[0-9a-f]{6}$/i.test(els.bg.value) ? els.bg.value : '#FFFFFF';
+      var mime = els.format.value;
+      var quality = parseInt(els.quality.value, 10) / 100;
+
+      Promise.all(queue.map(function (item) {
+        return PB.decodeImage(item.file).then(function (img) {
+          return { img: img, item: item };
+        }).catch(function (err) {
+          item.error = err.message || 'Could not open this image.';
+          return null;
+        });
+      })).then(function (decoded) {
+        var loaded = decoded.filter(Boolean);
+        render();
+        if (loaded.length < 2) {
+          els.status.textContent = 'Need at least two images that can be opened.';
+          return;
+        }
+
+        var canvas = els.canvas;
+        var ctx = canvas.getContext('2d');
+
+        if (mode === 'grid') {
+          var cols = els.columnsAuto.checked
+            ? Math.max(1, Math.ceil(Math.sqrt(loaded.length)))
+            : Math.max(1, parseInt(els.columns.value, 10) || 1);
+          var rows = Math.ceil(loaded.length / cols);
+          canvas.width = cols * cell + (cols + 1) * gap;
+          canvas.height = rows * cell + (rows + 1) * gap;
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          loaded.forEach(function (d, i) {
+            var col = i % cols, row = Math.floor(i / cols);
+            var x = gap + col * (cell + gap);
+            var y = gap + row * (cell + gap);
+            drawInto(ctx, d.img.source, d.img.width, d.img.height, x, y, cell, cell, fit);
+            d.img.release();
+          });
+        } else if (mode === 'row') {
+          var totalW = gap;
+          var widths = loaded.map(function (d) {
+            var w = Math.round(d.img.width * (cell / d.img.height));
+            totalW += w + gap;
+            return w;
+          });
+          canvas.width = totalW;
+          canvas.height = cell + gap * 2;
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          var cx = gap;
+          loaded.forEach(function (d, i) {
+            drawInto(ctx, d.img.source, d.img.width, d.img.height, cx, gap, widths[i], cell, 'stretch');
+            cx += widths[i] + gap;
+            d.img.release();
+          });
+        } else { // column
+          var totalH = gap;
+          var heights = loaded.map(function (d) {
+            var h = Math.round(d.img.height * (cell / d.img.width));
+            totalH += h + gap;
+            return h;
+          });
+          canvas.width = cell + gap * 2;
+          canvas.height = totalH;
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          var cy = gap;
+          loaded.forEach(function (d, i) {
+            drawInto(ctx, d.img.source, d.img.width, d.img.height, gap, cy, cell, heights[i], 'stretch');
+            cy += heights[i] + gap;
+            d.img.release();
+          });
+        }
+
+        if (!ALPHA[mime]) {
+          // Re-flatten onto the chosen background for formats without alpha,
+          // in case any source images carried transparency into the canvas.
+          var flat = document.createElement('canvas');
+          flat.width = canvas.width; flat.height = canvas.height;
+          var fctx = flat.getContext('2d');
+          fctx.fillStyle = bg;
+          fctx.fillRect(0, 0, flat.width, flat.height);
+          fctx.drawImage(canvas, 0, 0);
+          canvas.getContext('2d').drawImage(flat, 0, 0);
+        }
+
+        els.stageEmpty.hidden = true;
+        canvas.hidden = false;
+
+        return PB.canvasToBlob(canvas, mime, LOSSY[mime] ? quality : undefined).then(function (blob) {
+          resultBlob = blob;
+          resultName = 'collage.' + PB.extFor(mime);
+          els.save.disabled = false;
+          els.status.textContent = 'Collage ready — ' + canvas.width.toLocaleString() + ' × ' + canvas.height.toLocaleString() + ', ' + PB.formatBytes(blob.size) + '.';
+        });
+      }).then(function () {
+        els.build.classList.remove('is-busy');
+        els.build.disabled = queue.length < 2;
+      }).catch(function (err) {
+        els.build.classList.remove('is-busy');
+        els.build.disabled = queue.length < 2;
+        els.status.textContent = err.message || 'Something went wrong building the collage.';
+      });
+    });
+
+    els.save.addEventListener('click', function () {
+      if (resultBlob) PB.downloadBlob(resultBlob, resultName);
+    });
+
+    /* ---- Input ---- */
+
+    PB.createDropzone(els.drop, {
+      multiple: true,
+      onReject: function (message) {
+        els.dropError.textContent = message;
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.dropError.hidden = true;
+        add(files);
+      }
+    });
+
+    PB.takeHandoff().then(function (files) {
+      if (files.length) add(files);
+    });
+
+    window.addEventListener('pagehide', function () {
+      queue.forEach(function (it) { if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl); });
+    });
+
+    render();
+  });
 })();
 </script>
 </body>

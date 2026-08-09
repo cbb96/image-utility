@@ -3,35 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Placeholder image maker — sized dummy images | Pixelbench</title>
+<meta name="description" content="Generate a solid-colour placeholder image at any size, with an optional dimensions or custom label. Presets for common screen and ad sizes. Nothing is uploaded.">
+<link rel="canonical" href="https://example.pages.dev/placeholder.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Placeholder image maker">
+<meta property="og:description" content="Generate a sized, labelled placeholder image for mockups and layouts in your browser.">
+<meta property="og:url" content="https://example.pages.dev/placeholder.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
 
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<!-- Page-specific: the size-field separator -->
+<style>
+  .size-row { display: flex; gap: 0.6rem; align-items: center; }
+  .size-row input { flex: 1; min-width: 0; }
+  .size-row span { flex: 0 0 auto; color: var(--muted); font-family: var(--font-mono); }
+</style>
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 -->
 
@@ -40,25 +45,34 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
+      "@type": "SoftwareApplication",
+      "name": "Placeholder image maker",
+      "url": "https://example.pages.dev/placeholder.html",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any modern browser",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+      "description": "Generate a solid-colour placeholder image at any size, with an optional dimensions or custom label, entirely in the browser."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Placeholder maker", "item": "https://example.pages.dev/placeholder.html" }
+      ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+        { "@type": "Question", "name": "What is a placeholder image maker for?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Building mockups, wireframes or test layouts before real photos or assets exist. A correctly sized dummy image lets you check spacing, cropping and responsive behaviour without waiting on final content." } },
+        { "@type": "Question", "name": "Can I match an exact ad unit size?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. The presets include a 300×250 medium rectangle, and you can type any custom width and height for others such as 728×90 or 300×600." } },
+        { "@type": "Question", "name": "Does the label always stay readable?",
+          "acceptedAnswer": { "@type": "Answer", "text": "By default, yes — the tool computes the background's brightness and automatically picks black or white text. Turn off automatic contrast if you want to set an exact text colour yourself." } },
+        { "@type": "Question", "name": "Can I generate a plain rectangle with no text at all?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Uncheck \"Show dimensions as label\" for a solid, unlabelled rectangle in your chosen colour." } },
+        { "@type": "Question", "name": "Which format should I export?",
+          "acceptedAnswer": { "@type": "Answer", "text": "PNG. It's lossless and, for a flat solid colour, ends up smaller than JPEG or WebP anyway. Choose JPEG or WebP only if you specifically want a placeholder that mimics a photo's typical file size." } }
       ]
     }
   ]
@@ -83,10 +97,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
       <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -107,37 +121,246 @@
 
 <main id="main">
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Placeholder Maker</h1>
-                <p>Generate blank or labeled images for mockups.</p>
-            </header>
-            <div class="tool-layout">
-                <div>
-                    <section class="panel">
-                        <div class="panel-head"><h2>Settings</h2></div>
-                        <div class="panel-body">
-                            <div class='field'><label>Dimensions</label><input type='text' value='800x600'></div>
-                            <button class="btn btn-primary btn-block" style="margin-top:1rem;">Process</button>
-                        </div>
-                    </section>
-                </div>
-                <div>
-                    <div class="drop" data-drop>
-                        <div class="drop-idle">
-                            <p class="drop-lede">Drop images here</p>
-                        </div>
-                    </div>
-                    <section class="panel" style="margin-top:1rem">
-                        <div class="panel-head"><h2>Queue</h2></div>
-                        <div class="panel-body">
-                            <div class="empty">No images yet</div>
-                        </div>
-                    </section>
-                </div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Placeholder maker</span>
+    </nav>
+    <header class="page-head">
+      <h1>Placeholder image maker</h1>
+      <p>
+        Generate a sized dummy image for mockups, wireframes and test layouts.
+        Pick a preset or type your own dimensions — the preview updates as you go.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Size</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <label for="ph-preset">Preset</label>
+              <select id="ph-preset" data-preset>
+                <option value="custom">Custom</option>
+                <option value="1920x1080" selected>1920 × 1080 — HD</option>
+                <option value="1280x720">1280 × 720 — HD ready</option>
+                <option value="800x600">800 × 600</option>
+                <option value="400x400">400 × 400 — square</option>
+                <option value="1080x1080">1080 × 1080 — social square</option>
+                <option value="300x250">300 × 250 — ad (medium rectangle)</option>
+              </select>
             </div>
-        </div>
-        
+
+            <div class="field">
+              <span class="field-label">Dimensions (px)</span>
+              <div class="size-row">
+                <input type="number" data-width min="1" max="8000" step="1" value="1920" aria-label="Width in pixels">
+                <span aria-hidden="true">×</span>
+                <input type="number" data-height min="1" max="8000" step="1" value="1080" aria-label="Height in pixels">
+              </div>
+              <p class="field-note" data-size-note></p>
+            </div>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Appearance</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <label for="ph-bg">Background colour</label>
+              <div class="field-row">
+                <input type="text" id="ph-bg" data-bg value="#C7CDD8" spellcheck="false">
+                <input type="color" data-bg-picker value="#c7cdd8" aria-label="Pick background colour" style="flex:0 0 3rem;height:2.6rem;padding:2px">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="check">
+                <input type="checkbox" data-label-toggle checked>
+                Show dimensions as label
+              </label>
+            </div>
+
+            <div data-label-fields>
+              <div class="field">
+                <label for="ph-label-text">Custom label text</label>
+                <input type="text" id="ph-label-text" data-label-text placeholder="Optional — overrides the dimensions text" maxlength="60">
+              </div>
+
+              <div class="field">
+                <label class="check">
+                  <input type="checkbox" data-auto-contrast checked>
+                  Automatic contrast text colour
+                </label>
+              </div>
+
+              <div class="field" data-text-color-field hidden>
+                <label for="ph-text-color">Text colour</label>
+                <div class="field-row">
+                  <input type="text" id="ph-text-color" data-text-color value="#000000" spellcheck="false">
+                  <input type="color" data-text-color-picker value="#000000" aria-label="Pick text colour" style="flex:0 0 3rem;height:2.6rem;padding:2px">
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Output</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <label for="ph-format">Save as</label>
+              <select id="ph-format" data-format>
+                <option value="image/png" selected>PNG (.png)</option>
+                <option value="image/jpeg">JPEG (.jpg)</option>
+                <option value="image/webp">WebP (.webp)</option>
+              </select>
+              <p class="field-note" data-format-note>Lossless. Smallest and cleanest for a flat colour.</p>
+            </div>
+
+            <div class="field" data-quality-field hidden>
+              <label for="ph-quality">Quality <output for="ph-quality" data-quality-out>90</output></label>
+              <input type="range" id="ph-quality" data-quality min="10" max="100" step="1" value="90">
+            </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-save>Save image</button>
+
+            <div class="progress" data-progress hidden style="margin-top:.9rem">
+              <div class="progress-bar" data-progress-bar></div>
+            </div>
+            <p class="field-note" data-status role="status" aria-live="polite"></p>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="/resize.html">Resize</a>
+              <a href="/collage.html">Merge &amp; collage</a>
+              <a href="/convert.html">Convert format</a>
+              <a href="/compress.html">Compress</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Preview</h2></div>
+          <div class="panel-body">
+            <div class="stage" data-stage>
+              <canvas data-canvas></canvas>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="placeholder-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ── Written content ───────────────────────────────── -->
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>Why bother with a real image at all</h2>
+        <p>
+          A grey box in CSS tells you nothing about how a layout copes with a
+          16:9 hero versus a 1:1 avatar, or whether an image-heavy grid still
+          reads once every tile is actually filled. A correctly sized
+          placeholder — even a plain rectangle — exercises the same aspect
+          ratio, the same object-fit behaviour, and the same layout shift
+          questions that the real asset eventually will.
+        </p>
+
+        <h2>Picking a size that matches reality</h2>
+        <p>
+          The presets cover the sizes people reach for most often: common
+          screen and video ratios (1920×1080, 1280×720), a couple of square
+          formats for avatars and social posts, and the 300×250 "medium
+          rectangle" ad unit that's still one of the most widely supported ad
+          sizes on the web. For anything else — a specific card thumbnail, a
+          banner width from a design spec — type the exact pixels into the
+          custom fields.
+        </p>
+
+        <h2>Legible labels without extra effort</h2>
+        <p>
+          With automatic contrast on, the tool reads the background colour's
+          brightness and switches between black and white text so the label
+          stays readable against anything from a pale cream to a dark navy.
+          Turn it off if you'd rather match a specific brand colour and are
+          confident it'll still read clearly against your chosen background.
+        </p>
+
+        <hr>
+
+        <h2>A note on file size and format</h2>
+        <p>
+          A flat colour compresses extremely well as PNG — usually a few
+          kilobytes regardless of dimensions — because there's almost no
+          variation for the encoder to store. JPEG and WebP exist here mainly
+          for cases where you want a placeholder that behaves like a real
+          photo in terms of file weight, for example when testing a page's
+          loading performance budget rather than its layout.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>What is a placeholder image maker for?</summary>
+          <p>Building mockups, wireframes or test layouts before real photos or assets exist. A correctly sized dummy image lets you check spacing, cropping and responsive behaviour without waiting on final content.</p>
+        </details>
+        <details>
+          <summary>Can I match an exact ad unit size?</summary>
+          <p>Yes. The presets include a 300×250 medium rectangle, and you can type any custom width and height for others such as 728×90 or 300×600.</p>
+        </details>
+        <details>
+          <summary>Does the label always stay readable?</summary>
+          <p>By default, yes — the tool computes the background's brightness and automatically picks black or white text. Turn off automatic contrast if you want to set an exact text colour yourself.</p>
+        </details>
+        <details>
+          <summary>Can I generate a plain rectangle with no text at all?</summary>
+          <p>Yes. Uncheck "Show dimensions as label" for a solid, unlabelled rectangle in your chosen colour.</p>
+        </details>
+        <details>
+          <summary>Which format should I export?</summary>
+          <p>PNG. It's lossless and, for a flat solid colour, ends up smaller than JPEG or WebP anyway. Choose JPEG or WebP only if you specifically want a placeholder that mimics a photo's typical file size.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-foot">
@@ -183,19 +406,220 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">This generator needs JavaScript, because the drawing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 
 <script>
-(function() {
-    var PB = window.Pixelbench;
-    if (!PB) return;
-    PB.ready(function() {
-        var drop = document.querySelector('[data-drop]');
-        if (drop) PB.createDropzone(drop, { onFiles: function(f) { PB.toast('Files loaded!'); }});
+/* ============================================================
+   Placeholder maker — page logic
+   Depends on window.Pixelbench from /assets/js/app.js
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  var LOSSY = { 'image/jpeg': 1, 'image/webp': 1 };
+  var NOTES = {
+    'image/png': 'Lossless. Smallest and cleanest for a flat colour.',
+    'image/jpeg': 'Lossy. Only useful if you want a placeholder with photo-like file weight.',
+    'image/webp': 'Lossy or lossless. Also only useful for mimicking a real photo\'s file size.'
+  };
+
+  PB.ready(function () {
+    var els = {
+      preset: document.querySelector('[data-preset]'),
+      width: document.querySelector('[data-width]'),
+      height: document.querySelector('[data-height]'),
+      sizeNote: document.querySelector('[data-size-note]'),
+
+      bg: document.querySelector('[data-bg]'),
+      bgPicker: document.querySelector('[data-bg-picker]'),
+
+      labelToggle: document.querySelector('[data-label-toggle]'),
+      labelFields: document.querySelector('[data-label-fields]'),
+      labelText: document.querySelector('[data-label-text]'),
+      autoContrast: document.querySelector('[data-auto-contrast]'),
+      textColorField: document.querySelector('[data-text-color-field]'),
+      textColor: document.querySelector('[data-text-color]'),
+      textColorPicker: document.querySelector('[data-text-color-picker]'),
+
+      format: document.querySelector('[data-format]'),
+      formatNote: document.querySelector('[data-format-note]'),
+      qualityField: document.querySelector('[data-quality-field]'),
+      quality: document.querySelector('[data-quality]'),
+      qualityOut: document.querySelector('[data-quality-out]'),
+
+      save: document.querySelector('[data-save]'),
+      progress: document.querySelector('[data-progress]'),
+      progressBar: document.querySelector('[data-progress-bar]'),
+      status: document.querySelector('[data-status]'),
+
+      canvas: document.querySelector('[data-canvas]')
+    };
+
+    var ctx = els.canvas.getContext('2d');
+
+    /* ---- Format availability ---- */
+    Array.prototype.forEach.call(els.format.options, function (opt) {
+      PB.canEncode(opt.value).then(function (ok) {
+        if (ok) return;
+        opt.disabled = true;
+        opt.textContent = opt.textContent + ' — not supported here';
+        if (els.format.value === opt.value) {
+          els.format.value = 'image/png';
+          syncFormat();
+        }
+      });
     });
+
+    function syncFormat() {
+      var mime = els.format.value;
+      els.qualityField.hidden = !LOSSY[mime];
+      els.formatNote.textContent = NOTES[mime] || '';
+    }
+    els.format.addEventListener('change', syncFormat);
+    syncFormat();
+
+    els.quality.addEventListener('input', function () {
+      els.qualityOut.textContent = els.quality.value;
+    });
+
+    function wireHex(text, picker, onChange) {
+      picker.addEventListener('input', function () {
+        text.value = picker.value.toUpperCase();
+        onChange();
+      });
+      text.addEventListener('input', function () {
+        if (/^#[0-9a-f]{6}$/i.test(text.value)) picker.value = text.value;
+        onChange();
+      });
+    }
+
+    /* ---- Contrast text colour ----
+       Simple perceptual (YIQ) luminance estimate to choose readable
+       black or white text against any background colour. ---- */
+    function contrastColor(hex) {
+      var m = /^#([0-9a-f]{6})$/i.exec(hex);
+      if (!m) return '#000000';
+      var n = parseInt(m[1], 16);
+      var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+      var yiq = (r * 299 + g * 587 + b * 114) / 1000;
+      return yiq >= 140 ? '#000000' : '#FFFFFF';
+    }
+
+    /* ---- Presets ---- */
+
+    var PRESETS = {
+      '1920x1080': [1920, 1080],
+      '1280x720': [1280, 720],
+      '800x600': [800, 600],
+      '400x400': [400, 400],
+      '1080x1080': [1080, 1080],
+      '300x250': [300, 250]
+    };
+
+    els.preset.addEventListener('change', function () {
+      var dims = PRESETS[els.preset.value];
+      if (!dims) return;
+      els.width.value = dims[0];
+      els.height.value = dims[1];
+      scheduleRender();
+    });
+
+    function toCustom() {
+      els.preset.value = 'custom';
+    }
+    els.width.addEventListener('input', function () { toCustom(); scheduleRender(); });
+    els.height.addEventListener('input', function () { toCustom(); scheduleRender(); });
+
+    wireHex(els.bg, els.bgPicker, scheduleRender);
+    wireHex(els.textColor, els.textColorPicker, scheduleRender);
+
+    els.labelToggle.addEventListener('change', function () {
+      els.labelFields.hidden = !els.labelToggle.checked;
+      scheduleRender();
+    });
+    els.labelText.addEventListener('input', scheduleRender);
+    els.autoContrast.addEventListener('change', function () {
+      els.textColorField.hidden = els.autoContrast.checked;
+      scheduleRender();
+    });
+
+    /* ---- Rendering ---- */
+
+    function render() {
+      var w = PB.clamp(parseInt(els.width.value, 10) || 1, 1, 8000);
+      var h = PB.clamp(parseInt(els.height.value, 10) || 1, 1, 8000);
+      els.width.value = w;
+      els.height.value = h;
+      els.canvas.width = w;
+      els.canvas.height = h;
+      els.sizeNote.textContent = w.toLocaleString() + ' × ' + h.toLocaleString() + ' px';
+
+      var bg = /^#[0-9a-f]{6}$/i.test(els.bg.value) ? els.bg.value : '#C7CDD8';
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+
+      if (els.labelToggle.checked) {
+        var text = els.labelText.value.trim() || (w.toLocaleString() + ' × ' + h.toLocaleString());
+        var color = els.autoContrast.checked
+          ? contrastColor(bg)
+          : (/^#[0-9a-f]{6}$/i.test(els.textColor.value) ? els.textColor.value : '#000000');
+
+        var fontSize = PB.clamp(Math.round(Math.min(w, h) * 0.11), 11, 220);
+        // Shrink automatically if the text would overflow the canvas width.
+        ctx.font = '700 ' + fontSize + 'px Archivo, sans-serif';
+        var maxWidth = w * 0.88;
+        while (fontSize > 8 && ctx.measureText(text).width > maxWidth) {
+          fontSize -= 2;
+          ctx.font = '700 ' + fontSize + 'px Archivo, sans-serif';
+        }
+
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, w / 2, h / 2);
+      }
+    }
+
+    var scheduleRender = PB.debounce(render, 100);
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { render(); }).catch(function () {});
+    }
+
+    /* ---- Save ---- */
+
+    els.save.addEventListener('click', function () {
+      render();
+      var mime = els.format.value;
+      var quality = LOSSY[mime] ? parseInt(els.quality.value, 10) / 100 : undefined;
+
+      els.save.classList.add('is-busy');
+      els.save.disabled = true;
+      els.progress.hidden = false;
+      els.progressBar.style.width = '40%';
+
+      PB.canvasToBlob(els.canvas, mime, quality).then(function (blob) {
+        els.progressBar.style.width = '100%';
+        var name = 'placeholder-' + els.canvas.width + 'x' + els.canvas.height + '.' + PB.extFor(mime);
+        PB.downloadBlob(blob, name);
+        els.status.textContent = 'Saved as ' + name + ' (' + PB.formatBytes(blob.size) + ').';
+      }).catch(function (err) {
+        els.status.textContent = err.message || 'Could not encode this image.';
+      }).then(function () {
+        els.save.classList.remove('is-busy');
+        els.save.disabled = false;
+        setTimeout(function () { els.progress.hidden = true; els.progressBar.style.width = '0%'; }, 400);
+      });
+    });
+
+    render();
+  });
 })();
 </script>
 </body>

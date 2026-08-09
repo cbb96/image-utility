@@ -3,35 +3,59 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Favicon &amp; app icon generator | Pixelbench</title>
+<meta name="description" content="Turn one image into a full favicon and app-icon set — 16 to 512px PNGs, a real multi-size favicon.ico, and the head tags and web manifest to paste in. Nothing is uploaded.">
+<link rel="canonical" href="https://example.pages.dev/favicon.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Favicon &amp; app icon generator">
+<meta property="og:description" content="Generate a full favicon.ico and PNG icon set, plus the head tags and manifest, from one image.">
+<meta property="og:url" content="https://example.pages.dev/favicon.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
 
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<!-- Page-specific: the generated-icon tile grid -->
+<style>
+  .icon-grid {
+    display: grid; gap: 0.9rem;
+    grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  }
+  .icon-tile {
+    display: grid; justify-items: center; gap: 0.5rem;
+    padding: 0.9rem 0.7rem;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--surface); text-align: center;
+  }
+  .icon-tile-swatch {
+    width: 3.5rem; height: 3.5rem;
+    display: grid; place-items: center;
+    border: 1px solid var(--line); border-radius: 8px;
+    background:
+      conic-gradient(var(--check-b) 25%, transparent 0 50%, var(--check-b) 0 75%, transparent 0)
+      0 0 / 12px 12px, var(--check-a);
+  }
+  .icon-tile-swatch img { max-width: 100%; max-height: 100%; }
+  .icon-tile strong { font-size: 0.82rem; }
+  .icon-tile span { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); overflow-wrap: anywhere; }
+  .copy-row { display: flex; justify-content: flex-end; margin-top: 0.5rem; }
+</style>
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 -->
 
@@ -40,25 +64,34 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
+      "@type": "SoftwareApplication",
+      "name": "Favicon and app icon generator",
+      "url": "https://example.pages.dev/favicon.html",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any modern browser",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+      "description": "Generate a favicon.ico and a full PNG icon set from one image, plus the HTML head tags and web manifest, entirely in the browser."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Favicon & app icons", "item": "https://example.pages.dev/favicon.html" }
+      ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+        { "@type": "Question", "name": "Why is my non-square image cropped instead of stretched?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Stretching distorts the image, especially anything with straight edges or a circular logo. A centred square crop keeps the important central content intact and matches what every icon slot expects: a square." } },
+        { "@type": "Question", "name": "What's actually inside the favicon.ico file?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A minimal but valid ICO container: an ICONDIR header, one ICONDIRENTRY per image, and PNG-compressed image data for the 16, 32 and 48px sizes. Every current browser and OS accepts PNG-compressed data inside an ICO, which has been true since Windows Vista." } },
+        { "@type": "Question", "name": "Do I need every size this tool generates?",
+          "acceptedAnswer": { "@type": "Answer", "text": "In practice favicon.ico, apple-touch-icon (180px) and the two manifest sizes (192 and 512) cover almost every browser and device. The others exist for older Android launchers and specific manifest contexts that ask for them directly." } },
+        { "@type": "Question", "name": "Why is there no SVG favicon option?",
+          "acceptedAnswer": { "@type": "Answer", "text": "This tool starts from a raster photo or logo. Producing a usable SVG would mean guessing at vector shapes from pixels, which isn't reliable, so only PNG and ICO outputs are generated." } },
+        { "@type": "Question", "name": "Where do these files go on my site?",
+          "acceptedAnswer": { "@type": "Answer", "text": "In the root of your site, alongside index.html, with the exact filenames shown in the downloads and referenced in the head tags below. The manifest file should be saved as site.webmanifest in that same root." } }
       ]
     }
   ]
@@ -83,10 +116,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
       <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -107,37 +140,214 @@
 
 <main id="main">
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Favicon Generator</h1>
-                <p>Turn any square image into an .ico and set of app icons.</p>
-            </header>
-            <div class="tool-layout">
-                <div>
-                    <section class="panel">
-                        <div class="panel-head"><h2>Settings</h2></div>
-                        <div class="panel-body">
-                            <p class='field-note'>Drop a 512x512 image here to instantly generate your 16x16, 32x32, and 192x192 icon bundle.</p>
-                            <button class="btn btn-primary btn-block" style="margin-top:1rem;">Process</button>
-                        </div>
-                    </section>
-                </div>
-                <div>
-                    <div class="drop" data-drop>
-                        <div class="drop-idle">
-                            <p class="drop-lede">Drop images here</p>
-                        </div>
-                    </div>
-                    <section class="panel" style="margin-top:1rem">
-                        <div class="panel-head"><h2>Queue</h2></div>
-                        <div class="panel-body">
-                            <div class="empty">No images yet</div>
-                        </div>
-                    </section>
-                </div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Favicon &amp; app icons</span>
+    </nav>
+    <header class="page-head">
+      <h1>Favicon &amp; app icon generator</h1>
+      <p>
+        Drop in one image and get a full icon set back: a real multi-size
+        favicon.ico, PNGs from 16px to 512px, and the head tags and web
+        manifest to paste into your site.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Options</h2></div>
+          <div class="panel-body">
+
+            <p class="field-note" data-source-note>Drop a square-ish logo or photo. Non-square images are automatically centre-cropped to a square before resizing.</p>
+
+            <div class="field">
+              <label class="check">
+                <input type="checkbox" data-flatten>
+                Flatten transparency onto white
+              </label>
+              <p class="field-note">Recommended if your source has a transparent background — some launchers render alpha poorly at 16px.</p>
             </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-generate disabled>Generate icons</button>
+
+            <div class="progress" data-progress hidden style="margin-top:.9rem">
+              <div class="progress-bar" data-progress-bar></div>
+            </div>
+            <p class="field-note" data-status role="status" aria-live="polite"></p>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="/convert.html">Convert format</a>
+              <a href="/resize.html">Resize</a>
+              <a href="/crop.html">Crop</a>
+              <a href="/compress.html">Compress</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+        <div class="drop" data-drop>
+          <input type="file" id="pick" accept="image/*" hidden data-drop-input>
+          <div class="drop-idle">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+              <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+            </svg>
+            <p class="drop-lede">Drop an image here</p>
+            <p class="drop-hint">or <label class="link-btn" for="pick">choose a file</label> · ideally 512px or larger</p>
+          </div>
+          <p class="drop-error" data-drop-error role="alert" hidden></p>
         </div>
-        
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2>Generated icons</h2></div>
+          <div class="panel-body">
+            <div class="empty" data-icons-empty>
+              <strong>Nothing generated yet</strong>
+              <p>Drop a source image above. Icons appear here the moment it's loaded, and again whenever you change an option.</p>
+            </div>
+            <div class="icon-grid" data-icon-grid hidden></div>
+          </div>
+        </section>
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2>Add to your site</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <label for="head-tags">Head tags</label>
+              <textarea id="head-tags" data-head-tags readonly rows="6" onclick="this.select()"></textarea>
+              <div class="copy-row">
+                <button class="btn btn-sm" type="button" data-copy-tags>Copy</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="manifest-json">site.webmanifest</label>
+              <textarea id="manifest-json" data-manifest-json readonly rows="10" onclick="this.select()"></textarea>
+              <div class="copy-row">
+                <button class="btn btn-sm" type="button" data-copy-manifest>Copy</button>
+              </div>
+              <p class="field-note">Save this as <code>site.webmanifest</code> in your site's root, alongside favicon.ico.</p>
+            </div>
+
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="favicon-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ── Written content ───────────────────────────────── -->
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>Why there are so many sizes</h2>
+        <p>
+          No single icon file works everywhere. Browsers still look for
+          <code>favicon.ico</code> out of habit, iOS wants an
+          <code>apple-touch-icon</code> at 180px for the home screen, and
+          Android and desktop PWA installs read whatever sizes are listed in
+          the web manifest — commonly 192 and 512px. Generating the full set
+          once, rather than guessing which one you'll need, is the simplest way
+          to stop worrying about it.
+        </p>
+
+        <h3>favicon.ico</h3>
+        <p>
+          Still requested by some browsers and bookmarking tools even though
+          modern sites usually lead with a PNG. This tool builds a real
+          multi-size ICO containing 16, 32 and 48px images, each stored as
+          PNG data inside the ICO container — a format Windows and every
+          current browser has supported since Vista, so there's no need for
+          old-style uncompressed bitmap encoding.
+        </p>
+
+        <h3>apple-touch-icon</h3>
+        <p>
+          Used when someone adds your site to an iPhone or iPad home screen.
+          iOS applies its own rounded-corner mask on top, so keep your logo
+          away from the very edges of the source image if you can.
+        </p>
+
+        <h3>Manifest icons (192 / 512)</h3>
+        <p>
+          Referenced from <code>site.webmanifest</code> and used by Android
+          and desktop browsers when a site is installed as an app. The 512px
+          size is also what app stores and share cards tend to pull from when
+          a larger icon is needed.
+        </p>
+
+        <hr>
+
+        <h2>About the square crop</h2>
+        <p>
+          Every icon slot on every platform is square. If your source image
+          isn't, the generator takes the largest centred square it can — for
+          a 1600×1200 photo that's the middle 1200×1200 — rather than
+          squashing the image out of proportion. If your logo has important
+          detail near the left or right edge, crop it to square yourself
+          first with the <a href="/crop.html">crop tool</a> so you control
+          exactly what survives.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>Why is my non-square image cropped instead of stretched?</summary>
+          <p>Stretching distorts the image, especially anything with straight edges or a circular logo. A centred square crop keeps the important central content intact and matches what every icon slot expects: a square.</p>
+        </details>
+        <details>
+          <summary>What's actually inside the favicon.ico file?</summary>
+          <p>A minimal but valid ICO container: an ICONDIR header, one ICONDIRENTRY per image, and PNG-compressed image data for the 16, 32 and 48px sizes. Every current browser and OS accepts PNG-compressed data inside an ICO, which has been true since Windows Vista.</p>
+        </details>
+        <details>
+          <summary>Do I need every size this tool generates?</summary>
+          <p>In practice favicon.ico, apple-touch-icon (180px) and the two manifest sizes (192 and 512) cover almost every browser and device. The others exist for older Android launchers and specific manifest contexts that ask for them directly.</p>
+        </details>
+        <details>
+          <summary>Why is there no SVG favicon option?</summary>
+          <p>This tool starts from a raster photo or logo. Producing a usable SVG would mean guessing at vector shapes from pixels, which isn't reliable, so only PNG and ICO outputs are generated.</p>
+        </details>
+        <details>
+          <summary>Where do these files go on my site?</summary>
+          <p>In the root of your site, alongside index.html, with the exact filenames shown in the downloads and referenced in the head tags below. The manifest file should be saved as site.webmanifest in that same root.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-foot">
@@ -183,19 +393,293 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">This generator needs JavaScript, because the resizing and ICO encoding run in your browser rather than on a server. Nothing is sent anywhere either way.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 
 <script>
-(function() {
-    var PB = window.Pixelbench;
-    if (!PB) return;
-    PB.ready(function() {
-        var drop = document.querySelector('[data-drop]');
-        if (drop) PB.createDropzone(drop, { onFiles: function(f) { PB.toast('Files loaded!'); }});
+/* ============================================================
+   Favicon & app icons — page logic
+   Depends on window.Pixelbench from /assets/js/app.js
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  var SIZES = [
+    { size: 16, filename: 'favicon-16x16.png', label: '16 × 16' },
+    { size: 32, filename: 'favicon-32x32.png', label: '32 × 32' },
+    { size: 48, filename: 'favicon-48x48.png', label: '48 × 48' },
+    { size: 180, filename: 'apple-touch-icon.png', label: '180 × 180 (Apple)' },
+    { size: 192, filename: 'favicon-192x192.png', label: '192 × 192' },
+    { size: 512, filename: 'favicon-512x512.png', label: '512 × 512' }
+  ];
+  var ICO_SIZES = [16, 32, 48];
+
+  var sourceImg = null;
+  var sourceFile = null;
+  var generated = []; // { size, filename, blob, url }
+  var icoUrl = null;
+
+  PB.ready(function () {
+    var els = {
+      drop: document.querySelector('[data-drop]'),
+      dropError: document.querySelector('[data-drop-error]'),
+      sourceNote: document.querySelector('[data-source-note]'),
+      flatten: document.querySelector('[data-flatten]'),
+      generate: document.querySelector('[data-generate]'),
+      progress: document.querySelector('[data-progress]'),
+      progressBar: document.querySelector('[data-progress-bar]'),
+      status: document.querySelector('[data-status]'),
+      iconsEmpty: document.querySelector('[data-icons-empty]'),
+      iconGrid: document.querySelector('[data-icon-grid]'),
+      headTags: document.querySelector('[data-head-tags]'),
+      manifestJson: document.querySelector('[data-manifest-json]'),
+      copyTags: document.querySelector('[data-copy-tags]'),
+      copyManifest: document.querySelector('[data-copy-manifest]')
+    };
+
+    /* ---- Static text blocks ---- */
+
+    els.headTags.value = [
+      '<link rel="icon" href="/favicon.ico" sizes="any">',
+      '<link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">',
+      '<link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">',
+      '<link rel="apple-touch-icon" href="/apple-touch-icon.png">',
+      '<link rel="manifest" href="/site.webmanifest">'
+    ].join('\n');
+
+    els.manifestJson.value = JSON.stringify({
+      name: 'Your Site Name',
+      short_name: 'Site',
+      icons: [
+        { src: '/favicon-192x192.png', sizes: '192x192', type: 'image/png' },
+        { src: '/favicon-512x512.png', sizes: '512x512', type: 'image/png' }
+      ],
+      theme_color: '#ffffff',
+      background_color: '#ffffff',
+      display: 'standalone'
+    }, null, 2);
+
+    els.copyTags.addEventListener('click', function () {
+      PB.copyText(els.headTags.value).then(function () {
+        PB.toast('Head tags copied');
+      }).catch(function () { PB.toast('Could not copy'); });
     });
+    els.copyManifest.addEventListener('click', function () {
+      PB.copyText(els.manifestJson.value).then(function () {
+        PB.toast('Manifest copied');
+      }).catch(function () { PB.toast('Could not copy'); });
+    });
+
+    /* ---- ICO assembly ----
+       Minimal but valid ICO: ICONDIR header, one ICONDIRENTRY per
+       image, then the raw PNG bytes back to back. Every current
+       browser and OS accepts PNG-compressed image data inside ICO
+       files, so no BMP/DIB encoding is needed. ---- */
+
+    function buildIco(entries) {
+      var count = entries.length;
+      var headerSize = 6 + 16 * count;
+      var totalSize = headerSize + entries.reduce(function (t, e) { return t + e.buffer.byteLength; }, 0);
+      var buf = new ArrayBuffer(totalSize);
+      var view = new DataView(buf);
+      var bytes = new Uint8Array(buf);
+
+      view.setUint16(0, 0, true);   // reserved
+      view.setUint16(2, 1, true);   // type: 1 = icon
+      view.setUint16(4, count, true);
+
+      var offset = headerSize;
+      entries.forEach(function (entry, i) {
+        var rec = 6 + i * 16;
+        var dim = entry.size >= 256 ? 0 : entry.size; // 0 means 256px
+        view.setUint8(rec + 0, dim);          // width
+        view.setUint8(rec + 1, dim);          // height
+        view.setUint8(rec + 2, 0);            // colour palette
+        view.setUint8(rec + 3, 0);            // reserved
+        view.setUint16(rec + 4, 1, true);     // colour planes
+        view.setUint16(rec + 6, 32, true);    // bits per pixel
+        view.setUint32(rec + 8, entry.buffer.byteLength, true);
+        view.setUint32(rec + 12, offset, true);
+
+        bytes.set(new Uint8Array(entry.buffer), offset);
+        offset += entry.buffer.byteLength;
+      });
+
+      return new Blob([buf], { type: 'image/x-icon' });
+    }
+
+    /* ---- Cropping + resizing ---- */
+
+    function squareCrop(img) {
+      var side = Math.min(img.width, img.height);
+      return { sx: (img.width - side) / 2, sy: (img.height - side) / 2, side: side };
+    }
+
+    function renderSize(img, crop, size) {
+      var cv = document.createElement('canvas');
+      cv.width = size; cv.height = size;
+      var ctx = cv.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      if (els.flatten.checked) {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, size, size);
+      }
+      ctx.drawImage(img.source, crop.sx, crop.sy, crop.side, crop.side, 0, 0, size, size);
+      return PB.canvasToBlob(cv, 'image/png');
+    }
+
+    /* ---- Rendering the tile grid ---- */
+
+    function clearGenerated() {
+      generated.forEach(function (g) { if (g.url) URL.revokeObjectURL(g.url); });
+      generated = [];
+      if (icoUrl) { URL.revokeObjectURL(icoUrl); icoUrl = null; }
+      els.iconGrid.innerHTML = '';
+    }
+
+    function addTile(label, filename, url, downloadName) {
+      var tile = document.createElement('div');
+      tile.className = 'icon-tile';
+
+      var swatch = document.createElement('div');
+      swatch.className = 'icon-tile-swatch';
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = label + ' preview';
+      swatch.appendChild(img);
+
+      var strong = document.createElement('strong');
+      strong.textContent = label;
+      var span = document.createElement('span');
+      span.textContent = filename;
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn btn-sm btn-primary';
+      btn.textContent = 'Download';
+      btn.addEventListener('click', function () {
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = downloadName || filename;
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+
+      tile.appendChild(swatch);
+      tile.appendChild(strong);
+      tile.appendChild(span);
+      tile.appendChild(btn);
+      els.iconGrid.appendChild(tile);
+    }
+
+    function generate() {
+      if (!sourceImg) return;
+      clearGenerated();
+      els.generate.classList.add('is-busy');
+      els.generate.disabled = true;
+      els.progress.hidden = false;
+      els.progressBar.style.width = '0%';
+      els.status.textContent = 'Generating…';
+
+      var crop = squareCrop(sourceImg);
+      var total = SIZES.length;
+      var icoBuffers = {};
+
+      function step(i) {
+        if (i >= SIZES.length) return Promise.resolve();
+        var spec = SIZES[i];
+        return renderSize(sourceImg, crop, spec.size).then(function (blob) {
+          var url = URL.createObjectURL(blob);
+          generated.push({ size: spec.size, filename: spec.filename, blob: blob, url: url });
+          addTile(spec.label, spec.filename, url, spec.filename);
+          if (ICO_SIZES.indexOf(spec.size) !== -1) {
+            return blob.arrayBuffer().then(function (buf) { icoBuffers[spec.size] = buf; });
+          }
+        }).then(function () {
+          els.progressBar.style.width = Math.round(((i + 1) / total) * 100) + '%';
+          return step(i + 1);
+        });
+      }
+
+      step(0).then(function () {
+        // The ICO wants 16/32/48; those are already in SIZES, so reuse them.
+        var entries = ICO_SIZES.map(function (s) { return { size: s, buffer: icoBuffers[s] }; })
+          .filter(function (e) { return e.buffer; });
+        if (entries.length) {
+          var icoBlob = buildIco(entries);
+          icoUrl = URL.createObjectURL(icoBlob);
+          addTile('favicon.ico (multi-size)', 'favicon.ico', icoUrl, 'favicon.ico');
+        }
+
+        els.iconsEmpty.hidden = true;
+        els.iconGrid.hidden = false;
+        els.generate.classList.remove('is-busy');
+        els.generate.disabled = false;
+        els.progress.hidden = true;
+        els.status.textContent = generated.length + ' PNGs and a favicon.ico generated.';
+      });
+    }
+
+    els.generate.addEventListener('click', generate);
+
+    /* ---- Loading the source image ---- */
+
+    function loadSource(file) {
+      Promise.resolve(sourceImg && sourceImg.release()).then(function () {
+        return PB.decodeImage(file);
+      }).then(function (img) {
+        sourceImg = img;
+        sourceFile = file;
+        els.generate.disabled = false;
+
+        if (img.width === img.height) {
+          els.sourceNote.textContent = 'Source is ' + img.width + '×' + img.height + ' — already square, used as-is.';
+        } else {
+          var side = Math.min(img.width, img.height);
+          els.sourceNote.textContent = 'Source is ' + img.width + '×' + img.height + ' — not square. Using a centred ' + side + '×' + side + ' crop.';
+        }
+
+        generate();
+      }).catch(function (err) {
+        els.dropError.textContent = err.message || 'That file could not be opened.';
+        els.dropError.hidden = false;
+      });
+    }
+
+    PB.createDropzone(els.drop, {
+      multiple: false,
+      onReject: function (message) {
+        els.dropError.textContent = message;
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.dropError.hidden = true;
+        loadSource(files[0]);
+      }
+    });
+
+    PB.takeHandoff().then(function (files) {
+      if (files.length) loadSource(files[0]);
+    });
+
+    els.flatten.addEventListener('change', function () {
+      if (sourceImg) generate();
+    });
+
+    window.addEventListener('pagehide', function () {
+      if (sourceImg) sourceImg.release();
+      clearGenerated();
+    });
+  });
 })();
 </script>
 </body>

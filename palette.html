@@ -3,35 +3,70 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Colour palette extractor — dominant colours from an image | Pixelbench</title>
+<meta name="description" content="Pull the dominant colours out of any image as HEX, RGB and HSL swatches, or a ready-made CSS variable block. Runs entirely in your browser.">
+<link rel="canonical" href="https://example.pages.dev/palette.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Colour palette extractor — dominant colours from an image">
+<meta property="og:description" content="Pull the dominant colours out of any image as HEX, RGB, HSL and CSS variables.">
+<meta property="og:url" content="https://example.pages.dev/palette.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
 
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<!-- Page-specific: swatch bar + swatch cards -->
+<style>
+  .swatch-bar {
+    display: flex; height: 2.75rem;
+    border-radius: var(--radius); overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .swatch-bar span { display: block; height: 100%; }
+
+  .swatch-grid {
+    display: grid; gap: 0.9rem; margin-top: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr));
+  }
+  .swatch-card {
+    border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; background: var(--surface);
+  }
+  .swatch-chip { height: 4.5rem; }
+  .swatch-body { padding: 0.75rem 0.85rem; }
+  .swatch-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 0.5rem; font-family: var(--font-mono); font-size: 0.82rem;
+    padding: 0.15rem 0;
+  }
+  .swatch-row span:first-child { color: var(--muted); }
+  .swatch-copy {
+    background: transparent; border: 0; padding: 0.1rem 0.35rem;
+    color: var(--muted); cursor: pointer; font-size: 0.72rem;
+    font-family: var(--font-mono); border-radius: 4px;
+  }
+  .swatch-copy:hover { color: var(--accent); background: var(--surface-2); }
+  .swatch-share {
+    margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--line);
+    font-size: 0.74rem; color: var(--muted);
+  }
+</style>
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 -->
 
@@ -40,25 +75,32 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
+      "@type": "SoftwareApplication",
+      "name": "Colour palette extractor",
+      "url": "https://example.pages.dev/palette.html",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any modern browser",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+      "description": "Extract the dominant colours from an image as HEX, RGB, HSL swatches or CSS custom properties, entirely in the browser."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Colour palette", "item": "https://example.pages.dev/palette.html" }
+      ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+        { "@type": "Question", "name": "How are the dominant colours chosen?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The image is sampled onto a small canvas, each pixel's colour is quantised into a coarse bucket, and the most frequently hit buckets are kept. Each bucket's swatch is then refined by averaging the exact colours of the real pixels that landed in it, so the result reflects the image rather than a fixed grid." } },
+        { "@type": "Question", "name": "Why does the palette change slightly if I re-run it?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It doesn't — the sampling and bucketing are deterministic. What changes the result is the swatch count, which changes how finely similar colours get split apart." } },
+        { "@type": "Question", "name": "Does transparency affect the palette?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Fully transparent pixels are skipped before sampling, so a logo on a transparent background won't have its palette diluted by empty space." } },
+        { "@type": "Question", "name": "Can I use the output directly in CSS?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. \"Copy all as CSS variables\" copies a ready-made :root block with --palette-1 through --palette-N, ordered from most to least dominant, ready to paste into a stylesheet." } }
       ]
     }
   ]
@@ -83,10 +125,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
       <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -107,37 +149,174 @@
 
 <main id="main">
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Colour Palette</h1>
-                <p>Extract the dominant colours from any image.</p>
-            </header>
-            <div class="tool-layout">
-                <div>
-                    <section class="panel">
-                        <div class="panel-head"><h2>Settings</h2></div>
-                        <div class="panel-body">
-                            <div class='field'><label>Number of Colors</label><input type='number' value='5'></div>
-                            <button class="btn btn-primary btn-block" style="margin-top:1rem;">Process</button>
-                        </div>
-                    </section>
-                </div>
-                <div>
-                    <div class="drop" data-drop>
-                        <div class="drop-idle">
-                            <p class="drop-lede">Drop images here</p>
-                        </div>
-                    </div>
-                    <section class="panel" style="margin-top:1rem">
-                        <div class="panel-head"><h2>Queue</h2></div>
-                        <div class="panel-body">
-                            <div class="empty">No images yet</div>
-                        </div>
-                    </section>
-                </div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Colour palette</span>
+    </nav>
+    <header class="page-head">
+      <h1>Colour palette extractor</h1>
+      <p>
+        Drop in an image and get its dominant colours back as HEX, RGB and HSL,
+        sorted by how much of the image they cover, ready to copy as CSS variables.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Palette settings</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <label for="count">Number of swatches <output for="count" data-count-out>6</output></label>
+              <input type="range" id="count" data-count min="4" max="10" step="1" value="6">
+              <p class="field-note">More swatches split similar colours further apart instead of merging them.</p>
             </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-copy-css disabled>Copy all as CSS variables</button>
+            <p class="field-note" data-status role="status" aria-live="polite"></p>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="/convert.html">Convert format</a>
+              <a href="/favicon.html">Favicon maker</a>
+              <a href="/base64.html">Base64 &amp; data URI</a>
+              <a href="/metadata.html">Metadata</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+        <div class="drop" data-drop>
+          <input type="file" id="pick" accept="image/*" hidden data-drop-input>
+          <div class="drop-idle">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+              <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+            </svg>
+            <p class="drop-lede">Drop an image here</p>
+            <p class="drop-hint">or <label class="link-btn" for="pick">choose a file</label> · one at a time</p>
+          </div>
+          <p class="drop-error" data-drop-error role="alert" hidden></p>
         </div>
-        
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2>Palette</h2></div>
+          <div class="panel-body">
+            <div class="empty" data-empty>
+              <strong>Nothing loaded yet</strong>
+              <p>Drop an image above. It's sampled down to a small canvas for speed, then clustered into a handful of dominant colours.</p>
+            </div>
+
+            <div data-result hidden>
+              <div class="swatch-bar" data-swatch-bar></div>
+              <div class="swatch-grid" data-swatch-grid></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="palette-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ── Written content ───────────────────────────────── -->
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>How the palette is built</h2>
+        <p>
+          The full-resolution image is first drawn onto a small offscreen canvas —
+          capped around 200&nbsp;px on the longest side — so sampling stays fast even on
+          a large photo. Every sampled pixel is read with <code>getImageData</code>,
+          fully transparent pixels are skipped, and each remaining pixel's red, green
+          and blue channels are quantised down to 4 bits each. That collapses 16.7
+          million possible colours into 4,096 coarse buckets, and a histogram counts how
+          many sampled pixels land in each one.
+        </p>
+        <p>
+          The buckets with the most hits become the palette. Rather than showing the flat
+          centre of each bucket, the tool goes back over the sampled pixels a second time
+          and averages the real red, green and blue values of everything that fell into
+          the winning buckets — so a swatch labelled as the top colour is the actual
+          average of the pixels it represents, not just a rounded-off grid point.
+        </p>
+
+        <h3>Reading the proportion bar</h3>
+        <p>
+          The horizontal bar above the swatch cards is scaled by how many sampled pixels
+          each colour accounted for, so it's a quick visual read of which colours actually
+          dominate the image versus which ones are present but minor. A photo of a red
+          apple on a white plate typically shows one or two wide bands and several thin
+          ones — the true colour makeup, rather than an evenly split rainbow.
+        </p>
+
+        <hr>
+
+        <h2>Using the output</h2>
+        <p>
+          Each swatch card shows HEX, RGB and HSL with its own copy button, for whichever
+          format a particular tool expects. "Copy all as CSS variables" builds a single
+          <code>:root</code> block with <code>--palette-1</code> through
+          <code>--palette-N</code> in dominance order, ready to paste straight into a
+          stylesheet as a starting design-token set pulled from a real photo or logo.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>How are the dominant colours chosen?</summary>
+          <p>The image is sampled onto a small canvas, each pixel's colour is quantised into a coarse bucket, and the most frequently hit buckets are kept. Each bucket's swatch is then refined by averaging the exact colours of the real pixels that landed in it, so the result reflects the image rather than a fixed grid.</p>
+        </details>
+        <details>
+          <summary>Why does the palette change slightly if I re-run it?</summary>
+          <p>It doesn't — the sampling and bucketing are deterministic. What changes the result is the swatch count, which changes how finely similar colours get split apart.</p>
+        </details>
+        <details>
+          <summary>Does transparency affect the palette?</summary>
+          <p>No. Fully transparent pixels are skipped before sampling, so a logo on a transparent background won't have its palette diluted by empty space.</p>
+        </details>
+        <details>
+          <summary>Can I use the output directly in CSS?</summary>
+          <p>Yes. "Copy all as CSS variables" copies a ready-made :root block with --palette-1 through --palette-N, ordered from most to least dominant, ready to paste into a stylesheet.</p>
+        </details>
+        <details>
+          <summary>Why does a busy, colourful photo sometimes show near-duplicate swatches?</summary>
+          <p>Quantisation buckets colours by proximity, not by name, so two close but distinct shades of sky can occasionally both survive as separate top buckets. Lowering the swatch count merges them back together.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-foot">
@@ -183,19 +362,278 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">This palette tool needs JavaScript, because the colour sampling runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 
 <script>
-(function() {
-    var PB = window.Pixelbench;
-    if (!PB) return;
-    PB.ready(function() {
-        var drop = document.querySelector('[data-drop]');
-        if (drop) PB.createDropzone(drop, { onFiles: function(f) { PB.toast('Files loaded!'); }});
+/* ============================================================
+   Colour palette — page logic
+   Depends on window.Pixelbench from /assets/js/app.js
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  var SAMPLE_CAP = 200; // longest edge of the sampling canvas, in pixels
+
+  /* ---- Colour helpers ---- */
+
+  function toHex(n) {
+    var s = Math.round(PB.clamp(n, 0, 255)).toString(16);
+    return s.length < 2 ? '0' + s : s;
+  }
+
+  function rgbToHex(r, g, b) {
+    return '#' + toHex(r) + toHex(g) + toHex(b);
+  }
+
+  function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h = 0, s = 0, l = (max + min) / 2;
+    var d = max - min;
+    if (d !== 0) {
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    return {
+      h: Math.round(h * 360),
+      s: Math.round(s * 100),
+      l: Math.round(l * 100)
+    };
+  }
+
+  /* ----------------------------------------------------------
+     Palette extraction: quantise-and-refine histogram.
+
+     Each sampled pixel's R/G/B is quantised to 4 bits per
+     channel (16 levels each, 4096 buckets total). The buckets
+     with the most hits become the palette; each is then
+     refined by averaging the true colour of every pixel that
+     landed in it, so the swatch is a real average, not just a
+     rounded bucket centre.
+  ---------------------------------------------------------- */
+
+  function extractPalette(imageData, k) {
+    var data = imageData.data;
+    var buckets = {}; // key -> { count, rSum, gSum, bSum }
+    var total = 0;
+
+    for (var i = 0; i < data.length; i += 4) {
+      var a = data[i + 3];
+      if (a === 0) continue; // skip fully transparent pixels
+
+      var r = data[i], g = data[i + 1], b = data[i + 2];
+      var qr = r >> 4, qg = g >> 4, qb = b >> 4;
+      var key = (qr << 8) | (qg << 4) | qb;
+
+      var bucket = buckets[key];
+      if (!bucket) {
+        bucket = buckets[key] = { count: 0, rSum: 0, gSum: 0, bSum: 0 };
+      }
+      bucket.count++;
+      bucket.rSum += r;
+      bucket.gSum += g;
+      bucket.bSum += b;
+      total++;
+    }
+
+    var list = Object.keys(buckets).map(function (key) {
+      var b = buckets[key];
+      return {
+        count: b.count,
+        r: b.rSum / b.count,
+        g: b.gSum / b.count,
+        b: b.bSum / b.count
+      };
     });
+
+    list.sort(function (a, b) { return b.count - a.count; });
+    list = list.slice(0, k);
+
+    return list.map(function (c) {
+      return {
+        r: c.r, g: c.g, b: c.b,
+        share: total ? c.count / total : 0
+      };
+    });
+  }
+
+  function buildSampleCanvas(img) {
+    var w = img.width, h = img.height;
+    var scale = Math.min(1, SAMPLE_CAP / Math.max(w, h));
+    var sw = Math.max(1, Math.round(w * scale));
+    var sh = Math.max(1, Math.round(h * scale));
+
+    var cv = document.createElement('canvas');
+    cv.width = sw;
+    cv.height = sh;
+    var ctx = cv.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img.source, 0, 0, sw, sh);
+    return ctx.getImageData(0, 0, sw, sh);
+  }
+
+  /* ---- Page wiring ---- */
+
+  PB.ready(function () {
+    var els = {
+      drop: document.querySelector('[data-drop]'),
+      dropError: document.querySelector('[data-drop-error]'),
+      count: document.querySelector('[data-count]'),
+      countOut: document.querySelector('[data-count-out]'),
+      copyCss: document.querySelector('[data-copy-css]'),
+      status: document.querySelector('[data-status]'),
+      empty: document.querySelector('[data-empty]'),
+      result: document.querySelector('[data-result]'),
+      swatchBar: document.querySelector('[data-swatch-bar]'),
+      swatchGrid: document.querySelector('[data-swatch-grid]')
+    };
+
+    var currentImageData = null;
+    var currentPalette = [];
+
+    function render(palette) {
+      currentPalette = palette;
+
+      els.swatchBar.innerHTML = '';
+      palette.forEach(function (c) {
+        var seg = document.createElement('span');
+        seg.style.background = rgbToHex(c.r, c.g, c.b);
+        seg.style.width = Math.max(2, c.share * 100) + '%';
+        seg.title = rgbToHex(c.r, c.g, c.b) + ' — ' + Math.round(c.share * 100) + '%';
+        els.swatchBar.appendChild(seg);
+      });
+
+      els.swatchGrid.innerHTML = '';
+      palette.forEach(function (c, i) {
+        var hex = rgbToHex(c.r, c.g, c.b);
+        var hsl = rgbToHsl(c.r, c.g, c.b);
+        var rgbStr = 'rgb(' + Math.round(c.r) + ', ' + Math.round(c.g) + ', ' + Math.round(c.b) + ')';
+        var hslStr = 'hsl(' + hsl.h + ', ' + hsl.s + '%, ' + hsl.l + '%)';
+
+        var card = document.createElement('div');
+        card.className = 'swatch-card';
+
+        var chip = document.createElement('div');
+        chip.className = 'swatch-chip';
+        chip.style.background = hex;
+        card.appendChild(chip);
+
+        var body = document.createElement('div');
+        body.className = 'swatch-body';
+
+        [
+          ['HEX', hex],
+          ['RGB', rgbStr],
+          ['HSL', hslStr]
+        ].forEach(function (pair) {
+          var row = document.createElement('div');
+          row.className = 'swatch-row';
+          var label = document.createElement('span');
+          label.textContent = pair[0];
+          var valWrap = document.createElement('span');
+          valWrap.style.display = 'inline-flex';
+          valWrap.style.alignItems = 'center';
+          valWrap.style.gap = '0.4rem';
+          var val = document.createElement('span');
+          val.textContent = pair[1];
+          val.style.color = 'var(--ink)';
+          var copyBtn = document.createElement('button');
+          copyBtn.type = 'button';
+          copyBtn.className = 'swatch-copy';
+          copyBtn.textContent = 'Copy';
+          copyBtn.setAttribute('aria-label', 'Copy ' + pair[0] + ' value ' + pair[1]);
+          copyBtn.addEventListener('click', function () {
+            PB.copyText(pair[1]).then(function () { PB.toast('Copied ' + pair[0]); });
+          });
+          valWrap.appendChild(val);
+          valWrap.appendChild(copyBtn);
+          row.appendChild(label);
+          row.appendChild(valWrap);
+          body.appendChild(row);
+        });
+
+        var share = document.createElement('div');
+        share.className = 'swatch-share';
+        share.textContent = Math.round(c.share * 100) + '% of sampled pixels · #' + (i + 1);
+        body.appendChild(share);
+
+        card.appendChild(body);
+        els.swatchGrid.appendChild(card);
+      });
+
+      els.copyCss.disabled = palette.length === 0;
+    }
+
+    function runExtraction() {
+      if (!currentImageData) return;
+      var k = parseInt(els.count.value, 10);
+      var palette = extractPalette(currentImageData, k);
+      render(palette);
+    }
+
+    els.count.addEventListener('input', function () {
+      els.countOut.textContent = els.count.value;
+    });
+    els.count.addEventListener('change', runExtraction);
+
+    els.copyCss.addEventListener('click', function () {
+      if (!currentPalette.length) return;
+      var lines = [':root {'];
+      currentPalette.forEach(function (c, i) {
+        lines.push('  --palette-' + (i + 1) + ': ' + rgbToHex(c.r, c.g, c.b) + ';');
+      });
+      lines.push('}');
+      PB.copyText(lines.join('\n')).then(function () {
+        PB.toast('Copied ' + currentPalette.length + ' CSS variables');
+      });
+    });
+
+    function load(file) {
+      els.status.textContent = '';
+      els.copyCss.disabled = true;
+
+      PB.decodeImage(file).then(function (img) {
+        currentImageData = buildSampleCanvas(img);
+        img.release();
+
+        els.empty.hidden = true;
+        els.result.hidden = false;
+        runExtraction();
+      }).catch(function (err) {
+        els.status.textContent = err.message ||
+          'That file couldn\'t be opened. It may be damaged, or in a format this browser doesn\'t read.';
+        els.empty.hidden = false;
+        els.result.hidden = true;
+      });
+    }
+
+    PB.createDropzone(els.drop, {
+      multiple: false,
+      onReject: function (message) {
+        els.dropError.textContent = message;
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.dropError.hidden = true;
+        if (files.length) load(files[0]);
+      }
+    });
+
+    PB.takeHandoff().then(function (files) {
+      if (files.length) load(files[0]);
+    });
+  });
 })();
 </script>
 </body>

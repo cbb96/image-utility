@@ -3,35 +3,57 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Metadata viewer — read and strip EXIF &amp; GPS data | Pixelbench</title>
+<meta name="description" content="Read the EXIF, camera and GPS metadata hidden inside a photo, then strip it with a clean re-encode. Everything happens in your browser — nothing is uploaded.">
+<link rel="canonical" href="https://example.pages.dev/metadata.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Metadata viewer — read and strip EXIF & GPS data">
+<meta property="og:description" content="See exactly what a photo's EXIF data reveals, including GPS location, then strip it in your browser.">
+<meta property="og:url" content="https://example.pages.dev/metadata.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
 
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<!-- Page-specific: EXIF table + map link -->
+<style>
+  .exif-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  .exif-table th, .exif-table td { padding: 0.55rem 0.7rem; text-align: left; border-bottom: 1px solid var(--line); }
+  .exif-table th {
+    width: 40%; font-weight: 600; color: var(--ink-soft);
+    font-family: var(--font-mono); font-size: 0.78rem;
+  }
+  .exif-table td { font-family: var(--font-mono); color: var(--ink); overflow-wrap: anywhere; }
+  .exif-table tr:last-child th, .exif-table tr:last-child td { border-bottom: 0; }
+  .exif-section-title {
+    font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+    margin: 1.4rem 0 0.5rem;
+  }
+  .exif-section-title:first-child { margin-top: 0; }
+  .map-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    margin-top: 0.6rem; font-size: 0.88rem; font-weight: 600;
+    color: var(--accent); text-decoration: none;
+  }
+  .map-link:hover { text-decoration: underline; }
+</style>
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 -->
 
@@ -40,25 +62,34 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
+      "@type": "SoftwareApplication",
+      "name": "Image metadata viewer",
+      "url": "https://example.pages.dev/metadata.html",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any modern browser",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+      "description": "Read EXIF, camera and GPS metadata from a photo and strip it with a clean re-encode, entirely in the browser."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Metadata", "item": "https://example.pages.dev/metadata.html" }
+      ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+        { "@type": "Question", "name": "What is EXIF data?",
+          "acceptedAnswer": { "@type": "Answer", "text": "EXIF is a block of metadata that cameras and phones embed inside a JPEG file: camera make and model, exposure settings, the date and time the photo was taken, and often the exact GPS coordinates of where it was shot." } },
+        { "@type": "Question", "name": "Why don't PNG or WebP files show EXIF data here?",
+          "acceptedAnswer": { "@type": "Answer", "text": "EXIF is a JPEG and TIFF convention. PNG and WebP can carry limited metadata in their own chunk formats, but phone cameras almost never write GPS or camera data into them, so there is usually nothing to find." } },
+        { "@type": "Question", "name": "Does this upload my photo anywhere to read its metadata?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The file is read as raw bytes in your browser with the File API and parsed directly. Nothing leaves your device, which is also why this works offline." } },
+        { "@type": "Question", "name": "How does stripping metadata actually work?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The image is decoded to pixels and redrawn on a blank canvas, then re-encoded from scratch. A freshly encoded file has no EXIF segment to carry over, so everything from camera model to GPS coordinates is gone in the output." } },
+        { "@type": "Question", "name": "Will stripping metadata change how my photo looks?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No, the pixels are copied exactly. Orientation stored in EXIF is applied before the redraw, so a portrait photo stays upright even though the rotation tag itself is removed." } }
       ]
     }
   ]
@@ -83,10 +114,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
       <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -107,37 +138,219 @@
 
 <main id="main">
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Strip Metadata</h1>
-                <p>Remove EXIF and GPS data from your photos before sharing.</p>
-            </header>
-            <div class="tool-layout">
-                <div>
-                    <section class="panel">
-                        <div class="panel-head"><h2>Settings</h2></div>
-                        <div class="panel-body">
-                            <p class='field-note'>All metadata is automatically scrubbed during processing.</p>
-                            <button class="btn btn-primary btn-block" style="margin-top:1rem;">Process</button>
-                        </div>
-                    </section>
-                </div>
-                <div>
-                    <div class="drop" data-drop>
-                        <div class="drop-idle">
-                            <p class="drop-lede">Drop images here</p>
-                        </div>
-                    </div>
-                    <section class="panel" style="margin-top:1rem">
-                        <div class="panel-head"><h2>Queue</h2></div>
-                        <div class="panel-body">
-                            <div class="empty">No images yet</div>
-                        </div>
-                    </section>
-                </div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Metadata</span>
+    </nav>
+    <header class="page-head">
+      <h1>Metadata viewer</h1>
+      <p>
+        See exactly what's hidden inside a photo's EXIF data — camera model, exposure
+        settings, timestamp, and often the precise GPS coordinates of where it was taken —
+        then strip it all with one click.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>File</h2></div>
+          <div class="panel-body">
+            <dl class="stats">
+              <div class="stat"><dt>Name</dt><dd data-stat-name>—</dd></div>
+              <div class="stat"><dt>Type</dt><dd data-stat-type>—</dd></div>
+              <div class="stat"><dt>Size</dt><dd data-stat-size>—</dd></div>
+              <div class="stat"><dt>Pixels</dt><dd data-stat-dims>—</dd></div>
+            </dl>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Strip metadata</h2></div>
+          <div class="panel-body">
+            <p class="field-note">
+              Re-encodes the image from raw pixels onto a blank canvas. The output keeps
+              the same dimensions and format where possible, with no EXIF segment at all.
+            </p>
+            <button class="btn btn-primary btn-block" type="button" data-strip disabled style="margin-top:0.9rem">Strip metadata and download</button>
+            <p class="field-note" data-status role="status" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="/convert.html">Convert format</a>
+              <a href="/compress.html">Compress</a>
+              <a href="/base64.html">Base64 &amp; data URI</a>
+              <a href="/palette.html">Colour palette</a>
             </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+        <div class="drop" data-drop>
+          <input type="file" id="pick" accept="image/*" hidden data-drop-input>
+          <div class="drop-idle">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+              <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+            </svg>
+            <p class="drop-lede">Drop an image here</p>
+            <p class="drop-hint">or <label class="link-btn" for="pick">choose a file</label> · one at a time</p>
+          </div>
+          <p class="drop-error" data-drop-error role="alert" hidden></p>
         </div>
-        
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2>Metadata found</h2></div>
+          <div class="panel-body">
+            <div class="empty" data-empty>
+              <strong>Nothing loaded yet</strong>
+              <p>Drop a JPEG above. Photos straight off a phone or camera usually carry the most — screenshots and already-processed images usually carry the least.</p>
+            </div>
+
+            <div data-result hidden>
+              <div data-no-exif hidden>
+                <p class="notice notice-warn">No EXIF metadata found in this file. That's common for PNG and WebP, for screenshots, or for JPEGs that have already been stripped or re-exported through a canvas.</p>
+              </div>
+
+              <div data-exif-content hidden>
+                <div data-gps-block hidden>
+                  <p class="exif-section-title">Location</p>
+                  <table class="exif-table">
+                    <tbody data-gps-rows></tbody>
+                  </table>
+                  <a class="map-link" data-map-link href="#" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11Z"></path><circle cx="12" cy="10" r="2.4"></circle></svg>
+                    View on map
+                  </a>
+                  <p class="field-note" style="margin-top:0.6rem">This is exactly why stripping metadata matters before sharing a photo publicly — the exact spot it was taken is embedded in the file itself.</p>
+                </div>
+
+                <div data-camera-block hidden>
+                  <p class="exif-section-title">Camera</p>
+                  <table class="exif-table"><tbody data-camera-rows></tbody></table>
+                </div>
+
+                <div data-shot-block hidden>
+                  <p class="exif-section-title">Shot settings</p>
+                  <table class="exif-table"><tbody data-shot-rows></tbody></table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="metadata-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ── Written content ───────────────────────────────── -->
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>What's actually inside a photo</h2>
+        <p>
+          Most cameras and phones write a block of structured metadata called EXIF into
+          every JPEG they produce. It sits inside the file as an APP1 marker segment,
+          separate from the pixel data, and describes the conditions the photo was taken
+          under: the camera or phone model, the lens, the exposure time, aperture and ISO,
+          the date and time, and — if location services were on — the GPS coordinates,
+          accurate enough to place a pin on the exact spot someone was standing.
+        </p>
+        <p>
+          None of this is visible when you look at the image. It travels invisibly with
+          the file, through email attachments, cloud backups, and any website that doesn't
+          explicitly strip it before serving the file back out.
+        </p>
+
+        <h3>Why GPS data is the one to worry about</h3>
+        <p>
+          Camera model and exposure settings are mostly harmless trivia. GPS coordinates
+          are different — they can reveal a home address, a workplace, or a child's school,
+          simply from a photo someone meant to share casually. This tool decodes those
+          coordinates the same way an image host or social network could, and plots them
+          on a map, specifically to make that risk visible before you post something.
+        </p>
+
+        <h3>How this reader works</h3>
+        <p>
+          The file is read as raw bytes and parsed by hand in your browser: the tool looks
+          for the JPEG start-of-image marker, walks the marker segments until it finds an
+          APP1 segment beginning with the bytes <code>Exif\0\0</code>, then reads the TIFF
+          header that follows to work out the byte order and walk the tag directory. Camera
+          fields live in the main image directory; exposure, aperture, ISO and focal length
+          live in a linked sub-directory; GPS fields live in another. It's the same format
+          every EXIF reader parses, implemented from the specification rather than a
+          library.
+        </p>
+
+        <hr>
+
+        <h2>Stripping metadata</h2>
+        <p>
+          The "Strip metadata and download" button doesn't edit the EXIF segment — it
+          ignores it entirely. The image is decoded to raw pixels and drawn onto a new,
+          blank canvas at the same resolution, then re-encoded from scratch. A freshly
+          encoded file simply has nowhere for old metadata to live, so the output is clean
+          by construction rather than by careful removal. This is the same mechanism the
+          convert and compress tools use, which is why converting or compressing a photo
+          also happens to strip its metadata as a side effect.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>What is EXIF data?</summary>
+          <p>A block of metadata that cameras and phones embed inside a JPEG file: camera make and model, exposure settings, the date and time the photo was taken, and often the exact GPS coordinates of where it was shot.</p>
+        </details>
+        <details>
+          <summary>Why don't PNG or WebP files show EXIF data here?</summary>
+          <p>EXIF is a JPEG and TIFF convention. PNG and WebP can carry limited metadata in their own chunk formats, but phone cameras almost never write GPS or camera data into them, so there is usually nothing to find.</p>
+        </details>
+        <details>
+          <summary>Does this upload my photo anywhere to read its metadata?</summary>
+          <p>No. The file is read as raw bytes in your browser with the File API and parsed directly. Nothing leaves your device, which is also why this works offline.</p>
+        </details>
+        <details>
+          <summary>How does stripping metadata actually work?</summary>
+          <p>The image is decoded to pixels and redrawn on a blank canvas, then re-encoded from scratch. A freshly encoded file has no EXIF segment to carry over, so everything from camera model to GPS coordinates is gone in the output.</p>
+        </details>
+        <details>
+          <summary>Will stripping metadata change how my photo looks?</summary>
+          <p>No, the pixels are copied exactly. Orientation stored in EXIF is applied before the redraw, so a portrait photo stays upright even though the rotation tag itself is removed.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-foot">
@@ -183,19 +396,425 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">This metadata viewer needs JavaScript, because the EXIF parsing and stripping run in your browser rather than on a server. Nothing is sent anywhere either way.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 
 <script>
-(function() {
-    var PB = window.Pixelbench;
-    if (!PB) return;
-    PB.ready(function() {
-        var drop = document.querySelector('[data-drop]');
-        if (drop) PB.createDropzone(drop, { onFiles: function(f) { PB.toast('Files loaded!'); }});
+/* ============================================================
+   Metadata viewer — page logic
+   Depends on window.Pixelbench from /assets/js/app.js
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  /* ----------------------------------------------------------
+     EXIF/TIFF parsing, from scratch, no library.
+
+     JPEG structure: 0xFFD8 start-of-image, then a sequence of
+     marker segments (0xFFxx, u16 length, payload). We look for
+     an APP1 (0xFFE1) segment whose payload starts with the
+     ASCII bytes "Exif\0\0", followed by a TIFF header:
+       byte order ("II" little-endian or "MM" big-endian)
+       0x002A magic
+       u32 offset to IFD0 (relative to the start of the TIFF header)
+     Each IFD is: u16 entry count, then that many 12-byte entries
+     (tag u16, type u16, count u32, value/offset u32), then a u32
+     offset to the next IFD (0 if none).
+  ---------------------------------------------------------- */
+
+  var TYPE_SIZE = { 1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 7: 1, 9: 4, 10: 8 }; // BYTE,ASCII,SHORT,LONG,RATIONAL,UNDEFINED,SLONG,SRATIONAL
+
+  function DataCursor(view, littleEndian) {
+    this.view = view;
+    this.le = littleEndian;
+  }
+  DataCursor.prototype.u16 = function (off) { return this.view.getUint16(off, this.le); };
+  DataCursor.prototype.u32 = function (off) { return this.view.getUint32(off, this.le); };
+  DataCursor.prototype.i32 = function (off) { return this.view.getInt32(off, this.le); };
+
+  // Read a single IFD entry's value(s) as an array of numbers, or a string for ASCII.
+  function readEntryValue(dc, tiffStart, type, count, valueOffsetPos) {
+    var size = (TYPE_SIZE[type] || 1) * count;
+    var dataPos = size <= 4 ? valueOffsetPos : tiffStart + dc.u32(valueOffsetPos);
+
+    if (type === 2) { // ASCII
+      var bytes = [];
+      for (var i = 0; i < count; i++) {
+        var b = dc.view.getUint8(dataPos + i);
+        if (b === 0) break;
+        bytes.push(b);
+      }
+      return String.fromCharCode.apply(null, bytes);
+    }
+
+    var out = [];
+    for (var j = 0; j < count; j++) {
+      var p = dataPos + j * (TYPE_SIZE[type] || 1);
+      if (type === 1 || type === 7) out.push(dc.view.getUint8(p));
+      else if (type === 3) out.push(dc.view.getUint16(p, dc.le));
+      else if (type === 4) out.push(dc.view.getUint32(p, dc.le));
+      else if (type === 9) out.push(dc.view.getInt32(p, dc.le));
+      else if (type === 5) out.push(dc.view.getUint32(p, dc.le) / dc.view.getUint32(p + 4, dc.le));
+      else if (type === 10) out.push(dc.view.getInt32(p, dc.le) / dc.view.getInt32(p + 4, dc.le));
+      else out.push(dc.view.getUint32(p, dc.le));
+    }
+    return out;
+  }
+
+  // Parse one IFD starting at `offset` (relative to tiffStart). Returns { tags: {tagNum: value}, next: offset|0 }.
+  function parseIFD(dc, tiffStart, offset) {
+    var tags = {};
+    var pos = tiffStart + offset;
+    var count = dc.u16(pos);
+    pos += 2;
+    for (var i = 0; i < count; i++) {
+      var entryPos = pos + i * 12;
+      var tag = dc.u16(entryPos);
+      var type = dc.u16(entryPos + 2);
+      var num = dc.u32(entryPos + 4);
+      if (!TYPE_SIZE[type] || num <= 0 || num > 65536) continue; // skip unknown/unreasonable
+      try {
+        tags[tag] = readEntryValue(dc, tiffStart, type, num, entryPos + 8);
+      } catch (err) { /* malformed entry, skip it */ }
+    }
+    var nextPos = pos + count * 12;
+    var next = 0;
+    try { next = dc.u32(nextPos); } catch (err) {}
+    return { tags: tags, next: next };
+  }
+
+  // Find the first APP1 "Exif\0\0" segment in a JPEG ArrayBuffer and parse it.
+  // Returns { ifd0: {}, exif: {}, gps: {} } or null if none found.
+  function parseExifFromJpeg(buf) {
+    var view = new DataView(buf);
+    if (view.byteLength < 4 || view.getUint16(0) !== 0xFFD8) return null;
+
+    var pos = 2;
+    while (pos + 4 <= view.byteLength) {
+      var marker = view.getUint16(pos);
+      if ((marker & 0xFF00) !== 0xFF00) break; // not a marker, bail out
+      // Markers with no payload length field.
+      if (marker === 0xFFD8 || marker === 0xFFD9 || (marker >= 0xFFD0 && marker <= 0xFFD7)) {
+        pos += 2;
+        continue;
+      }
+      var segLen = view.getUint16(pos + 2);
+      if (marker === 0xFFE1) {
+        var payloadStart = pos + 4;
+        if (hasExifHeader(view, payloadStart)) {
+          return parseExifSegment(buf, payloadStart + 6);
+        }
+      }
+      if (marker === 0xFFDA) break; // start-of-scan: no more markers to look at
+      pos += 2 + segLen;
+    }
+    return null;
+  }
+
+  function hasExifHeader(view, pos) {
+    var sig = 'Exif\0\0';
+    if (pos + 6 > view.byteLength) return false;
+    for (var i = 0; i < 6; i++) {
+      if (view.getUint8(pos + i) !== sig.charCodeAt(i)) return false;
+    }
+    return true;
+  }
+
+  function parseExifSegment(buf, tiffStart) {
+    var view = new DataView(buf);
+    var bom = String.fromCharCode(view.getUint8(tiffStart), view.getUint8(tiffStart + 1));
+    var le;
+    if (bom === 'II') le = true;
+    else if (bom === 'MM') le = false;
+    else return null;
+
+    var dc = new DataCursor(view, le);
+    var magic = dc.u16(tiffStart + 2);
+    if (magic !== 0x002A) return null;
+
+    var ifd0Offset = dc.u32(tiffStart + 4);
+    var ifd0 = parseIFD(dc, tiffStart, ifd0Offset).tags;
+
+    var exifTags = {};
+    if (ifd0[0x8769] && ifd0[0x8769].length) {
+      try { exifTags = parseIFD(dc, tiffStart, ifd0[0x8769][0]).tags; } catch (err) {}
+    }
+
+    var gpsTags = {};
+    if (ifd0[0x8825] && ifd0[0x8825].length) {
+      try { gpsTags = parseIFD(dc, tiffStart, ifd0[0x8825][0]).tags; } catch (err) {}
+    }
+
+    return { ifd0: ifd0, exif: exifTags, gps: gpsTags };
+  }
+
+  /* ---- Formatting helpers ---- */
+
+  function fmtRational(v) {
+    if (!v || !v.length) return null;
+    return v[0];
+  }
+
+  function fmtExposure(v) {
+    var n = fmtRational(v);
+    if (n == null || !isFinite(n) || n <= 0) return null;
+    if (n >= 1) return n.toFixed(1) + ' s';
+    var denom = Math.round(1 / n);
+    return '1/' + denom + ' s';
+  }
+
+  function fmtFNumber(v) {
+    var n = fmtRational(v);
+    if (n == null || !isFinite(n)) return null;
+    return 'f/' + (Math.round(n * 10) / 10);
+  }
+
+  function fmtFocalLength(v) {
+    var n = fmtRational(v);
+    if (n == null || !isFinite(n)) return null;
+    return (Math.round(n * 10) / 10) + ' mm';
+  }
+
+  function fmtISO(v) {
+    if (!v || !v.length) return null;
+    return String(v[0]);
+  }
+
+  function fmtOrientation(v) {
+    if (!v || !v.length) return null;
+    var map = {
+      1: 'Normal', 2: 'Flipped horizontally', 3: 'Rotated 180°',
+      4: 'Flipped vertically', 5: 'Rotated 90° CW, flipped', 6: 'Rotated 90° CW',
+      7: 'Rotated 90° CCW, flipped', 8: 'Rotated 90° CCW'
+    };
+    return map[v[0]] || String(v[0]);
+  }
+
+  function fmtAscii(v) {
+    if (typeof v !== 'string') return null;
+    var s = v.trim();
+    return s ? s : null;
+  }
+
+  // GPS coordinate: 3 rationals (degrees, minutes, seconds) plus a ref letter.
+  function gpsToDecimal(coord, ref) {
+    if (!coord || coord.length < 3) return null;
+    var deg = coord[0], min = coord[1], sec = coord[2];
+    var dec = deg + min / 60 + sec / 3600;
+    if (ref === 'S' || ref === 'W') dec = -dec;
+    return dec;
+  }
+
+  function addRow(tbody, label, value) {
+    if (value == null || value === '') return false;
+    var tr = document.createElement('tr');
+    var th = document.createElement('th');
+    th.textContent = label;
+    var td = document.createElement('td');
+    td.textContent = value;
+    tr.appendChild(th);
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return true;
+  }
+
+  /* ---- Page wiring ---- */
+
+  PB.ready(function () {
+    var els = {
+      drop: document.querySelector('[data-drop]'),
+      dropError: document.querySelector('[data-drop-error]'),
+      statName: document.querySelector('[data-stat-name]'),
+      statType: document.querySelector('[data-stat-type]'),
+      statSize: document.querySelector('[data-stat-size]'),
+      statDims: document.querySelector('[data-stat-dims]'),
+      strip: document.querySelector('[data-strip]'),
+      status: document.querySelector('[data-status]'),
+      empty: document.querySelector('[data-empty]'),
+      result: document.querySelector('[data-result]'),
+      noExif: document.querySelector('[data-no-exif]'),
+      exifContent: document.querySelector('[data-exif-content]'),
+      gpsBlock: document.querySelector('[data-gps-block]'),
+      gpsRows: document.querySelector('[data-gps-rows]'),
+      mapLink: document.querySelector('[data-map-link]'),
+      cameraBlock: document.querySelector('[data-camera-block]'),
+      cameraRows: document.querySelector('[data-camera-rows]'),
+      shotBlock: document.querySelector('[data-shot-block]'),
+      shotRows: document.querySelector('[data-shot-rows]')
+    };
+
+    var currentFile = null;
+
+    function resetResult() {
+      els.noExif.hidden = true;
+      els.exifContent.hidden = true;
+      els.gpsBlock.hidden = true;
+      els.cameraBlock.hidden = true;
+      els.shotBlock.hidden = true;
+      els.gpsRows.innerHTML = '';
+      els.cameraRows.innerHTML = '';
+      els.shotRows.innerHTML = '';
+    }
+
+    function showFile(file, img) {
+      els.statName.textContent = file.name;
+      els.statType.textContent = PB.typeLabel(file);
+      els.statSize.textContent = PB.formatBytes(file.size);
+      els.statDims.textContent = img.width.toLocaleString() + ' × ' + img.height.toLocaleString();
+      els.empty.hidden = true;
+      els.result.hidden = false;
+      els.strip.disabled = false;
+    }
+
+    function renderExif(data) {
+      resetResult();
+
+      if (!data) {
+        els.noExif.hidden = false;
+        return;
+      }
+
+      var ifd0 = data.ifd0, exif = data.exif, gps = data.gps;
+      var anyRow = false;
+
+      // Camera
+      anyRow = addRow(els.cameraRows, 'Make', fmtAscii(ifd0[0x010F])) || anyRow;
+      anyRow = addRow(els.cameraRows, 'Model', fmtAscii(ifd0[0x0110])) || anyRow;
+      anyRow = addRow(els.cameraRows, 'Orientation', fmtOrientation(ifd0[0x0112])) || anyRow;
+      anyRow = addRow(els.cameraRows, 'Date taken', fmtAscii(ifd0[0x0132]) || fmtAscii(exif[0x9003])) || anyRow;
+      var cameraHasRows = els.cameraRows.children.length > 0;
+      els.cameraBlock.hidden = !cameraHasRows;
+
+      // Shot settings — live in the Exif sub-IFD
+      var shotAdded = false;
+      shotAdded = addRow(els.shotRows, 'Exposure time', fmtExposure(exif[0x829A])) || shotAdded;
+      shotAdded = addRow(els.shotRows, 'F-number', fmtFNumber(exif[0x829D])) || shotAdded;
+      shotAdded = addRow(els.shotRows, 'ISO', fmtISO(exif[0x8827])) || shotAdded;
+      shotAdded = addRow(els.shotRows, 'Focal length', fmtFocalLength(exif[0x920A])) || shotAdded;
+      els.shotBlock.hidden = !shotAdded;
+
+      // GPS — refs (0x0001 lat, 0x0003 lon) are ASCII 'N'/'S' or 'E'/'W'.
+      var lat = gpsToDecimal(gps[0x0002], typeof gps[0x0001] === 'string' ? gps[0x0001] : null);
+      var lon = gpsToDecimal(gps[0x0004], typeof gps[0x0003] === 'string' ? gps[0x0003] : null);
+
+      if (lat != null && lon != null && isFinite(lat) && isFinite(lon)) {
+        var latStr = Math.abs(lat).toFixed(6) + '° ' + (lat >= 0 ? 'N' : 'S');
+        var lonStr = Math.abs(lon).toFixed(6) + '° ' + (lon >= 0 ? 'E' : 'W');
+        addRow(els.gpsRows, 'Latitude', latStr);
+        addRow(els.gpsRows, 'Longitude', lonStr);
+        els.gpsBlock.hidden = false;
+        var latFixed = lat.toFixed(6), lonFixed = lon.toFixed(6);
+        els.mapLink.href = 'https://www.openstreetmap.org/?mlat=' + latFixed + '&mlon=' + lonFixed + '#map=15/' + latFixed + '/' + lonFixed;
+      } else {
+        els.gpsBlock.hidden = true;
+      }
+
+      var hasAnything = cameraHasRows || shotAdded || !els.gpsBlock.hidden;
+      if (!hasAnything) {
+        els.noExif.hidden = false;
+        els.exifContent.hidden = true;
+      } else {
+        els.exifContent.hidden = false;
+      }
+    }
+
+    function load(file) {
+      currentFile = file;
+      els.strip.disabled = true;
+      els.status.textContent = '';
+      resetResult();
+      els.result.hidden = true;
+      els.empty.hidden = false;
+
+      PB.decodeImage(file).then(function (img) {
+        showFile(file, img);
+        img.release();
+
+        if (file.type !== 'image/jpeg' && !/\.(jpe?g|jfif)$/i.test(file.name)) {
+          renderExif(null);
+          return;
+        }
+
+        file.arrayBuffer().then(function (buf) {
+          var data;
+          try {
+            data = parseExifFromJpeg(buf);
+          } catch (err) {
+            data = null;
+          }
+          renderExif(data);
+        }).catch(function () {
+          renderExif(null);
+        });
+      }).catch(function (err) {
+        els.status.textContent = err.message ||
+          'That file couldn\'t be opened. It may be damaged, or in a format this browser doesn\'t read.';
+        els.empty.hidden = false;
+        els.result.hidden = true;
+      });
+    }
+
+    els.strip.addEventListener('click', function () {
+      if (!currentFile) return;
+      var file = currentFile;
+
+      els.strip.classList.add('is-busy');
+      els.strip.disabled = true;
+      els.status.textContent = 'Re-encoding…';
+
+      PB.decodeImage(file).then(function (img) {
+        var w = img.width, h = img.height;
+        if (!w || !h) { img.release(); throw new Error('This file has no fixed pixel size.'); }
+
+        var cv = document.createElement('canvas');
+        cv.width = w;
+        cv.height = h;
+        var ctx = cv.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img.source, 0, 0, w, h);
+        img.release();
+
+        var mime = file.type && file.type.indexOf('image/') === 0 ? file.type : 'image/png';
+
+        return PB.canEncode(mime).then(function (ok) {
+          if (!ok) mime = 'image/png';
+          return PB.canvasToBlob(cv, mime, mime === 'image/jpeg' || mime === 'image/webp' ? 0.92 : undefined);
+        }).then(function (blob) {
+          var outName = PB.renameExt(file.name, PB.extFor(mime));
+          PB.downloadBlob(blob, outName);
+          els.status.textContent = 'Downloaded ' + outName + ' with no metadata (' + PB.formatBytes(blob.size) + ').';
+        });
+      }).catch(function (err) {
+        els.status.textContent = err.message || 'Couldn\'t re-encode this file.';
+      }).then(function () {
+        els.strip.classList.remove('is-busy');
+        els.strip.disabled = false;
+      });
     });
+
+    PB.createDropzone(els.drop, {
+      multiple: false,
+      onReject: function (message) {
+        els.dropError.textContent = message;
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.dropError.hidden = true;
+        if (files.length) load(files[0]);
+      }
+    });
+
+    PB.takeHandoff().then(function (files) {
+      if (files.length) load(files[0]);
+    });
+  });
 })();
 </script>
 </body>

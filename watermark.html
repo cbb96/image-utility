@@ -3,35 +3,72 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Watermark images — add text or logo marks | Pixelbench</title>
+<meta name="description" content="Stamp a photo with a text or logo watermark in your browser. Position, rotate, tile and adjust opacity with a live preview before saving. Nothing is uploaded.">
+<link rel="canonical" href="https://example.pages.dev/watermark.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Watermark images — text or logo marks">
+<meta property="og:description" content="Add a positioned, rotated or tiled watermark to a photo entirely in your browser.">
+<meta property="og:url" content="https://example.pages.dev/watermark.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
 
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<!-- Page-specific: 3x3 position picker and the compact logo dropzone -->
+<style>
+  .posgrid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem;
+    margin-bottom: 0.6rem;
+  }
+  .posgrid button {
+    aspect-ratio: 1; display: grid; place-items: center;
+    font-size: 1.05rem; line-height: 1;
+    color: var(--ink-soft); background: var(--surface);
+    border: 1px solid var(--line-strong); border-radius: var(--radius);
+    cursor: pointer;
+  }
+  .posgrid button:hover { border-color: var(--ink); }
+  .posgrid button[aria-pressed="true"] {
+    color: var(--accent-ink); background: var(--accent); border-color: var(--accent);
+  }
+  .tile-btn[aria-pressed="true"] {
+    color: var(--accent-ink); background: var(--accent); border-color: var(--accent);
+  }
+  .drop-sm {
+    margin-top: 0.6rem; padding: 1rem;
+    border-radius: var(--radius);
+  }
+  .drop-sm .drop-idle { padding-block: 0.4rem; gap: 0.3rem; }
+  .drop-sm .drop-lede { font-size: 0.92rem; }
+  .drop-sm .drop-hint { font-size: 0.8rem; }
+  .logo-preview {
+    display: flex; align-items: center; gap: 0.6rem; margin-top: 0.6rem;
+  }
+  .logo-preview img {
+    width: 2.75rem; height: 2.75rem; object-fit: contain;
+    border: 1px solid var(--line); border-radius: 6px;
+    background:
+      conic-gradient(var(--check-b) 25%, transparent 0 50%, var(--check-b) 0 75%, transparent 0)
+      0 0 / 12px 12px, var(--check-a);
+  }
+</style>
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 -->
 
@@ -40,25 +77,34 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
+      "@type": "SoftwareApplication",
+      "name": "Image watermark tool",
+      "url": "https://example.pages.dev/watermark.html",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any modern browser",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+      "description": "Add a text or logo watermark to an image, with live positioning, rotation, tiling and opacity control, entirely in the browser."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Watermark", "item": "https://example.pages.dev/watermark.html" }
+      ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+        { "@type": "Question", "name": "Does the watermark stay editable after I save?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The mark is drawn directly onto the pixels and the image is re-encoded, the same way a rubber stamp works on paper. Keep an unmarked original if you might want to change the watermark later." } },
+        { "@type": "Question", "name": "Can I use a transparent PNG as my logo mark?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Transparency in the logo is preserved, and the opacity slider layers on top of that, so a logo that is already partly see-through gets even fainter as you lower it." } },
+        { "@type": "Question", "name": "Will the watermark end up the right size on differently sized photos?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Position, margin and scale are all calculated from each image's actual pixel dimensions, not the size the preview happens to be shown at, so the same settings reapply sensibly whether the source is 800px or 8000px wide." } },
+        { "@type": "Question", "name": "What does the Tile option do?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It repeats the mark in a grid across the whole photo instead of placing it once, which makes the watermark much harder to crop out — the usual choice for proofs and preview galleries." } },
+        { "@type": "Question", "name": "Does watermarking remove EXIF data?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Like every tool here, the image is decoded, redrawn on a canvas and re-encoded, so EXIF, GPS and colour profile data are dropped from the saved file." } }
       ]
     }
   ]
@@ -83,10 +129,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
       <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -107,37 +153,307 @@
 
 <main id="main">
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Watermark</h1>
-                <p>Stamp your images with text or logo watermarks.</p>
-            </header>
-            <div class="tool-layout">
-                <div>
-                    <section class="panel">
-                        <div class="panel-head"><h2>Settings</h2></div>
-                        <div class="panel-body">
-                            <div class='field'><label>Watermark Text</label><input type='text' value='© Copyright'></div><div class='field'><label>Opacity</label><input type='range' value='50'></div>
-                            <button class="btn btn-primary btn-block" style="margin-top:1rem;">Process</button>
-                        </div>
-                    </section>
-                </div>
-                <div>
-                    <div class="drop" data-drop>
-                        <div class="drop-idle">
-                            <p class="drop-lede">Drop images here</p>
-                        </div>
-                    </div>
-                    <section class="panel" style="margin-top:1rem">
-                        <div class="panel-head"><h2>Queue</h2></div>
-                        <div class="panel-body">
-                            <div class="empty">No images yet</div>
-                        </div>
-                    </section>
-                </div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Watermark</span>
+    </nav>
+    <header class="page-head">
+      <h1>Watermark an image</h1>
+      <p>
+        Stamp a photo with text or a logo. Position it on a 3×3 grid or tile it
+        across the whole frame, rotate and scale it, and watch the result update
+        live before you save.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Watermark</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <span class="field-label">Mark type</span>
+              <div class="seg" data-mode role="group" aria-label="Watermark type">
+                <button type="button" data-mode-btn="text" aria-pressed="true">Text</button>
+                <button type="button" data-mode-btn="logo" aria-pressed="false">Logo image</button>
+              </div>
             </div>
+
+            <!-- Text mode fields -->
+            <div data-text-fields>
+              <div class="field">
+                <label for="wm-text">Watermark text</label>
+                <input type="text" id="wm-text" data-text value="SAMPLE" maxlength="80">
+              </div>
+
+              <div class="field">
+                <label for="wm-fontsize">Font size <output for="wm-fontsize" data-fontsize-out>48</output>px</label>
+                <input type="range" id="wm-fontsize" data-fontsize min="8" max="400" step="1" value="48">
+                <p class="field-note">Measured in the image's own pixels, not the preview's on-screen size.</p>
+              </div>
+
+              <div class="field">
+                <label for="wm-color">Text colour</label>
+                <div class="field-row">
+                  <input type="text" id="wm-color" data-text-color value="#FFFFFF" spellcheck="false">
+                  <input type="color" data-text-color-picker value="#ffffff" aria-label="Pick text colour" style="flex:0 0 3rem;height:2.6rem;padding:2px">
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="wm-text-opacity">Opacity <output for="wm-text-opacity" data-text-opacity-out>60</output>%</label>
+                <input type="range" id="wm-text-opacity" data-text-opacity min="0" max="100" step="1" value="60">
+              </div>
+            </div>
+
+            <!-- Logo mode fields -->
+            <div data-logo-fields hidden>
+              <div class="field">
+                <span class="field-label">Logo image</span>
+                <div class="drop drop-sm" data-logo-drop>
+                  <input type="file" id="pick-logo" accept="image/*" hidden data-logo-drop-input>
+                  <div class="drop-idle">
+                    <p class="drop-lede">Drop a logo here</p>
+                    <p class="drop-hint">or <label class="link-btn" for="pick-logo">choose a file</label></p>
+                  </div>
+                  <p class="drop-error" data-logo-drop-error role="alert" hidden></p>
+                </div>
+                <div class="logo-preview" data-logo-preview hidden>
+                  <img data-logo-thumb alt="">
+                  <span class="field-note" data-logo-note style="margin-top:0"></span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="wm-logo-opacity">Opacity <output for="wm-logo-opacity" data-logo-opacity-out>90</output>%</label>
+                <input type="range" id="wm-logo-opacity" data-logo-opacity min="0" max="100" step="1" value="90">
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Position</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <span class="field-label">Placement</span>
+              <div class="posgrid" data-posgrid role="group" aria-label="Watermark position">
+                <button type="button" data-pos="tl" aria-pressed="false" aria-label="Top left">↖</button>
+                <button type="button" data-pos="t" aria-pressed="false" aria-label="Top centre">↑</button>
+                <button type="button" data-pos="tr" aria-pressed="false" aria-label="Top right">↗</button>
+                <button type="button" data-pos="l" aria-pressed="false" aria-label="Middle left">←</button>
+                <button type="button" data-pos="c" aria-pressed="false" aria-label="Centre">•</button>
+                <button type="button" data-pos="r" aria-pressed="false" aria-label="Middle right">→</button>
+                <button type="button" data-pos="bl" aria-pressed="false" aria-label="Bottom left">↙</button>
+                <button type="button" data-pos="b" aria-pressed="false" aria-label="Bottom centre">↓</button>
+                <button type="button" data-pos="br" aria-pressed="true" aria-label="Bottom right">↘</button>
+              </div>
+              <button type="button" class="btn btn-sm btn-block tile-btn" data-tile-btn aria-pressed="false">Tile across image</button>
+            </div>
+
+            <div class="field">
+              <label for="wm-rotation">Rotation <output for="wm-rotation" data-rotation-out>0</output>°</label>
+              <input type="range" id="wm-rotation" data-rotation min="-45" max="45" step="1" value="0">
+            </div>
+
+            <div class="field" data-scale-field hidden>
+              <label for="wm-scale">Logo scale <output for="wm-scale" data-scale-out>100</output>%</label>
+              <input type="range" id="wm-scale" data-scale min="10" max="300" step="5" value="100">
+              <p class="field-note">Relative size of the logo against the image's shorter side.</p>
+            </div>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Output</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <label for="wm-format">Save as</label>
+              <select id="wm-format" data-format>
+                <option value="image/jpeg" selected>JPEG (.jpg)</option>
+                <option value="image/png">PNG (.png)</option>
+                <option value="image/webp">WebP (.webp)</option>
+                <option value="image/avif">AVIF (.avif)</option>
+                <option value="image/bmp">BMP (.bmp)</option>
+              </select>
+              <p class="field-note" data-format-note></p>
+            </div>
+
+            <div class="field" data-quality-field>
+              <label for="wm-quality">Quality <output for="wm-quality" data-quality-out>86</output></label>
+              <input type="range" id="wm-quality" data-quality min="10" max="100" step="1" value="86">
+            </div>
+
+            <div class="field" data-matte-field hidden>
+              <label for="wm-matte">Background behind transparency</label>
+              <div class="field-row">
+                <input type="text" id="wm-matte" data-matte value="#FFFFFF" spellcheck="false">
+                <input type="color" data-matte-picker value="#ffffff" aria-label="Pick background colour" style="flex:0 0 3rem;height:2.6rem;padding:2px">
+              </div>
+              <p class="field-note">This format has no alpha channel, so transparent areas need a solid colour underneath.</p>
+            </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-save disabled>Save image</button>
+
+            <div class="progress" data-progress hidden style="margin-top:.9rem">
+              <div class="progress-bar" data-progress-bar></div>
+            </div>
+            <p class="field-note" data-status role="status" aria-live="polite"></p>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="/convert.html">Convert format</a>
+              <a href="/compress.html">Compress</a>
+              <a href="/resize.html">Resize</a>
+              <a href="/crop.html">Crop</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+        <div class="drop" data-drop>
+          <input type="file" id="pick" accept="image/*" hidden data-drop-input>
+          <div class="drop-idle">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+              <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+            </svg>
+            <p class="drop-lede">Drop an image here</p>
+            <p class="drop-hint">or <label class="link-btn" for="pick">choose a file</label></p>
+          </div>
+          <p class="drop-error" data-drop-error role="alert" hidden></p>
         </div>
-        
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2>Preview</h2></div>
+          <div class="panel-body">
+            <div class="stage" data-stage>
+              <div class="empty" data-stage-empty>
+                <strong>Nothing loaded yet</strong>
+                <p>Drop an image above. The watermark redraws live as you change any setting on the left.</p>
+              </div>
+              <canvas data-canvas hidden></canvas>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="watermark-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ── Written content ───────────────────────────────── -->
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>Text marks versus logo marks</h2>
+        <p>
+          A text watermark is the fastest way to claim a proof or a preview —
+          "SAMPLE", a name, a copyright line. It's legible at any size and costs
+          nothing to set up. A logo mark takes more preparation but reads as more
+          deliberate, and a PNG with a transparent background blends into the
+          photo instead of sitting on top of it as a block.
+        </p>
+        <p>
+          Both share the same placement, rotation and opacity controls, so
+          switching between them keeps the position you already chose.
+        </p>
+
+        <h2>Choosing a position</h2>
+        <p>
+          Corner placements are the least intrusive and the easiest to crop out,
+          which makes them a reasonable choice when the watermark is mostly a
+          courtesy rather than a deterrent. Centre placement is the hardest to
+          remove without damaging the image underneath, but it's also the most
+          visible, which matters for a portfolio proof someone shouldn't be able
+          to screenshot around.
+        </p>
+        <p>
+          Tile mode repeats the mark in a grid across the entire frame. It's the
+          most resistant to cropping, since removing every instance means
+          removing most of the photo, but it's also the most visually intrusive
+          — reserve it for genuine proofs, not finished delivery images.
+        </p>
+
+        <h2>Opacity and legibility</h2>
+        <p>
+          A watermark that's fully opaque competes with the photo for attention;
+          one that's too faint stops doing its job. Somewhere between 40% and 70%
+          opacity is the usual range for a mark meant to be seen but not dominate,
+          higher for a deliberately obvious "not for distribution" proof mark.
+        </p>
+
+        <hr>
+
+        <h2>What happens to the file</h2>
+        <p>
+          The mark is rasterised directly into the image's pixels on a canvas,
+          then the result is re-encoded in your chosen format. That means it
+          can't be peeled off later by anyone who downloads the file, but it also
+          means metadata — EXIF, GPS, colour profile — doesn't survive the trip,
+          the same as every other tool here.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>Does the watermark stay editable after I save?</summary>
+          <p>No. It's drawn directly onto the pixels, the same way a rubber stamp works on paper. Keep an unmarked original if you might want to change the watermark later.</p>
+        </details>
+        <details>
+          <summary>Can I use a transparent PNG as my logo mark?</summary>
+          <p>Yes. Transparency in the logo is preserved, and the opacity slider layers on top of that, so a logo that's already partly see-through gets even fainter as you lower it.</p>
+        </details>
+        <details>
+          <summary>Will the watermark end up the right size on differently sized photos?</summary>
+          <p>Position, margin and scale are all calculated from each image's actual pixel dimensions, not the size the preview happens to be shown at, so the same settings reapply sensibly whether the source is 800px or 8000px wide.</p>
+        </details>
+        <details>
+          <summary>What does the Tile option do?</summary>
+          <p>It repeats the mark in a grid across the whole photo instead of placing it once, which makes the watermark much harder to crop out — the usual choice for proofs and preview galleries.</p>
+        </details>
+        <details>
+          <summary>Does watermarking remove EXIF data?</summary>
+          <p>Yes. Like every tool here, the image is decoded, redrawn on a canvas and re-encoded, so EXIF, GPS and colour profile data are dropped from the saved file.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-foot">
@@ -183,19 +499,413 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">This watermarker needs JavaScript, because the drawing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 
 <script>
-(function() {
-    var PB = window.Pixelbench;
-    if (!PB) return;
-    PB.ready(function() {
-        var drop = document.querySelector('[data-drop]');
-        if (drop) PB.createDropzone(drop, { onFiles: function(f) { PB.toast('Files loaded!'); }});
+/* ============================================================
+   Watermark — page logic
+   Depends on window.Pixelbench from /assets/js/app.js
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  var ALPHA = { 'image/png': 1, 'image/webp': 1, 'image/avif': 1 };
+  var LOSSY = { 'image/jpeg': 1, 'image/webp': 1, 'image/avif': 1 };
+  var NOTES = {
+    'image/jpeg': 'Lossy. Small files, no transparency, opens anywhere.',
+    'image/png': 'Lossless with transparency.',
+    'image/webp': 'Lossy or lossless, with transparency.',
+    'image/avif': 'Smallest files at a given quality. Slower to encode.',
+    'image/bmp': 'Uncompressed and very large.'
+  };
+  var POS = ['tl', 't', 'tr', 'l', 'c', 'r', 'bl', 'b', 'br'];
+
+  var mode = 'text';
+  var position = 'br';
+  var tiling = false;
+
+  var baseFile = null, baseImg = null;
+  var logoFile = null, logoImg = null;
+
+  PB.ready(function () {
+    var els = {
+      drop: document.querySelector('[data-drop]'),
+      dropError: document.querySelector('[data-drop-error]'),
+
+      modeWrap: document.querySelector('[data-mode]'),
+      textFields: document.querySelector('[data-text-fields]'),
+      logoFields: document.querySelector('[data-logo-fields]'),
+
+      text: document.querySelector('[data-text]'),
+      fontSize: document.querySelector('[data-fontsize]'),
+      fontSizeOut: document.querySelector('[data-fontsize-out]'),
+      textColor: document.querySelector('[data-text-color]'),
+      textColorPicker: document.querySelector('[data-text-color-picker]'),
+      textOpacity: document.querySelector('[data-text-opacity]'),
+      textOpacityOut: document.querySelector('[data-text-opacity-out]'),
+
+      logoDrop: document.querySelector('[data-logo-drop]'),
+      logoDropError: document.querySelector('[data-logo-drop-error]'),
+      logoPreview: document.querySelector('[data-logo-preview]'),
+      logoThumb: document.querySelector('[data-logo-thumb]'),
+      logoNote: document.querySelector('[data-logo-note]'),
+      logoOpacity: document.querySelector('[data-logo-opacity]'),
+      logoOpacityOut: document.querySelector('[data-logo-opacity-out]'),
+
+      posgrid: document.querySelector('[data-posgrid]'),
+      tileBtn: document.querySelector('[data-tile-btn]'),
+      rotation: document.querySelector('[data-rotation]'),
+      rotationOut: document.querySelector('[data-rotation-out]'),
+      scaleField: document.querySelector('[data-scale-field]'),
+      scale: document.querySelector('[data-scale]'),
+      scaleOut: document.querySelector('[data-scale-out]'),
+
+      format: document.querySelector('[data-format]'),
+      formatNote: document.querySelector('[data-format-note]'),
+      qualityField: document.querySelector('[data-quality-field]'),
+      quality: document.querySelector('[data-quality]'),
+      qualityOut: document.querySelector('[data-quality-out]'),
+      matteField: document.querySelector('[data-matte-field]'),
+      matte: document.querySelector('[data-matte]'),
+      mattePicker: document.querySelector('[data-matte-picker]'),
+
+      save: document.querySelector('[data-save]'),
+      progress: document.querySelector('[data-progress]'),
+      progressBar: document.querySelector('[data-progress-bar]'),
+      status: document.querySelector('[data-status]'),
+
+      stage: document.querySelector('[data-stage]'),
+      stageEmpty: document.querySelector('[data-stage-empty]'),
+      canvas: document.querySelector('[data-canvas]')
+    };
+
+    var ctx = els.canvas.getContext('2d');
+    var scheduleRender = PB.debounce(function () { render(); }, 120);
+
+    /* ---- Format availability ---- */
+    Array.prototype.forEach.call(els.format.options, function (opt) {
+      PB.canEncode(opt.value).then(function (ok) {
+        if (ok) return;
+        opt.disabled = true;
+        opt.textContent = opt.textContent + ' — not supported here';
+        if (els.format.value === opt.value) {
+          els.format.value = 'image/png';
+          syncFormat();
+        }
+      });
     });
+
+    function syncFormat() {
+      var mime = els.format.value;
+      els.qualityField.hidden = !LOSSY[mime];
+      els.matteField.hidden = !!ALPHA[mime];
+      els.formatNote.textContent = NOTES[mime] || '';
+      scheduleRender();
+    }
+    els.format.addEventListener('change', syncFormat);
+    syncFormat();
+
+    els.quality.addEventListener('input', function () {
+      els.qualityOut.textContent = els.quality.value;
+    });
+
+    function wireHex(text, picker) {
+      picker.addEventListener('input', function () {
+        text.value = picker.value.toUpperCase();
+        scheduleRender();
+      });
+      text.addEventListener('input', function () {
+        if (/^#[0-9a-f]{6}$/i.test(text.value)) picker.value = text.value;
+        scheduleRender();
+      });
+    }
+    wireHex(els.matte, els.mattePicker);
+    wireHex(els.textColor, els.textColorPicker);
+
+    /* ---- Mode toggle ---- */
+    els.modeWrap.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-mode-btn]');
+      if (!btn) return;
+      mode = btn.getAttribute('data-mode-btn');
+      Array.prototype.forEach.call(els.modeWrap.querySelectorAll('button'), function (b) {
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+      });
+      els.textFields.hidden = mode !== 'text';
+      els.logoFields.hidden = mode !== 'logo';
+      els.scaleField.hidden = mode !== 'logo';
+      scheduleRender();
+    });
+
+    /* ---- Text fields ---- */
+    els.text.addEventListener('input', scheduleRender);
+    els.fontSize.addEventListener('input', function () {
+      els.fontSizeOut.textContent = els.fontSize.value;
+      scheduleRender();
+    });
+    els.textOpacity.addEventListener('input', function () {
+      els.textOpacityOut.textContent = els.textOpacity.value;
+      scheduleRender();
+    });
+
+    /* ---- Logo opacity + scale ---- */
+    els.logoOpacity.addEventListener('input', function () {
+      els.logoOpacityOut.textContent = els.logoOpacity.value;
+      scheduleRender();
+    });
+    els.scale.addEventListener('input', function () {
+      els.scaleOut.textContent = els.scale.value;
+      scheduleRender();
+    });
+    els.rotation.addEventListener('input', function () {
+      els.rotationOut.textContent = els.rotation.value;
+      scheduleRender();
+    });
+
+    /* ---- Position grid + tile ---- */
+    els.posgrid.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-pos]');
+      if (!btn) return;
+      position = btn.getAttribute('data-pos');
+      tiling = false;
+      els.tileBtn.setAttribute('aria-pressed', 'false');
+      Array.prototype.forEach.call(els.posgrid.querySelectorAll('button'), function (b) {
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+      });
+      scheduleRender();
+    });
+    els.tileBtn.addEventListener('click', function () {
+      tiling = !tiling;
+      els.tileBtn.setAttribute('aria-pressed', tiling ? 'true' : 'false');
+      scheduleRender();
+    });
+
+    /* ---- Rendering ---- */
+
+    function textMetrics(w, h) {
+      var size = PB.clamp(parseInt(els.fontSize.value, 10) || 48, 1, 4000);
+      ctx.font = '700 ' + size + 'px Archivo, sans-serif';
+      var m = ctx.measureText(els.text.value || 'SAMPLE');
+      var width = Math.max(1, m.width);
+      var height = size * 1.2;
+      return { size: size, width: width, height: height };
+    }
+
+    function logoMetrics(w, h) {
+      if (!logoImg) return null;
+      var scalePct = parseInt(els.scale.value, 10) || 100;
+      var targetW = Math.max(4, Math.min(w, h) * 0.25 * (scalePct / 100));
+      var ratio = logoImg.height / logoImg.width;
+      var targetH = targetW * ratio;
+      return { width: targetW, height: targetH };
+    }
+
+    function centerFor(key, w, h, mw, mh, pad) {
+      var left = pad + mw / 2, midX = w / 2, right = w - pad - mw / 2;
+      var top = pad + mh / 2, midY = h / 2, bottom = h - pad - mh / 2;
+      var map = {
+        tl: [left, top], t: [midX, top], tr: [right, top],
+        l: [left, midY], c: [midX, midY], r: [right, midY],
+        bl: [left, bottom], b: [midX, bottom], br: [right, bottom]
+      };
+      var p = map[key] || map.br;
+      return { cx: p[0], cy: p[1] };
+    }
+
+    function drawTextAt(cx, cy, size, rot, opacity, color) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(rot);
+      ctx.font = '700 ' + size + 'px Archivo, sans-serif';
+      ctx.fillStyle = color;
+      ctx.globalAlpha = opacity;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(els.text.value || 'SAMPLE', 0, 0);
+      ctx.restore();
+    }
+
+    function drawLogoAt(cx, cy, mw, mh, rot, opacity) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(rot);
+      ctx.globalAlpha = opacity;
+      ctx.drawImage(logoImg.source, -mw / 2, -mh / 2, mw, mh);
+      ctx.restore();
+    }
+
+    function render() {
+      if (!baseImg) return;
+      var w = baseImg.width, h = baseImg.height;
+      els.canvas.width = w;
+      els.canvas.height = h;
+
+      var mime = els.format.value;
+      ctx.clearRect(0, 0, w, h);
+      if (!ALPHA[mime]) {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = /^#[0-9a-f]{6}$/i.test(els.matte.value) ? els.matte.value : '#FFFFFF';
+        ctx.fillRect(0, 0, w, h);
+      }
+      ctx.globalAlpha = 1;
+      ctx.drawImage(baseImg.source, 0, 0, w, h);
+
+      var rot = (parseFloat(els.rotation.value) || 0) * Math.PI / 180;
+      var pad = Math.max(6, Math.round(Math.min(w, h) * 0.035));
+
+      if (mode === 'text') {
+        var tm = textMetrics(w, h);
+        var opacity = (parseInt(els.textOpacity.value, 10) || 0) / 100;
+        var color = /^#[0-9a-f]{6}$/i.test(els.textColor.value) ? els.textColor.value : '#FFFFFF';
+        if (tiling) {
+          tileDraw(w, h, tm.width, tm.height, pad, function (cx, cy) {
+            drawTextAt(cx, cy, tm.size, rot, opacity, color);
+          });
+        } else {
+          var c = centerFor(position, w, h, tm.width, tm.height, pad);
+          drawTextAt(c.cx, c.cy, tm.size, rot, opacity, color);
+        }
+      } else if (mode === 'logo' && logoImg) {
+        var lm = logoMetrics(w, h);
+        var lopacity = (parseInt(els.logoOpacity.value, 10) || 0) / 100;
+        if (tiling) {
+          tileDraw(w, h, lm.width, lm.height, pad, function (cx, cy) {
+            drawLogoAt(cx, cy, lm.width, lm.height, rot, lopacity);
+          });
+        } else {
+          var lc = centerFor(position, w, h, lm.width, lm.height, pad);
+          drawLogoAt(lc.cx, lc.cy, lm.width, lm.height, rot, lopacity);
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      els.save.disabled = false;
+    }
+
+    function tileDraw(w, h, mw, mh, pad, drawFn) {
+      var stepX = mw * 1.9 + pad;
+      var stepY = mh * 1.9 + pad;
+      if (stepX < 4 || stepY < 4) return;
+      var row = 0;
+      for (var y = -stepY; y < h + stepY; y += stepY) {
+        var offset = (row % 2) ? stepX / 2 : 0;
+        for (var x = -stepX + offset; x < w + stepX; x += stepX) {
+          drawFn(x, y);
+        }
+        row++;
+      }
+    }
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { scheduleRender(); }).catch(function () {});
+    }
+
+    /* ---- Loading the base image ---- */
+
+    function loadBase(file) {
+      Promise.resolve(baseImg && baseImg.release()).then(function () {
+        return PB.decodeImage(file);
+      }).then(function (img) {
+        baseImg = img;
+        baseFile = file;
+        els.stageEmpty.hidden = true;
+        els.canvas.hidden = false;
+        els.status.textContent = 'Loaded ' + img.width.toLocaleString() + ' × ' + img.height.toLocaleString() + '.';
+        render();
+      }).catch(function (err) {
+        els.dropError.textContent = err.message || 'That file could not be opened.';
+        els.dropError.hidden = false;
+      });
+    }
+
+    PB.createDropzone(els.drop, {
+      multiple: false,
+      onReject: function (message) {
+        els.dropError.textContent = message;
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.dropError.hidden = true;
+        loadBase(files[0]);
+      }
+    });
+
+    PB.takeHandoff().then(function (files) {
+      if (files.length) loadBase(files[0]);
+    });
+
+    /* ---- Loading the logo image ---- */
+
+    function loadLogo(file) {
+      Promise.resolve(logoImg && logoImg.release()).then(function () {
+        return PB.decodeImage(file);
+      }).then(function (img) {
+        logoImg = img;
+        logoFile = file;
+        els.logoPreview.hidden = false;
+        if (els.logoThumb.src) URL.revokeObjectURL(els.logoThumb.src);
+        els.logoThumb.src = URL.createObjectURL(file);
+        els.logoThumb.alt = 'Preview of ' + file.name;
+        els.logoNote.textContent = file.name + '  ·  ' + img.width.toLocaleString() + ' × ' + img.height.toLocaleString();
+        scheduleRender();
+      }).catch(function (err) {
+        els.logoDropError.textContent = err.message || 'That file could not be opened.';
+        els.logoDropError.hidden = false;
+      });
+    }
+
+    PB.createDropzone(els.logoDrop, {
+      multiple: false,
+      onReject: function (message) {
+        els.logoDropError.textContent = message;
+        els.logoDropError.hidden = false;
+        setTimeout(function () { els.logoDropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.logoDropError.hidden = true;
+        loadLogo(files[0]);
+      }
+    });
+
+    /* ---- Save ---- */
+
+    els.save.addEventListener('click', function () {
+      if (!baseImg) return;
+      render();
+      var mime = els.format.value;
+      var quality = LOSSY[mime] ? parseInt(els.quality.value, 10) / 100 : undefined;
+
+      els.save.classList.add('is-busy');
+      els.save.disabled = true;
+      els.progress.hidden = false;
+      els.progressBar.style.width = '30%';
+
+      PB.canvasToBlob(els.canvas, mime, quality).then(function (blob) {
+        els.progressBar.style.width = '100%';
+        var name = PB.renameExt(baseFile.name, PB.extFor(mime));
+        PB.downloadBlob(blob, name);
+        els.status.textContent = 'Saved as ' + name + ' (' + PB.formatBytes(blob.size) + ').';
+      }).catch(function (err) {
+        els.status.textContent = err.message || 'Could not encode this image.';
+      }).then(function () {
+        els.save.classList.remove('is-busy');
+        els.save.disabled = false;
+        setTimeout(function () { els.progress.hidden = true; els.progressBar.style.width = '0%'; }, 400);
+      });
+    });
+
+    window.addEventListener('pagehide', function () {
+      if (baseImg) baseImg.release();
+      if (logoImg) logoImg.release();
+      if (els.logoThumb.src) URL.revokeObjectURL(els.logoThumb.src);
+    });
+  });
 })();
 </script>
 </body>

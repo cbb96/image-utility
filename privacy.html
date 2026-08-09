@@ -3,67 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Privacy — Pixelbench</title>
+<meta name="description" content="Pixelbench's privacy policy: what leaves your device (almost nothing) and what the site itself collects.">
+<link rel="canonical" href="https://example.pages.dev/privacy.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Privacy — Pixelbench">
+<meta property="og:description" content="What leaves your device when you use Pixelbench, and what the site itself collects.">
+<meta property="og:url" content="https://example.pages.dev/privacy.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
-
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
--->
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "Any modern browser",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
-      ]
-    }
-  ]
-}
-</script>
 </head>
 
 <body>
@@ -83,10 +47,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
       <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -106,16 +70,68 @@
 </header>
 
 <main id="main">
+  <div class="wrap wrap-narrow">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Privacy</span>
+    </nav>
+    <header class="page-head">
+      <h1>Privacy</h1>
+      <p class="updated" style="display:block;margin-top:0.6rem">Last updated <span data-year>2026</span>.</p>
+    </header>
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Privacy Policy</h1>
-            </header>
-            <section class="section">
-                <div class='prose'><h2>Privacy</h2><p>Because processing runs locally on your machine, we never see your images.</p></div>
-            </section>
-        </div>
-        
+    <div class="prose">
+      <h2>Your images</h2>
+      <p>
+        Every tool on this site reads files using the browser's File API and
+        processes them with the Canvas API, entirely inside the page. That
+        means your images are never transmitted to any server operated by
+        this site or anyone else — there is no upload endpoint for a tool to
+        call. You can verify this yourself: open your browser's developer
+        tools, watch the network panel, and run any conversion. Nothing goes
+        out.
+      </p>
+      <p>
+        A couple of tools use your browser's local <code>IndexedDB</code>
+        storage to carry a file from the homepage to a tool page when you
+        click a "send to" chip (for example, dropping a photo on the
+        homepage and choosing "Convert"). That storage is local to your
+        device, expires automatically after ten minutes, and is never read
+        by anything other than the page you're using.
+      </p>
+
+      <h2>What this site does collect</h2>
+      <p>
+        The site itself is static hosting with the advertising slots you see
+        between sections. If those advertising slots are active, the
+        provider serving them may set cookies or use similar technology in
+        line with their own privacy policy, independent of anything this
+        site's own code does. Standard web server logs (IP address,
+        user agent, requested page) may be collected by the hosting
+        provider for operational and security purposes, the same as almost
+        any website.
+      </p>
+      <p>
+        A single preference — your chosen colour theme (light, dark or
+        auto) — is stored in your browser's <code>localStorage</code> so it
+        persists between visits. It never leaves your device.
+      </p>
+
+      <h2>Third parties</h2>
+      <p>
+        Page fonts are loaded from Google Fonts, which involves your browser
+        making a request to Google's servers for the font files, subject to
+        Google's own privacy policy. No image or file you process is
+        involved in that request.
+      </p>
+
+      <h2>Changes to this policy</h2>
+      <p>
+        If this policy changes, the date above will update. Because this is
+        a static site with no account system, there's no mailing list to
+        notify — check back here if you want the current version.
+      </p>
+    </div>
+  </div>
 </main>
 
 <footer class="site-foot">
@@ -149,7 +165,7 @@
       <h2>Site</h2>
       <a href="/about.html">About</a>
       <a href="/contact.html">Contact</a>
-      <a href="/privacy.html">Privacy</a>
+      <a href="/privacy.html" aria-current="page">Privacy</a>
       <a href="/terms.html">Terms</a>
     </nav>
   </div>
@@ -161,9 +177,9 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">Some page behaviour (theme switching, the mobile menu) needs JavaScript, but this page itself is plain text and works without it.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 </body>
 </html>

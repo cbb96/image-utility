@@ -3,35 +3,42 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Rotate &amp; flip images — free rotation and mirroring | Pixelbench</title>
+<meta name="description" content="Rotate images freely from -180 to 180 degrees, or in quarter turns, and flip horizontally or vertically, with a live preview. Nothing is uploaded.">
+<link rel="canonical" href="https://example.pages.dev/rotate.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Rotate &amp; flip images — free rotation and mirroring">
+<meta property="og:description" content="Rotate images freely or in quarter turns, and flip them, with a live preview, without uploading them anywhere.">
+<meta property="og:url" content="https://example.pages.dev/rotate.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
 
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<!-- Page-specific: flip toggle buttons -->
+<style>
+  .flip-row { display: flex; gap: 0.6rem; }
+  .flip-row .btn { flex: 1; }
+  .flip-row .btn[aria-pressed="true"] {
+    color: var(--accent-ink); background: var(--accent); border-color: var(--accent);
+  }
+</style>
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 -->
 
@@ -40,25 +47,34 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
+      "@type": "SoftwareApplication",
+      "name": "Image rotator",
+      "url": "https://example.pages.dev/rotate.html",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any modern browser",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+      "description": "Rotate an image freely or by quarter turns and flip it horizontally or vertically, with a live preview, entirely in the browser."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Rotate & flip", "item": "https://example.pages.dev/rotate.html" }
+      ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+        { "@type": "Question", "name": "Why is the output image a different size to the original?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Any rotation that isn't a multiple of 90 degrees makes the image's bounding box bigger than the original, because a tilted rectangle needs more horizontal and vertical space to contain it. The canvas is sized to that full bounding box so no part of the rotated image is cut off." } },
+        { "@type": "Question", "name": "What fills the corners left empty by rotation?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Transparency, for formats that support it. JPEG has no alpha channel, so a matte colour — white by default, and adjustable — fills those corners instead." } },
+        { "@type": "Question", "name": "What's the difference between rotating 180 degrees and flipping both ways?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For the whole image they look identical. The difference shows up with text or asymmetric detail: a 180-degree rotation keeps letters the right way round but upside down, while flipping both horizontally and vertically mirrors them as well, which is the same result — the two operations happen to coincide exactly at 180 degrees." } },
+        { "@type": "Question", "name": "My phone photo looks sideways. Will rotating here fix it?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It shouldn't need fixing — Pixelbench reads the orientation tag stored in the file and displays the photo upright automatically, on this tool and every other one. If a photo still looks sideways after loading, use the quarter-turn buttons to correct it." } },
+        { "@type": "Question", "name": "Can I flip and rotate at the same time?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes, they combine freely. Flips are applied before the rotation angle, so you can mirror a photo and then angle it however you like." } }
       ]
     }
   ]
@@ -83,10 +99,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
       <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -107,37 +123,216 @@
 
 <main id="main">
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Rotate & Flip</h1>
-                <p>Spin and mirror your photos easily.</p>
-            </header>
-            <div class="tool-layout">
-                <div>
-                    <section class="panel">
-                        <div class="panel-head"><h2>Settings</h2></div>
-                        <div class="panel-body">
-                            <div class='btn-row'><button class='btn'>Rotate Left</button><button class='btn'>Rotate Right</button></div>
-                            <button class="btn btn-primary btn-block" style="margin-top:1rem;">Process</button>
-                        </div>
-                    </section>
-                </div>
-                <div>
-                    <div class="drop" data-drop>
-                        <div class="drop-idle">
-                            <p class="drop-lede">Drop images here</p>
-                        </div>
-                    </div>
-                    <section class="panel" style="margin-top:1rem">
-                        <div class="panel-head"><h2>Queue</h2></div>
-                        <div class="panel-body">
-                            <div class="empty">No images yet</div>
-                        </div>
-                    </section>
-                </div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Rotate &amp; flip</span>
+    </nav>
+    <header class="page-head">
+      <h1>Rotate &amp; flip</h1>
+      <p>
+        Straighten a tilted photo, spin it in quarter turns, or mirror it, and
+        watch the result update live before you save.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Rotate</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <label for="rotation">Angle <output for="rotation" data-rotation-out>0°</output></label>
+              <input type="range" id="rotation" data-rotation min="-180" max="180" step="1" value="0">
             </div>
+
+            <div class="btn-row">
+              <button class="btn" type="button" data-quarter="-90">−90°</button>
+              <button class="btn" type="button" data-quarter="90">+90°</button>
+              <button class="btn btn-ghost" type="button" data-reset-angle>Reset</button>
+            </div>
+
+            <div class="field" style="margin-top:1.1rem">
+              <span class="field-label">Flip</span>
+              <div class="flip-row">
+                <button class="btn" type="button" data-flip="h" aria-pressed="false">Horizontal</button>
+                <button class="btn" type="button" data-flip="v" aria-pressed="false">Vertical</button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Output settings</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <label for="format">Save as</label>
+              <select id="format" data-format>
+                <option value="image/jpeg">JPEG (.jpg)</option>
+                <option value="image/png" selected>PNG (.png)</option>
+                <option value="image/webp">WebP (.webp)</option>
+              </select>
+            </div>
+
+            <div class="field" data-quality-field hidden>
+              <label for="quality">Quality <output for="quality" data-quality-out>90</output></label>
+              <input type="range" id="quality" data-quality min="10" max="100" step="1" value="90">
+            </div>
+
+            <div class="field" data-matte-field hidden>
+              <label for="matte">Background behind transparency</label>
+              <div class="field-row">
+                <input type="text" id="matte" data-matte value="#FFFFFF" spellcheck="false" aria-describedby="matte-note">
+                <input type="color" data-matte-picker value="#ffffff" aria-label="Pick background colour" style="flex:0 0 3rem;height:2.6rem;padding:2px">
+              </div>
+              <p class="field-note" id="matte-note">This format has no alpha channel, so the corners left empty by rotation need a solid colour underneath.</p>
+            </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-save disabled>Save</button>
+            <p class="field-note" data-status role="status" aria-live="polite"></p>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="/crop.html">Crop</a>
+              <a href="/resize.html">Resize</a>
+              <a href="/convert.html">Convert format</a>
+              <a href="/compress.html">Compress</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+        <div class="drop" data-drop>
+          <input type="file" id="pick" accept="image/*" hidden data-drop-input>
+          <div class="drop-idle">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+              <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+            </svg>
+            <p class="drop-lede">Drop an image here</p>
+            <p class="drop-hint">or <label class="link-btn" for="pick">choose a file</label> · one image at a time</p>
+          </div>
+          <p class="drop-error" data-drop-error role="alert" hidden></p>
         </div>
-        
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2>Preview</h2></div>
+          <div class="panel-body">
+            <div class="stage" data-stage>
+              <div class="empty" data-stage-empty>
+                <strong>Nothing loaded yet</strong>
+                <p>Drop an image above and it appears here. Rotate, flip and the preview updates as you go.</p>
+              </div>
+              <canvas data-preview hidden></canvas>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="rotate-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ── Written content ───────────────────────────────── -->
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>Straightening versus turning</h2>
+        <p>
+          Quarter turns and free rotation solve different problems. A photo
+          taken with the phone held sideways needs a clean 90-degree turn — the
+          content is fine, it's just oriented wrong. A photo of a horizon
+          that's a few degrees off level needs a small free rotation instead,
+          usually somewhere under 5 degrees, to bring it back to true without
+          otherwise changing the composition.
+        </p>
+        <p>
+          Free rotation at any angle other than a multiple of 90 degrees
+          necessarily makes the canvas bigger than the source image, because a
+          tilted rectangle's bounding box is larger than the rectangle itself.
+          The extra space appears as transparent corners, or a solid colour if
+          the output format doesn't support transparency.
+        </p>
+
+        <h3>Flipping</h3>
+        <p>
+          Flipping mirrors the image along an axis rather than turning it.
+          Horizontal flip swaps left and right, which is occasionally useful
+          for correcting a selfie-camera mirror effect or matching the
+          direction of motion in a composite. Vertical flip is rarer in
+          practice but combines with rotation to produce any of the eight
+          standard orientations a rectangle can sit in.
+        </p>
+
+        <hr>
+
+        <h2>Choosing an output format for a rotated image</h2>
+        <p>
+          If the rotation isn't a multiple of 90 degrees, the result almost
+          always has transparent corners, so PNG or WebP are the natural
+          choices — both keep that transparency. Choosing JPEG instead forces
+          a matte colour into those corners, which is fine for a photo destined
+          for a plain white background but will show as an obvious rectangle
+          on anything else.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>Why is the output image a different size to the original?</summary>
+          <p>Any rotation that isn't a multiple of 90 degrees makes the image's bounding box bigger than the original, because a tilted rectangle needs more horizontal and vertical space to contain it. The canvas is sized to that full bounding box so no part of the rotated image is cut off.</p>
+        </details>
+        <details>
+          <summary>What fills the corners left empty by rotation?</summary>
+          <p>Transparency, for formats that support it. JPEG has no alpha channel, so a matte colour — white by default, and adjustable — fills those corners instead.</p>
+        </details>
+        <details>
+          <summary>What's the difference between rotating 180 degrees and flipping both ways?</summary>
+          <p>For the whole image they look identical. The difference shows up with text or asymmetric detail: a 180-degree rotation keeps letters the right way round but upside down, while flipping both horizontally and vertically mirrors them as well — the two operations happen to coincide exactly at 180 degrees.</p>
+        </details>
+        <details>
+          <summary>My phone photo looks sideways. Will rotating here fix it?</summary>
+          <p>It shouldn't need fixing — Pixelbench reads the orientation tag stored in the file and displays the photo upright automatically, on this tool and every other one. If a photo still looks sideways after loading, use the quarter-turn buttons to correct it.</p>
+        </details>
+        <details>
+          <summary>Can I flip and rotate at the same time?</summary>
+          <p>Yes, they combine freely. Flips are applied before the rotation angle, so you can mirror a photo and then angle it however you like.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-foot">
@@ -183,19 +378,233 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">This tool needs JavaScript, because the rotation runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 
 <script>
-(function() {
-    var PB = window.Pixelbench;
-    if (!PB) return;
-    PB.ready(function() {
-        var drop = document.querySelector('[data-drop]');
-        if (drop) PB.createDropzone(drop, { onFiles: function(f) { PB.toast('Files loaded!'); }});
+/* ============================================================
+   Rotate & flip — page logic
+   Depends on window.Pixelbench from /assets/js/app.js
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  var ALPHA = { 'image/png': 1, 'image/webp': 1 };
+  var LOSSY = { 'image/jpeg': 1, 'image/webp': 1 };
+
+  var current = null; // { file, decoded, w, h }
+  var flipH = false;
+  var flipV = false;
+
+  function wrap180(deg) {
+    return ((deg + 180) % 360 + 360) % 360 - 180;
+  }
+
+  PB.ready(function () {
+    var els = {
+      drop: document.querySelector('[data-drop]'),
+      dropError: document.querySelector('[data-drop-error]'),
+      rotation: document.querySelector('[data-rotation]'),
+      rotationOut: document.querySelector('[data-rotation-out]'),
+      resetAngle: document.querySelector('[data-reset-angle]'),
+      format: document.querySelector('[data-format]'),
+      qualityField: document.querySelector('[data-quality-field]'),
+      quality: document.querySelector('[data-quality]'),
+      qualityOut: document.querySelector('[data-quality-out]'),
+      matteField: document.querySelector('[data-matte-field]'),
+      matte: document.querySelector('[data-matte]'),
+      mattePicker: document.querySelector('[data-matte-picker]'),
+      save: document.querySelector('[data-save]'),
+      status: document.querySelector('[data-status]'),
+      stageEmpty: document.querySelector('[data-stage-empty]'),
+      canvas: document.querySelector('[data-preview]')
+    };
+    var ctx = els.canvas.getContext('2d');
+
+    /* ---- Format availability ---- */
+    Array.prototype.forEach.call(els.format.options, function (opt) {
+      PB.canEncode(opt.value).then(function (ok) {
+        if (ok) return;
+        opt.disabled = true;
+        opt.textContent = opt.textContent + ' — not supported here';
+        if (els.format.value === opt.value) {
+          els.format.value = 'image/png';
+          syncFormat();
+          render();
+        }
+      });
     });
+
+    function syncFormat() {
+      var mime = els.format.value;
+      els.qualityField.hidden = !LOSSY[mime];
+      els.matteField.hidden = !!ALPHA[mime];
+    }
+    els.format.addEventListener('change', function () { syncFormat(); render(); });
+    syncFormat();
+
+    /* ---- Controls ---- */
+
+    var render = PB.debounce(doRender, 60);
+
+    els.rotation.addEventListener('input', function () {
+      els.rotationOut.textContent = els.rotation.value + '°';
+      render();
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-quarter]'), function (btn) {
+      btn.addEventListener('click', function () {
+        var delta = parseInt(btn.getAttribute('data-quarter'), 10);
+        var next = wrap180((parseInt(els.rotation.value, 10) || 0) + delta);
+        els.rotation.value = next;
+        els.rotationOut.textContent = next + '°';
+        render();
+      });
+    });
+
+    els.resetAngle.addEventListener('click', function () {
+      els.rotation.value = 0;
+      els.rotationOut.textContent = '0°';
+      render();
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-flip]'), function (btn) {
+      btn.addEventListener('click', function () {
+        var axis = btn.getAttribute('data-flip');
+        if (axis === 'h') { flipH = !flipH; btn.setAttribute('aria-pressed', flipH ? 'true' : 'false'); }
+        else { flipV = !flipV; btn.setAttribute('aria-pressed', flipV ? 'true' : 'false'); }
+        render();
+      });
+    });
+
+    els.quality.addEventListener('input', function () {
+      els.qualityOut.textContent = els.quality.value;
+    });
+
+    els.mattePicker.addEventListener('input', function () {
+      els.matte.value = els.mattePicker.value.toUpperCase();
+      render();
+    });
+    els.matte.addEventListener('input', function () {
+      if (/^#[0-9a-f]{6}$/i.test(els.matte.value)) {
+        els.mattePicker.value = els.matte.value;
+        render();
+      }
+    });
+
+    /* ---- Rendering the live preview ---- */
+
+    function doRender() {
+      if (!current) return;
+
+      var deg = parseFloat(els.rotation.value) || 0;
+      var rad = deg * Math.PI / 180;
+      var w = current.w, h = current.h;
+
+      var bw = Math.abs(w * Math.cos(rad)) + Math.abs(h * Math.sin(rad));
+      var bh = Math.abs(w * Math.sin(rad)) + Math.abs(h * Math.cos(rad));
+      bw = Math.max(1, Math.round(bw));
+      bh = Math.max(1, Math.round(bh));
+
+      els.canvas.width = bw;
+      els.canvas.height = bh;
+
+      var mime = els.format.value;
+      ctx.clearRect(0, 0, bw, bh);
+      if (!ALPHA[mime]) {
+        ctx.fillStyle = /^#[0-9a-f]{6}$/i.test(els.matte.value) ? els.matte.value : '#FFFFFF';
+        ctx.fillRect(0, 0, bw, bh);
+      }
+
+      ctx.save();
+      ctx.translate(bw / 2, bh / 2);
+      ctx.rotate(rad);
+      ctx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(current.decoded.source, -w / 2, -h / 2, w, h);
+      ctx.restore();
+
+      els.save.disabled = false;
+    }
+
+    /* ---- Loading an image ---- */
+
+    function releaseCurrent() {
+      if (current && current.decoded) current.decoded.release();
+      current = null;
+    }
+
+    function load(file) {
+      els.status.textContent = '';
+      PB.decodeImage(file).then(function (img) {
+        releaseCurrent();
+        current = { file: file, decoded: img, w: img.width, h: img.height };
+        flipH = false;
+        flipV = false;
+        Array.prototype.forEach.call(document.querySelectorAll('[data-flip]'), function (btn) {
+          btn.setAttribute('aria-pressed', 'false');
+        });
+        els.rotation.value = 0;
+        els.rotationOut.textContent = '0°';
+
+        els.stageEmpty.hidden = true;
+        els.canvas.hidden = false;
+        render();
+        doRender();
+      }).catch(function (err) {
+        els.dropError.textContent = err.message ||
+          'That file couldn\'t be opened. It may be damaged, or in a format this browser doesn\'t read.';
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      });
+    }
+
+    els.save.addEventListener('click', function () {
+      if (!current) return;
+      var mime = els.format.value;
+      var quality = parseInt(els.quality.value, 10) / 100;
+      els.save.classList.add('is-busy');
+      els.save.disabled = true;
+      PB.canvasToBlob(els.canvas, mime, LOSSY[mime] ? quality : undefined).then(function (blob) {
+        var name = PB.renameExt(current.file.name, PB.extFor(mime));
+        PB.downloadBlob(blob, name);
+        els.status.textContent = 'Saved at ' + els.canvas.width.toLocaleString() + ' × ' +
+          els.canvas.height.toLocaleString() + ', ' + PB.formatBytes(blob.size) + '.';
+      }).catch(function (err) {
+        els.status.textContent = err.message || 'Saving failed.';
+      }).then(function () {
+        els.save.classList.remove('is-busy');
+        els.save.disabled = false;
+      });
+    });
+
+    /* ---- Input ---- */
+
+    PB.createDropzone(els.drop, {
+      multiple: false,
+      onReject: function (message) {
+        els.dropError.textContent = message;
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.dropError.hidden = true;
+        if (files.length) load(files[0]);
+      }
+    });
+
+    PB.takeHandoff().then(function (files) {
+      if (files.length) load(files[0]);
+    });
+
+    window.addEventListener('pagehide', releaseCurrent);
+  });
 })();
 </script>
 </body>

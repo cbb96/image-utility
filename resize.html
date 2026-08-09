@@ -3,35 +3,39 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Resize images — by pixels or percentage, batch capable | Pixelbench</title>
+<meta name="description" content="Resize images by exact pixel dimensions or by percentage, with locked aspect ratio and common presets. Batch a whole folder. Nothing is uploaded.">
+<link rel="canonical" href="https://example.pages.dev/resize.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Resize images — by pixels or percentage">
+<meta property="og:description" content="Resize a batch of images by exact dimensions or percentage, without uploading them anywhere.">
+<meta property="og:url" content="https://example.pages.dev/resize.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
 
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<!-- Page-specific: the lock-aspect chain toggle -->
+<style>
+  .chain-row { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.6rem; }
+  .chain-row .check { flex: none; }
+</style>
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 -->
 
@@ -40,25 +44,34 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
+      "@type": "SoftwareApplication",
+      "name": "Image resizer",
+      "url": "https://example.pages.dev/resize.html",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any modern browser",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+      "description": "Resize images by exact pixel dimensions or by percentage, entirely in the browser, with a batch queue."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Resize", "item": "https://example.pages.dev/resize.html" }
+      ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+        { "@type": "Question", "name": "What's the difference between resizing by pixels and by percentage?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Pixel mode sets an exact target width and height that applies to every image in the batch. Percentage mode scales each image relative to its own original size, so a mixed batch of different-sized photos keeps its relative proportions." } },
+        { "@type": "Question", "name": "How do I resize without distorting the image?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Keep 'Lock aspect ratio' checked. Editing the width then recalculates the height (and vice versa) using the original image's true proportions, so the result is never stretched." } },
+        { "@type": "Question", "name": "Will resizing make the file smaller?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Usually, yes, and often dramatically. File size scales with pixel count, so halving both dimensions removes about three quarters of the data before any compression is even applied." } },
+        { "@type": "Question", "name": "Can I enlarge a small image?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The tool will stretch pixels up if you ask it to, but no resizer can invent detail that was never captured, so upscaled photos look softer than a genuinely high-resolution original. Turn on 'Don't enlarge smaller images' to skip upscaling automatically across a mixed batch." } },
+        { "@type": "Question", "name": "Does resizing change the file format?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Each image is re-encoded back to its own original format. If your browser can't write that format, it falls back to PNG instead, which the file name reflects." } }
       ]
     }
   ]
@@ -83,10 +96,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
       <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -107,37 +120,236 @@
 
 <main id="main">
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Resize images</h1>
-                <p>Resize photos by pixels or percentage, locked to aspect ratio.</p>
-            </header>
-            <div class="tool-layout">
-                <div>
-                    <section class="panel">
-                        <div class="panel-head"><h2>Settings</h2></div>
-                        <div class="panel-body">
-                            <div class='field'><label>Width (px)</label><input type='number' value='1920'></div><div class='field'><label>Height (px)</label><input type='number' value='1080'></div>
-                            <button class="btn btn-primary btn-block" style="margin-top:1rem;">Process</button>
-                        </div>
-                    </section>
-                </div>
-                <div>
-                    <div class="drop" data-drop>
-                        <div class="drop-idle">
-                            <p class="drop-lede">Drop images here</p>
-                        </div>
-                    </div>
-                    <section class="panel" style="margin-top:1rem">
-                        <div class="panel-head"><h2>Queue</h2></div>
-                        <div class="panel-body">
-                            <div class="empty">No images yet</div>
-                        </div>
-                    </section>
-                </div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Resize</span>
+    </nav>
+    <header class="page-head">
+      <h1>Resize images</h1>
+      <p>
+        Set exact pixel dimensions or scale by percentage, with the aspect ratio
+        locked by default. Drop in a whole batch — every image resizes with the
+        same settings and re-encodes to its own original format.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Resize settings</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <span class="field-label">Resize by</span>
+              <div class="seg" data-unit role="group" aria-label="Resize unit">
+                <button type="button" data-unit-btn="pixels" aria-pressed="true">Pixels</button>
+                <button type="button" data-unit-btn="percent" aria-pressed="false">Percent</button>
+              </div>
             </div>
+
+            <div class="field" data-preset-field>
+              <label for="preset">Preset size</label>
+              <select id="preset" data-preset>
+                <option value="">Custom</option>
+                <option value="1920,1080">1920 × 1080 (Full HD)</option>
+                <option value="1280,720">1280 × 720 (HD)</option>
+                <option value="1080,1080">1080 × 1080 (Instagram square)</option>
+                <option value="1200,630">1200 × 630 (OG / link preview)</option>
+                <option value="800,600">800 × 600</option>
+              </select>
+            </div>
+
+            <div class="field" data-pixels-field>
+              <div class="field-row">
+                <div>
+                  <label for="width">Width (px)</label>
+                  <input type="number" id="width" data-width min="1" max="20000" step="1" value="1920">
+                </div>
+                <div>
+                  <label for="height">Height (px)</label>
+                  <input type="number" id="height" data-height min="1" max="20000" step="1" value="1080">
+                </div>
+              </div>
+              <div class="chain-row">
+                <label class="check">
+                  <input type="checkbox" data-lock checked>
+                  Lock aspect ratio
+                </label>
+              </div>
+              <p class="field-note">Locked to the first image you add. Editing one dimension recalculates the other.</p>
+            </div>
+
+            <div class="field" data-percent-field hidden>
+              <label for="percent">Scale <output for="percent" data-percent-out>50%</output></label>
+              <input type="range" id="percent" data-percent min="1" max="400" step="1" value="50">
+              <p class="field-note">Each image is scaled relative to its own original size.</p>
+            </div>
+
+            <div class="field">
+              <label class="check">
+                <input type="checkbox" data-no-enlarge checked>
+                Don't enlarge smaller images
+              </label>
+              <p class="field-note">Skips resizing (upward) any image that's already smaller than the target.</p>
+            </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-resize-all disabled>Resize all</button>
+
+            <div class="progress" data-progress hidden style="margin-top:.9rem">
+              <div class="progress-bar" data-progress-bar></div>
+            </div>
+            <p class="field-note" data-status role="status" aria-live="polite"></p>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="/compress.html">Compress</a>
+              <a href="/crop.html">Crop</a>
+              <a href="/convert.html">Convert format</a>
+              <a href="/metadata.html">Strip metadata</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+        <div class="drop" data-drop>
+          <input type="file" id="pick" accept="image/*" multiple hidden data-drop-input>
+          <div class="drop-idle">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+              <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+            </svg>
+            <p class="drop-lede">Drop images here</p>
+            <p class="drop-hint">or <label class="link-btn" for="pick">choose files</label> · add as many as you like</p>
+          </div>
+          <p class="drop-error" data-drop-error role="alert" hidden></p>
         </div>
-        
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2 data-queue-title>Queue</h2></div>
+          <div class="panel-body">
+
+            <div class="btn-row" data-queue-actions hidden style="margin-bottom:1rem">
+              <button class="btn btn-sm" type="button" data-download-all disabled>Download all</button>
+              <button class="btn btn-sm btn-ghost" type="button" data-clear-all>Remove all</button>
+            </div>
+
+            <div class="empty" data-queue-empty>
+              <strong>No images yet</strong>
+              <p>Drop files above, paste an image with Ctrl&nbsp;+&nbsp;V, or choose them from disk. The first image you add sets the reference aspect ratio for the lock.</p>
+            </div>
+
+            <ul class="filelist" data-queue hidden></ul>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="resize-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ── Written content ───────────────────────────────── -->
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>Pixels or percentage</h2>
+        <p>
+          Pixel mode is for when you know exactly what you need — a 1200×630
+          social card, an 800×600 thumbnail, a maximum width for a blog post.
+          It sets one target size and applies it to every image in the queue,
+          which is what you want when the output needs to match a spec.
+        </p>
+        <p>
+          Percentage mode is relative: each image is scaled against its own
+          original dimensions, so a batch of differently sized photos keeps its
+          differences rather than being forced to a single shape. It's the
+          better choice when you're just shrinking a folder of camera photos
+          for email or a shared drive.
+        </p>
+
+        <h3>Why the aspect ratio lock matters</h3>
+        <p>
+          Setting width and height independently, without locking them
+          together, stretches or squashes the image — circles become ovals,
+          faces get wider or narrower than they should. The lock recalculates
+          the dimension you didn't touch, using the true proportions of the
+          first image you loaded, so the result always matches the original
+          shape unless you deliberately unlock it.
+        </p>
+
+        <hr>
+
+        <h2>Choosing a target size</h2>
+        <p>
+          Resize to the size the image will actually be shown at, not the size
+          your camera happened to produce. A photo displayed at 1200px wide on
+          a web page gains nothing from being shipped at 4000px — it just costs
+          bandwidth and load time. The presets cover the sizes that come up
+          most often: HD and Full HD for screens and video thumbnails, a square
+          crop-friendly size for Instagram, and the 1200×630 shape most social
+          platforms expect for link previews.
+        </p>
+        <p>
+          Format is preserved from the source file: a JPEG stays a JPEG, a PNG
+          stays a PNG. If your browser can't re-encode the original format —
+          this happens occasionally with less common formats — the tool falls
+          back to PNG and the downloaded file name reflects that.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>What's the difference between resizing by pixels and by percentage?</summary>
+          <p>Pixel mode sets an exact target width and height that applies to every image in the batch. Percentage mode scales each image relative to its own original size, so a mixed batch of different-sized photos keeps its relative proportions.</p>
+        </details>
+        <details>
+          <summary>How do I resize without distorting the image?</summary>
+          <p>Keep "Lock aspect ratio" checked. Editing the width then recalculates the height (and vice versa) using the original image's true proportions, so the result is never stretched.</p>
+        </details>
+        <details>
+          <summary>Will resizing make the file smaller?</summary>
+          <p>Usually, yes, and often dramatically. File size scales with pixel count, so halving both dimensions removes about three quarters of the data before any compression is even applied.</p>
+        </details>
+        <details>
+          <summary>Can I enlarge a small image?</summary>
+          <p>The tool will stretch pixels up if you ask it to, but no resizer can invent detail that was never captured, so upscaled photos look softer than a genuinely high-resolution original. Turn on "Don't enlarge smaller images" to skip upscaling automatically across a mixed batch.</p>
+        </details>
+        <details>
+          <summary>Does resizing change the file format?</summary>
+          <p>No. Each image is re-encoded back to its own original format. If your browser can't write that format, it falls back to PNG instead, which the file name reflects.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-foot">
@@ -183,19 +395,386 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">This resizer needs JavaScript, because the resizing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 
 <script>
-(function() {
-    var PB = window.Pixelbench;
-    if (!PB) return;
-    PB.ready(function() {
-        var drop = document.querySelector('[data-drop]');
-        if (drop) PB.createDropzone(drop, { onFiles: function(f) { PB.toast('Files loaded!'); }});
+/* ============================================================
+   Resize — page logic
+   Depends on window.Pixelbench from /assets/js/app.js
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  var ALPHA = { 'image/png': 1, 'image/webp': 1, 'image/avif': 1, 'image/gif': 1 };
+  var LOSSY = { 'image/jpeg': 1, 'image/webp': 1, 'image/avif': 1 };
+
+  var queue = [];
+  var seq = 0;
+  var running = false;
+  var unit = 'pixels';
+  var refAspect = null; // width / height of the first image loaded, for the lock
+  var syncingDims = false;
+
+  PB.ready(function () {
+    var els = {
+      drop: document.querySelector('[data-drop]'),
+      dropError: document.querySelector('[data-drop-error]'),
+      unitWrap: document.querySelector('[data-unit]'),
+      presetField: document.querySelector('[data-preset-field]'),
+      preset: document.querySelector('[data-preset]'),
+      pixelsField: document.querySelector('[data-pixels-field]'),
+      width: document.querySelector('[data-width]'),
+      height: document.querySelector('[data-height]'),
+      lock: document.querySelector('[data-lock]'),
+      percentField: document.querySelector('[data-percent-field]'),
+      percent: document.querySelector('[data-percent]'),
+      percentOut: document.querySelector('[data-percent-out]'),
+      noEnlarge: document.querySelector('[data-no-enlarge]'),
+      resizeAll: document.querySelector('[data-resize-all]'),
+      progress: document.querySelector('[data-progress]'),
+      progressBar: document.querySelector('[data-progress-bar]'),
+      status: document.querySelector('[data-status]'),
+      queueTitle: document.querySelector('[data-queue-title]'),
+      queueActions: document.querySelector('[data-queue-actions]'),
+      queueEmpty: document.querySelector('[data-queue-empty]'),
+      list: document.querySelector('[data-queue]'),
+      downloadAll: document.querySelector('[data-download-all]'),
+      clearAll: document.querySelector('[data-clear-all]')
+    };
+
+    /* ---- Unit toggle ---- */
+
+    els.unitWrap.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-unit-btn]');
+      if (!btn) return;
+      unit = btn.getAttribute('data-unit-btn');
+      Array.prototype.forEach.call(els.unitWrap.querySelectorAll('button'), function (b) {
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+      });
+      els.pixelsField.hidden = unit !== 'pixels';
+      els.presetField.hidden = unit !== 'pixels';
+      els.percentField.hidden = unit !== 'percent';
     });
+
+    /* ---- Width / height lock ---- */
+
+    els.width.addEventListener('input', function () {
+      if (syncingDims) return;
+      if (els.lock.checked && refAspect) {
+        syncingDims = true;
+        var w = parseFloat(els.width.value) || 0;
+        els.height.value = Math.max(1, Math.round(w / refAspect));
+        syncingDims = false;
+      }
+    });
+    els.height.addEventListener('input', function () {
+      if (syncingDims) return;
+      if (els.lock.checked && refAspect) {
+        syncingDims = true;
+        var h = parseFloat(els.height.value) || 0;
+        els.width.value = Math.max(1, Math.round(h * refAspect));
+        syncingDims = false;
+      }
+    });
+
+    /* ---- Presets ---- */
+
+    els.preset.addEventListener('change', function () {
+      if (!els.preset.value) return;
+      var parts = els.preset.value.split(',');
+      els.width.value = parts[0];
+      els.height.value = parts[1];
+      if (unit !== 'pixels') {
+        unit = 'pixels';
+        els.pixelsField.hidden = false;
+        els.presetField.hidden = false;
+        els.percentField.hidden = true;
+        Array.prototype.forEach.call(els.unitWrap.querySelectorAll('button'), function (b) {
+          b.setAttribute('aria-pressed', b.getAttribute('data-unit-btn') === 'pixels' ? 'true' : 'false');
+        });
+      }
+    });
+
+    /* ---- Percent readout ---- */
+
+    els.percent.addEventListener('input', function () {
+      els.percentOut.textContent = els.percent.value + '%';
+    });
+
+    /* ---- Queue rendering ---- */
+
+    function render() {
+      els.queueEmpty.hidden = queue.length > 0;
+      els.list.hidden = queue.length === 0;
+      els.queueActions.hidden = queue.length === 0;
+      els.queueTitle.textContent = queue.length
+        ? 'Queue — ' + queue.length + ' image' + (queue.length === 1 ? '' : 's')
+        : 'Queue';
+      els.resizeAll.disabled = queue.length === 0 || running;
+      els.downloadAll.disabled = !queue.some(function (it) { return it.blob; });
+
+      els.list.innerHTML = '';
+      queue.forEach(function (item) {
+        var li = document.createElement('li');
+        li.className = 'filerow';
+
+        var thumb = document.createElement('div');
+        thumb.className = 'filerow-thumb';
+        if (item.thumbUrl) {
+          var img = document.createElement('img');
+          img.src = item.thumbUrl;
+          img.alt = '';
+          thumb.appendChild(img);
+        }
+
+        var meta = document.createElement('div');
+        meta.className = 'filerow-meta';
+        var name = document.createElement('strong');
+        name.textContent = item.blob ? item.outName : item.file.name;
+        var detail = document.createElement('span');
+        detail.textContent = describe(item);
+        meta.appendChild(name);
+        meta.appendChild(detail);
+
+        var actions = document.createElement('div');
+        actions.className = 'filerow-actions';
+
+        if (item.blob) {
+          var dl = document.createElement('button');
+          dl.type = 'button';
+          dl.className = 'btn btn-sm btn-primary';
+          dl.textContent = 'Save';
+          dl.addEventListener('click', function () { PB.downloadBlob(item.blob, item.outName); });
+          actions.appendChild(dl);
+        }
+
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn btn-sm btn-ghost';
+        rm.setAttribute('aria-label', 'Remove ' + item.file.name);
+        rm.textContent = '✕';
+        rm.addEventListener('click', function () { remove(item.id); });
+        actions.appendChild(rm);
+
+        li.appendChild(thumb);
+        li.appendChild(meta);
+        li.appendChild(actions);
+        els.list.appendChild(li);
+      });
+    }
+
+    function describe(item) {
+      if (item.error) return item.error;
+      if (item.blob) {
+        return item.srcDims + ' → ' + item.outDims + '  ·  ' +
+               PB.formatBytes(item.file.size) + ' → ' + PB.formatBytes(item.blob.size);
+      }
+      return PB.typeLabel(item.file) + '  ·  ' + PB.formatBytes(item.file.size) +
+             (item.srcDims ? '  ·  ' + item.srcDims : '');
+    }
+
+    function add(files) {
+      files.forEach(function (file) {
+        var item = {
+          id: ++seq,
+          file: file,
+          thumbUrl: URL.createObjectURL(file),
+          srcDims: '',
+          srcW: 0,
+          srcH: 0,
+          blob: null,
+          outName: '',
+          outDims: '',
+          error: ''
+        };
+        queue.push(item);
+
+        PB.decodeImage(file).then(function (img) {
+          item.srcW = img.width;
+          item.srcH = img.height;
+          item.srcDims = img.width.toLocaleString() + ' × ' + img.height.toLocaleString();
+          img.release();
+          if (refAspect === null && img.width && img.height) {
+            refAspect = img.width / img.height;
+            els.width.value = img.width;
+            els.height.value = img.height;
+          }
+          render();
+        }).catch(function () {
+          item.error = 'Couldn\'t be opened — this browser may not read ' + PB.typeLabel(file) + '.';
+          render();
+        });
+      });
+      render();
+    }
+
+    function remove(id) {
+      queue = queue.filter(function (it) {
+        if (it.id !== id) return true;
+        if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl);
+        return false;
+      });
+      if (!queue.length) refAspect = null;
+      render();
+    }
+
+    function clearAll() {
+      queue.forEach(function (it) { if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl); });
+      queue = [];
+      refAspect = null;
+      els.status.textContent = '';
+      render();
+    }
+
+    /* ---- Resizing ---- */
+
+    function targetDims(w, h, opts) {
+      var tw, th;
+      if (opts.unit === 'percent') {
+        var scale = opts.percent / 100;
+        tw = Math.max(1, Math.round(w * scale));
+        th = Math.max(1, Math.round(h * scale));
+      } else {
+        tw = opts.width;
+        th = opts.height;
+      }
+      if (opts.noEnlarge && tw >= w && th >= h) {
+        tw = w;
+        th = h;
+      }
+      return { w: tw, h: th };
+    }
+
+    function resizeOne(item, opts) {
+      return PB.decodeImage(item.file).then(function (img) {
+        var w = img.width, h = img.height;
+        if (!w || !h) {
+          img.release();
+          throw new Error('This file has no fixed pixel size.');
+        }
+
+        var dims = targetDims(w, h, opts);
+        var srcMime = item.file.type && item.file.type.indexOf('image/') === 0 ? item.file.type : '';
+
+        return PB.canEncode(srcMime).then(function (ok) {
+          var mime = (srcMime && ok) ? srcMime : 'image/png';
+
+          var cv = document.createElement('canvas');
+          cv.width = dims.w;
+          cv.height = dims.h;
+          var ctx = cv.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+
+          if (!ALPHA[mime]) {
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, dims.w, dims.h);
+          }
+
+          ctx.drawImage(img.source, 0, 0, dims.w, dims.h);
+          img.release();
+
+          return PB.canvasToBlob(cv, mime, LOSSY[mime] ? 0.92 : undefined).then(function (blob) {
+            item.blob = blob;
+            item.outName = PB.renameExt(item.file.name, PB.extFor(mime));
+            item.outDims = dims.w.toLocaleString() + ' × ' + dims.h.toLocaleString();
+            item.error = '';
+          });
+        });
+      });
+    }
+
+    els.resizeAll.addEventListener('click', function () {
+      if (running || !queue.length) return;
+
+      var opts = {
+        unit: unit,
+        width: PB.clamp(parseInt(els.width.value, 10) || 1, 1, 20000),
+        height: PB.clamp(parseInt(els.height.value, 10) || 1, 1, 20000),
+        percent: PB.clamp(parseFloat(els.percent.value) || 1, 1, 400),
+        noEnlarge: els.noEnlarge.checked
+      };
+
+      running = true;
+      els.resizeAll.classList.add('is-busy');
+      els.resizeAll.disabled = true;
+      els.progress.hidden = false;
+      els.progressBar.style.width = '0%';
+
+      var done = 0, failed = 0;
+
+      function step(i) {
+        if (i >= queue.length) return Promise.resolve();
+        var item = queue[i];
+        return resizeOne(item, opts)
+          .catch(function (err) {
+            failed++;
+            item.error = err.message || 'Resize failed.';
+          })
+          .then(function () {
+            done++;
+            els.progressBar.style.width = Math.round((done / queue.length) * 100) + '%';
+            els.status.textContent = 'Resizing ' + done + ' of ' + queue.length + '…';
+            render();
+            return new Promise(function (r) { setTimeout(r, 0); }).then(function () { return step(i + 1); });
+          });
+      }
+
+      step(0).then(function () {
+        running = false;
+        els.resizeAll.classList.remove('is-busy');
+        els.progress.hidden = true;
+        var ok = queue.length - failed;
+        els.status.textContent = failed
+          ? ok + ' resized, ' + failed + ' failed. See the notes on each row.'
+          : ok + ' image' + (ok === 1 ? '' : 's') + ' resized. Save them below.';
+        render();
+      });
+    });
+
+    /* ---- Downloads ---- */
+
+    els.downloadAll.addEventListener('click', function () {
+      var ready = queue.filter(function (it) { return it.blob; });
+      ready.forEach(function (item, i) {
+        setTimeout(function () { PB.downloadBlob(item.blob, item.outName); }, i * 320);
+      });
+      PB.toast('Saving ' + ready.length + ' file' + (ready.length === 1 ? '' : 's'));
+    });
+
+    els.clearAll.addEventListener('click', clearAll);
+
+    /* ---- Input ---- */
+
+    PB.createDropzone(els.drop, {
+      multiple: true,
+      onReject: function (message) {
+        els.dropError.textContent = message;
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.dropError.hidden = true;
+        add(files);
+      }
+    });
+
+    PB.takeHandoff().then(function (files) {
+      if (files.length) add(files);
+    });
+
+    window.addEventListener('pagehide', function () {
+      queue.forEach(function (it) { if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl); });
+    });
+
+    render();
+  });
 })();
 </script>
 </body>

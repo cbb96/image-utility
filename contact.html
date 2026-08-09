@@ -3,67 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Contact — Pixelbench</title>
+<meta name="description" content="How to get in touch about Pixelbench: bug reports, format requests, and advertising.">
+<link rel="canonical" href="https://example.pages.dev/contact.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Contact — Pixelbench">
+<meta property="og:description" content="How to get in touch about Pixelbench.">
+<meta property="og:url" content="https://example.pages.dev/contact.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
-
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
--->
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "Any modern browser",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
-      ]
-    }
-  ]
-}
-</script>
 </head>
 
 <body>
@@ -83,10 +47,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
       <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -106,16 +70,45 @@
 </header>
 
 <main id="main">
+  <div class="wrap wrap-narrow">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Contact</span>
+    </nav>
+    <header class="page-head">
+      <h1>Contact</h1>
+      <p>Pixelbench is a small static site, so this is a short page.</p>
+    </header>
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Contact</h1>
-            </header>
-            <section class="section">
-                <div class='prose'><h2>Contact</h2><p>You can reach us at contact@example.com.</p></div>
-            </section>
-        </div>
-        
+    <div class="prose">
+      <h2>Bug reports and format requests</h2>
+      <p>
+        If a tool produced a broken file, a page didn't load, or you'd like
+        a format or feature added, email
+        <a href="mailto:hello@pixelbench.example">hello@pixelbench.example</a>.
+        Include the tool you were using, your browser and OS, and — if you
+        can — the file that caused the problem. Since nothing is uploaded
+        anywhere by design, attaching the file to your email is the only way
+        for a report to include it; leave it out if it's sensitive and
+        describe the issue instead.
+      </p>
+
+      <h2>Advertising</h2>
+      <p>
+        The ad slots on this site are placeholder-only in this build. For
+        anything related to sponsorship or advertising, use the same address
+        above with "Advertising" in the subject line.
+      </p>
+
+      <h2>What not to send here</h2>
+      <p>
+        This inbox isn't a support queue for a hosted service — there's no
+        account system, no billing, and no data stored about you to look up.
+        If your question is about how a tool works, check that tool's FAQ
+        section first; most of what would otherwise be a support ticket is
+        already answered there.
+      </p>
+    </div>
+  </div>
 </main>
 
 <footer class="site-foot">
@@ -148,7 +141,7 @@
     <nav class="foot-col" aria-label="Site">
       <h2>Site</h2>
       <a href="/about.html">About</a>
-      <a href="/contact.html">Contact</a>
+      <a href="/contact.html" aria-current="page">Contact</a>
       <a href="/privacy.html">Privacy</a>
       <a href="/terms.html">Terms</a>
     </nav>
@@ -161,9 +154,9 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">Some page behaviour (theme switching, the mobile menu) needs JavaScript, but this page itself is plain text and works without it.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 </body>
 </html>

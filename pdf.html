@@ -3,35 +3,53 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Images to PDF — combine photos into one PDF | Pixelbench</title>
+<meta name="description" content="Drop a stack of images, drag to reorder, choose page size and margins, and build a single PDF in your browser. Nothing is uploaded.">
+<link rel="canonical" href="https://example.pages.dev/pdf.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Images to PDF — combine photos into one PDF">
+<meta property="og:description" content="Build a PDF from a stack of images without uploading them anywhere.">
+<meta property="og:url" content="https://example.pages.dev/pdf.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
 
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<!-- Page-specific: draggable reorder handle -->
+<style>
+  .filerow[draggable="true"] { cursor: grab; }
+  .filerow.is-dragging { opacity: 0.4; }
+  .filerow.is-dragover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .filerow-index {
+    flex: none; width: 1.6rem; text-align: center;
+    font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted);
+  }
+  .filerow-reorder { flex: none; display: flex; flex-direction: column; gap: 2px; }
+  .filerow-reorder button {
+    width: 1.5rem; height: 1.2rem; padding: 0; line-height: 1;
+    font-size: 0.7rem; border-radius: 4px;
+  }
+  .pdf-preview-frame {
+    width: 100%; height: 70vh; border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--surface-2);
+  }
+</style>
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 -->
 
@@ -40,25 +58,32 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
+      "@type": "SoftwareApplication",
+      "name": "Images to PDF",
+      "url": "https://example.pages.dev/pdf.html",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any modern browser",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+      "description": "Combine a stack of images into a single PDF, built entirely in the browser."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Images to PDF", "item": "https://example.pages.dev/pdf.html" }
+      ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+        { "@type": "Question", "name": "Does this upload my photos to build the PDF?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The PDF file format is assembled byte by byte in your browser using JavaScript. Your images are decoded, drawn onto a canvas, re-encoded as JPEG and written directly into a PDF structure, all on your own device." } },
+        { "@type": "Question", "name": "Can I reorder the pages?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Drag any row in the queue to a new position, or use the up and down buttons on each row, before you build the PDF." } },
+        { "@type": "Question", "name": "What page size should I use?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A4 or Letter suit documents and scans. Choose \"Fit to image\" to give every page the same shape as its photo, with no border, which suits a photo book or portfolio." } },
+        { "@type": "Question", "name": "Does it keep transparency?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Every image is embedded as JPEG, which has no alpha channel, so transparent areas are filled with the background colour you choose before the PDF is built." } }
       ]
     }
   ]
@@ -83,10 +108,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
-      <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/pdf.html" aria-current="page">Image&nbsp;to&nbsp;PDF</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -107,37 +132,242 @@
 
 <main id="main">
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Images to PDF</h1>
-                <p>Combine multiple images into a single PDF document.</p>
-            </header>
-            <div class="tool-layout">
-                <div>
-                    <section class="panel">
-                        <div class="panel-head"><h2>Settings</h2></div>
-                        <div class="panel-body">
-                            <div class='field'><label>Page Size</label><select><option>A4</option><option>US Letter</option></select></div>
-                            <button class="btn btn-primary btn-block" style="margin-top:1rem;">Process</button>
-                        </div>
-                    </section>
-                </div>
-                <div>
-                    <div class="drop" data-drop>
-                        <div class="drop-idle">
-                            <p class="drop-lede">Drop images here</p>
-                        </div>
-                    </div>
-                    <section class="panel" style="margin-top:1rem">
-                        <div class="panel-head"><h2>Queue</h2></div>
-                        <div class="panel-body">
-                            <div class="empty">No images yet</div>
-                        </div>
-                    </section>
-                </div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Images to PDF</span>
+    </nav>
+    <header class="page-head">
+      <h1>Images to PDF</h1>
+      <p>
+        Drop a stack of photos, drag them into order, pick a page size and
+        margin, and build one PDF. The file is assembled by hand in your
+        browser — there's no server rendering it and nothing to wait on.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Page setup</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <label for="pagesize">Page size</label>
+              <select id="pagesize" data-pagesize>
+                <option value="a4" selected>A4</option>
+                <option value="letter">US Letter</option>
+                <option value="legal">US Legal</option>
+                <option value="fit">Fit to image</option>
+              </select>
+              <p class="field-note" data-pagesize-note>Each photo gets a page shaped like the photo itself, with no border.</p>
             </div>
+
+            <div class="field" data-orientation-field>
+              <label for="orientation">Orientation</label>
+              <select id="orientation" data-orientation>
+                <option value="auto" selected>Auto (match each photo)</option>
+                <option value="portrait">Portrait</option>
+                <option value="landscape">Landscape</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="margin">Margin</label>
+              <select id="margin" data-margin>
+                <option value="0">None</option>
+                <option value="18">Small</option>
+                <option value="36" selected>Normal</option>
+                <option value="72">Large</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="fit">Fit inside the page</label>
+              <select id="fit" data-fit>
+                <option value="contain" selected>Fit whole image (may add a border)</option>
+                <option value="cover">Fill the page (may crop the image)</option>
+                <option value="stretch">Stretch to fill exactly</option>
+              </select>
+            </div>
+
+            <div class="field" data-matte-field>
+              <label for="matte">Background / border colour</label>
+              <div class="field-row">
+                <input type="text" id="matte" data-matte value="#FFFFFF" spellcheck="false">
+                <input type="color" data-matte-picker value="#ffffff" aria-label="Pick background colour" style="flex:0 0 3rem;height:2.6rem;padding:2px">
+              </div>
+              <p class="field-note">JPEG has no transparency, so this fills any space around each photo.</p>
+            </div>
+
+            <div class="field">
+              <label for="quality">Image quality <output for="quality" data-quality-out>85</output></label>
+              <input type="range" id="quality" data-quality min="40" max="100" step="1" value="85">
+              <p class="field-note">Each photo is re-encoded as JPEG at this quality when it's embedded.</p>
+            </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-build disabled>Build PDF</button>
+
+            <div class="progress" data-progress hidden style="margin-top:.9rem">
+              <div class="progress-bar" data-progress-bar></div>
+            </div>
+            <p class="field-note" data-status role="status" aria-live="polite"></p>
+
+            <div data-result-actions hidden style="margin-top:.9rem">
+              <button class="btn btn-primary btn-block" type="button" data-download>Download PDF</button>
+              <p class="field-note" data-result-note style="text-align:center;margin-top:.5rem"></p>
+            </div>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="/collage.html">Merge &amp; collage</a>
+              <a href="/resize.html">Resize</a>
+              <a href="/compress.html">Compress</a>
+              <a href="/rotate.html">Rotate &amp; flip</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+        <div class="drop" data-drop>
+          <input type="file" id="pick" accept="image/*" multiple hidden data-drop-input>
+          <div class="drop-idle">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+              <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+            </svg>
+            <p class="drop-lede">Drop images here</p>
+            <p class="drop-hint">or <label class="link-btn" for="pick">choose files</label> · added in the order you drop them</p>
+          </div>
+          <p class="drop-error" data-drop-error role="alert" hidden></p>
         </div>
-        
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2 data-queue-title>Pages</h2></div>
+          <div class="panel-body">
+
+            <div class="btn-row" data-queue-actions hidden style="margin-bottom:1rem">
+              <button class="btn btn-sm btn-ghost" type="button" data-clear-all>Remove all</button>
+            </div>
+
+            <div class="empty" data-queue-empty>
+              <strong>No pages yet</strong>
+              <p>Drop images above. Each one becomes a page, in the order shown here — drag a row, or use the arrows, to change the order.</p>
+            </div>
+
+            <ul class="filelist" data-queue hidden></ul>
+          </div>
+        </section>
+
+        <section class="panel" data-preview-panel hidden style="margin-top:1rem">
+          <div class="panel-head"><h2>Preview</h2></div>
+          <div class="panel-body">
+            <iframe class="pdf-preview-frame" data-preview-frame title="PDF preview"></iframe>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="pdf-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ── Written content ───────────────────────────────── -->
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>How the PDF gets built</h2>
+        <p>
+          A PDF is a plain byte format under the hood: a short header, a series
+          of numbered objects describing pages and images, and a table at the
+          end pointing to where each object starts. This tool writes exactly
+          that. Each photo is decoded, drawn onto a canvas at the size and
+          position your page settings call for, re-encoded as a JPEG, and
+          embedded as an image object on its own page. There's no server
+          rendering a document and mailing it back — the bytes are put
+          together right here and handed to your browser as a download.
+        </p>
+
+        <h3>Choosing a page size</h3>
+        <p>
+          A4 and US Letter suit anything meant to be printed or read as a
+          document — scans, forms, a stack of receipts. "Fit to image" skips
+          the idea of a page entirely and gives each photo a page shaped
+          exactly like itself, which reads better for a portfolio or a photo
+          book where you don't want white borders dictated by paper stock.
+        </p>
+
+        <h3>Fit modes and margins</h3>
+        <p>
+          "Fit whole image" scales each photo down until it fits completely
+          inside the margins, which can leave a border on two sides if the
+          photo's proportions don't match the page's. "Fill the page" scales
+          up until there's no border at all, cropping whatever hangs over the
+          edge. "Stretch" ignores the original proportions completely — useful
+          only when you deliberately want that.
+        </p>
+
+        <hr>
+
+        <h2>What doesn't survive the trip</h2>
+        <p>
+          Every image is embedded as JPEG, so transparency is flattened onto
+          the background colour you pick, and EXIF, GPS and colour-profile
+          metadata are dropped the same way they are in the convert and
+          compress tools. If you need the PDF to stay editable or searchable
+          as text, this isn't that kind of tool — it's a way to turn a set of
+          photos into one file to view, print or send, not to OCR or annotate.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>Is there a limit on how many images I can add?</summary>
+          <p>No fixed limit — the queue is held in your browser's memory, so a very long batch of large photos may get slow on an older device. A few dozen photos is comfortable on a typical laptop.</p>
+        </details>
+        <details>
+          <summary>Can I remove a page after adding it?</summary>
+          <p>Yes. Each row in the queue has its own remove button, or use "Remove all" to start over.</p>
+        </details>
+        <details>
+          <summary>Why is the output always JPEG-based?</summary>
+          <p>Embedding raw JPEG bytes is the simplest and smallest way to put a photo inside a PDF, and it's what most PDF tools do by default for photographic content. It keeps the resulting file small even with dozens of pages.</p>
+        </details>
+        <details>
+          <summary>Will the PDF open in every reader?</summary>
+          <p>Yes. It's written to the same PDF 1.4 structure that's been readable by every mainstream PDF viewer, browser and printer for over twenty years.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-foot">
@@ -183,19 +413,523 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">This tool needs JavaScript, because the PDF is assembled in your browser rather than on a server. Nothing is sent anywhere either way.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 
 <script>
-(function() {
-    var PB = window.Pixelbench;
-    if (!PB) return;
-    PB.ready(function() {
-        var drop = document.querySelector('[data-drop]');
-        if (drop) PB.createDropzone(drop, { onFiles: function(f) { PB.toast('Files loaded!'); }});
+/* ============================================================
+   Images to PDF — page logic
+   Depends on window.Pixelbench from /assets/js/app.js
+
+   Builds a minimal but valid PDF 1.4 file by hand: one image
+   object per page (embedded as a raw JPEG stream via the
+   DCTDecode filter), a page object referencing it, a Pages
+   tree, a Catalog, and a plain cross-reference table. No
+   library, no network request — every byte is written here.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  var PAPER = {
+    a4: [595.28, 841.89],
+    letter: [612, 792],
+    legal: [612, 1008]
+  };
+
+  // Pixels-to-points for "fit to image" pages: treat the source
+  // photo as if it were captured at 96 pixels per inch, then
+  // convert to PDF's 72-point inch. Keeps huge camera photos from
+  // producing absurdly large page objects.
+  var PX_TO_PT = 72 / 96;
+
+  var queue = [];
+  var seq = 0;
+  var pdfBlob = null;
+  var pdfUrl = null;
+  var dragId = null;
+
+  PB.ready(function () {
+    var els = {
+      drop: document.querySelector('[data-drop]'),
+      dropError: document.querySelector('[data-drop-error]'),
+      pagesize: document.querySelector('[data-pagesize]'),
+      pagesizeNote: document.querySelector('[data-pagesize-note]'),
+      orientationField: document.querySelector('[data-orientation-field]'),
+      orientation: document.querySelector('[data-orientation]'),
+      margin: document.querySelector('[data-margin]'),
+      fit: document.querySelector('[data-fit]'),
+      matteField: document.querySelector('[data-matte-field]'),
+      matte: document.querySelector('[data-matte]'),
+      mattePicker: document.querySelector('[data-matte-picker]'),
+      quality: document.querySelector('[data-quality]'),
+      qualityOut: document.querySelector('[data-quality-out]'),
+      build: document.querySelector('[data-build]'),
+      progress: document.querySelector('[data-progress]'),
+      progressBar: document.querySelector('[data-progress-bar]'),
+      status: document.querySelector('[data-status]'),
+      resultActions: document.querySelector('[data-result-actions]'),
+      resultNote: document.querySelector('[data-result-note]'),
+      download: document.querySelector('[data-download]'),
+      queueTitle: document.querySelector('[data-queue-title]'),
+      queueActions: document.querySelector('[data-queue-actions]'),
+      queueEmpty: document.querySelector('[data-queue-empty]'),
+      list: document.querySelector('[data-queue]'),
+      clearAll: document.querySelector('[data-clear-all]'),
+      previewPanel: document.querySelector('[data-preview-panel]'),
+      previewFrame: document.querySelector('[data-preview-frame]')
+    };
+
+    /* ---- Controls ---- */
+
+    function syncPagesize() {
+      var fit = els.pagesize.value === 'fit';
+      els.orientationField.hidden = fit;
+      els.pagesizeNote.hidden = !fit;
+    }
+    els.pagesize.addEventListener('change', syncPagesize);
+    syncPagesize();
+
+    els.quality.addEventListener('input', function () {
+      els.qualityOut.textContent = els.quality.value;
     });
+    els.mattePicker.addEventListener('input', function () {
+      els.matte.value = els.mattePicker.value.toUpperCase();
+    });
+    els.matte.addEventListener('input', function () {
+      if (/^#[0-9a-f]{6}$/i.test(els.matte.value)) els.mattePicker.value = els.matte.value;
+    });
+
+    function invalidateResult() {
+      if (pdfUrl) { URL.revokeObjectURL(pdfUrl); pdfUrl = null; }
+      pdfBlob = null;
+      els.resultActions.hidden = true;
+      els.previewPanel.hidden = true;
+      els.previewFrame.src = 'about:blank';
+    }
+    ['change', 'input'].forEach(function (evt) {
+      [els.pagesize, els.orientation, els.margin, els.fit, els.matte, els.quality].forEach(function (el) {
+        el.addEventListener(evt, invalidateResult);
+      });
+    });
+
+    /* ---- Queue ---- */
+
+    function render() {
+      els.queueEmpty.hidden = queue.length > 0;
+      els.list.hidden = queue.length === 0;
+      els.queueActions.hidden = queue.length === 0;
+      els.queueTitle.textContent = queue.length
+        ? 'Pages — ' + queue.length + ' image' + (queue.length === 1 ? '' : 's')
+        : 'Pages';
+      els.build.disabled = queue.length === 0;
+
+      els.list.innerHTML = '';
+      queue.forEach(function (item, i) {
+        var li = document.createElement('li');
+        li.className = 'filerow';
+        li.draggable = true;
+        li.setAttribute('data-id', item.id);
+
+        li.addEventListener('dragstart', function (e) {
+          dragId = item.id;
+          li.classList.add('is-dragging');
+          if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(item.id)); }
+        });
+        li.addEventListener('dragend', function () { li.classList.remove('is-dragging'); });
+        li.addEventListener('dragover', function (e) { e.preventDefault(); li.classList.add('is-dragover'); });
+        li.addEventListener('dragleave', function () { li.classList.remove('is-dragover'); });
+        li.addEventListener('drop', function (e) {
+          e.preventDefault();
+          li.classList.remove('is-dragover');
+          if (dragId == null || dragId === item.id) return;
+          moveItem(dragId, item.id);
+        });
+
+        var index = document.createElement('span');
+        index.className = 'filerow-index';
+        index.textContent = String(i + 1);
+
+        var reorder = document.createElement('div');
+        reorder.className = 'filerow-reorder';
+        var up = document.createElement('button');
+        up.type = 'button'; up.className = 'btn btn-sm btn-ghost'; up.textContent = '↑';
+        up.setAttribute('aria-label', 'Move ' + item.file.name + ' earlier');
+        up.disabled = i === 0;
+        up.addEventListener('click', function () { moveBy(item.id, -1); });
+        var down = document.createElement('button');
+        down.type = 'button'; down.className = 'btn btn-sm btn-ghost'; down.textContent = '↓';
+        down.setAttribute('aria-label', 'Move ' + item.file.name + ' later');
+        down.disabled = i === queue.length - 1;
+        down.addEventListener('click', function () { moveBy(item.id, 1); });
+        reorder.appendChild(up);
+        reorder.appendChild(down);
+
+        var thumb = document.createElement('div');
+        thumb.className = 'filerow-thumb';
+        var img = document.createElement('img');
+        img.src = item.thumbUrl;
+        img.alt = '';
+        thumb.appendChild(img);
+
+        var meta = document.createElement('div');
+        meta.className = 'filerow-meta';
+        var name = document.createElement('strong');
+        name.textContent = item.file.name;
+        var detail = document.createElement('span');
+        detail.textContent = item.error || (PB.typeLabel(item.file) + '  ·  ' + PB.formatBytes(item.file.size) + (item.dims ? '  ·  ' + item.dims : ''));
+        meta.appendChild(name);
+        meta.appendChild(detail);
+
+        var actions = document.createElement('div');
+        actions.className = 'filerow-actions';
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn btn-sm btn-ghost';
+        rm.setAttribute('aria-label', 'Remove ' + item.file.name);
+        rm.textContent = '✕';
+        rm.addEventListener('click', function () { remove(item.id); });
+        actions.appendChild(rm);
+
+        li.appendChild(index);
+        li.appendChild(reorder);
+        li.appendChild(thumb);
+        li.appendChild(meta);
+        li.appendChild(actions);
+        els.list.appendChild(li);
+      });
+    }
+
+    function moveItem(fromId, toId) {
+      var fromIdx = queue.findIndex(function (it) { return it.id === fromId; });
+      var toIdx = queue.findIndex(function (it) { return it.id === toId; });
+      if (fromIdx === -1 || toIdx === -1) return;
+      var moved = queue.splice(fromIdx, 1)[0];
+      queue.splice(toIdx, 0, moved);
+      invalidateResult();
+      render();
+    }
+
+    function moveBy(id, delta) {
+      var idx = queue.findIndex(function (it) { return it.id === id; });
+      var target = idx + delta;
+      if (idx === -1 || target < 0 || target >= queue.length) return;
+      var moved = queue.splice(idx, 1)[0];
+      queue.splice(target, 0, moved);
+      invalidateResult();
+      render();
+    }
+
+    function add(files) {
+      files.forEach(function (file) {
+        var item = {
+          id: ++seq,
+          file: file,
+          thumbUrl: URL.createObjectURL(file),
+          dims: '',
+          error: ''
+        };
+        queue.push(item);
+        PB.decodeImage(file).then(function (img) {
+          item.dims = img.width.toLocaleString() + ' × ' + img.height.toLocaleString();
+          img.release();
+          render();
+        }).catch(function () {
+          item.error = 'Couldn’t be opened — this browser may not read ' + PB.typeLabel(file) + '.';
+          render();
+        });
+      });
+      invalidateResult();
+      render();
+    }
+
+    function remove(id) {
+      queue = queue.filter(function (it) {
+        if (it.id !== id) return true;
+        if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl);
+        return false;
+      });
+      invalidateResult();
+      render();
+    }
+
+    els.clearAll.addEventListener('click', function () {
+      queue.forEach(function (it) { if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl); });
+      queue = [];
+      els.status.textContent = '';
+      invalidateResult();
+      render();
+    });
+
+    /* ---- Rendering one page's raster (composited to its final printable size) ---- */
+
+    function renderPageCanvas(file, boxWpt, boxHpt, fitMode, matte) {
+      return PB.decodeImage(file).then(function (img) {
+        var naturalW = img.width, naturalH = img.height;
+        if (!naturalW || !naturalH) { img.release(); throw new Error('This file has no fixed pixel size.'); }
+
+        // Render at roughly 150dpi relative to the printable box, capped
+        // so a tiny box on a giant source photo doesn't upscale absurdly.
+        var dpi = 150;
+        var canvasW = Math.max(1, Math.round(boxWpt / 72 * dpi));
+        var canvasH = Math.max(1, Math.round(boxHpt / 72 * dpi));
+        var maxSrcScale = 2; // never render at more than 2x the source's own resolution
+        canvasW = Math.min(canvasW, Math.round(naturalW * (boxWpt / boxHpt >= naturalW / naturalH ? maxSrcScale : maxSrcScale * (boxWpt / boxHpt) / (naturalW / naturalH))));
+        canvasH = Math.round(canvasW * (boxHpt / boxWpt));
+        canvasW = Math.max(canvasW, 8); canvasH = Math.max(canvasH, 8);
+
+        var cv = document.createElement('canvas');
+        cv.width = canvasW; cv.height = canvasH;
+        var ctx = cv.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.fillStyle = /^#[0-9a-f]{6}$/i.test(matte) ? matte : '#FFFFFF';
+        ctx.fillRect(0, 0, canvasW, canvasH);
+
+        var sx = 0, sy = 0, sw = naturalW, sh = naturalH;
+        var dx = 0, dy = 0, dw = canvasW, dh = canvasH;
+
+        if (fitMode === 'stretch') {
+          // dw/dh already fill the canvas exactly.
+        } else if (fitMode === 'cover') {
+          var scale = Math.max(canvasW / naturalW, canvasH / naturalH);
+          dw = naturalW * scale; dh = naturalH * scale;
+          dx = (canvasW - dw) / 2; dy = (canvasH - dh) / 2;
+        } else { // contain
+          var scaleC = Math.min(canvasW / naturalW, canvasH / naturalH);
+          dw = naturalW * scaleC; dh = naturalH * scaleC;
+          dx = (canvasW - dw) / 2; dy = (canvasH - dh) / 2;
+        }
+
+        ctx.drawImage(img.source, sx, sy, sw, sh, dx, dy, dw, dh);
+        img.release();
+        return { canvas: cv, width: canvasW, height: canvasH };
+      });
+    }
+
+    /* ---- Minimal PDF writer ---- */
+
+    function buildPdf(pages) {
+      // pages: [{ jpegBytes: Uint8Array, pxW, pxH, pageW, pageH, boxW, boxH, marginX, marginY }]
+      var enc = new TextEncoder();
+      var chunks = [];
+      var offset = 0;
+      var xref = [];
+
+      function push(part) {
+        var u8 = typeof part === 'string' ? enc.encode(part) : part;
+        chunks.push(u8);
+        offset += u8.length;
+      }
+      function beginObj(num) {
+        xref[num] = offset;
+        push(num + ' 0 obj\n');
+      }
+      function endObj() { push('endobj\n'); }
+
+      push(new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x34, 0x0a])); // "%PDF-1.4\n"
+      push(new Uint8Array([0x25, 0xe2, 0xe3, 0xcf, 0xd3, 0x0a])); // binary marker comment
+
+      var catalogNum = 1, pagesNum = 2;
+      var n = pages.length;
+      // Reserve object numbers: page, content, image per page, starting at 3.
+      var pageNums = [], contentNums = [], imageNums = [];
+      for (var i = 0; i < n; i++) {
+        pageNums.push(3 + i * 3);
+        contentNums.push(4 + i * 3);
+        imageNums.push(5 + i * 3);
+      }
+
+      // Catalog
+      beginObj(catalogNum);
+      push('<< /Type /Catalog /Pages ' + pagesNum + ' 0 R >>\n');
+      endObj();
+
+      // Pages tree
+      beginObj(pagesNum);
+      var kids = pageNums.map(function (p) { return p + ' 0 R'; }).join(' ');
+      push('<< /Type /Pages /Kids [' + kids + '] /Count ' + n + ' >>\n');
+      endObj();
+
+      for (i = 0; i < n; i++) {
+        var p = pages[i];
+        var pageW = p.pageW.toFixed(2), pageH = p.pageH.toFixed(2);
+
+        // Page object
+        beginObj(pageNums[i]);
+        push('<< /Type /Page /Parent ' + pagesNum + ' 0 R /MediaBox [0 0 ' + pageW + ' ' + pageH + ']' +
+             ' /Resources << /XObject << /Im' + i + ' ' + imageNums[i] + ' 0 R >> >>' +
+             ' /Contents ' + contentNums[i] + ' 0 R >>\n');
+        endObj();
+
+        // Content stream: place the image to exactly fill the printable box.
+        var content = 'q\n' + p.boxW.toFixed(2) + ' 0 0 ' + p.boxH.toFixed(2) + ' ' +
+                       p.marginX.toFixed(2) + ' ' + p.marginY.toFixed(2) + ' cm\n/Im' + i + ' Do\nQ\n';
+        var contentBytes = enc.encode(content);
+        beginObj(contentNums[i]);
+        push('<< /Length ' + contentBytes.length + ' >>\nstream\n');
+        push(contentBytes);
+        push('\nendstream\n');
+        endObj();
+
+        // Image XObject (raw JPEG via DCTDecode).
+        beginObj(imageNums[i]);
+        push('<< /Type /XObject /Subtype /Image /Width ' + p.pxW + ' /Height ' + p.pxH +
+             ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + p.jpegBytes.length + ' >>\nstream\n');
+        push(p.jpegBytes);
+        push('\nendstream\n');
+        endObj();
+      }
+
+      var xrefOffset = offset;
+      var total = imageNums[n - 1] + 1;
+      push('xref\n0 ' + total + '\n');
+      push('0000000000 65535 f \n');
+      for (i = 1; i < total; i++) {
+        var off = xref[i] || 0;
+        push(pad10(off) + ' 00000 n \n');
+      }
+      push('trailer\n<< /Size ' + total + ' /Root ' + catalogNum + ' 0 R >>\nstartxref\n' + xrefOffset + '\n%%EOF');
+
+      return new Blob(chunks, { type: 'application/pdf' });
+    }
+
+    function pad10(n) {
+      var s = String(Math.round(n));
+      while (s.length < 10) s = '0' + s;
+      return s;
+    }
+
+    /* ---- Build ---- */
+
+    els.build.addEventListener('click', function () {
+      if (!queue.length) return;
+      invalidateResult();
+
+      els.build.classList.add('is-busy');
+      els.build.disabled = true;
+      els.progress.hidden = false;
+      els.progressBar.style.width = '0%';
+      els.status.textContent = 'Preparing pages…';
+
+      var quality = parseInt(els.quality.value, 10) / 100;
+      var matte = els.matte.value.trim();
+      var marginPt = parseInt(els.margin.value, 10);
+      var fitMode = els.fit.value;
+      var sizeChoice = els.pagesize.value;
+      var orientChoice = els.orientation.value;
+
+      var results = [];
+      var failed = 0;
+
+      function pageBoxFor(naturalW, naturalH) {
+        var pageW, pageH;
+        if (sizeChoice === 'fit') {
+          pageW = naturalW * PX_TO_PT + marginPt * 2;
+          pageH = naturalH * PX_TO_PT + marginPt * 2;
+        } else {
+          var paper = PAPER[sizeChoice] || PAPER.a4;
+          var wantLandscape = orientChoice === 'landscape' ||
+            (orientChoice === 'auto' && naturalW > naturalH);
+          pageW = wantLandscape ? Math.max(paper[0], paper[1]) : Math.min(paper[0], paper[1]);
+          pageH = wantLandscape ? Math.min(paper[0], paper[1]) : Math.max(paper[0], paper[1]);
+        }
+        var boxW = Math.max(1, pageW - marginPt * 2);
+        var boxH = Math.max(1, pageH - marginPt * 2);
+        return { pageW: pageW, pageH: pageH, boxW: boxW, boxH: boxH, marginX: (pageW - boxW) / 2, marginY: (pageH - boxH) / 2 };
+      }
+
+      function step(i) {
+        if (i >= queue.length) return Promise.resolve();
+        var item = queue[i];
+        return PB.decodeImage(item.file).then(function (probe) {
+          var naturalW = probe.width, naturalH = probe.height;
+          probe.release();
+          var box = pageBoxFor(naturalW, naturalH);
+          return renderPageCanvas(item.file, box.boxW, box.boxH, fitMode, matte).then(function (rendered) {
+            return PB.canvasToBlob(rendered.canvas, 'image/jpeg', quality).then(function (blob) {
+              return blob.arrayBuffer().then(function (buf) {
+                results.push({
+                  jpegBytes: new Uint8Array(buf),
+                  pxW: rendered.width,
+                  pxH: rendered.height,
+                  pageW: box.pageW,
+                  pageH: box.pageH,
+                  boxW: box.boxW,
+                  boxH: box.boxH,
+                  marginX: box.marginX,
+                  marginY: box.marginY
+                });
+              });
+            });
+          });
+        }).catch(function (err) {
+          failed++;
+          item.error = err.message || 'Could not add this page.';
+        }).then(function () {
+          els.progressBar.style.width = Math.round(((i + 1) / queue.length) * 100) + '%';
+          els.status.textContent = 'Rendering page ' + (i + 1) + ' of ' + queue.length + '…';
+          return new Promise(function (r) { setTimeout(r, 0); }).then(function () { return step(i + 1); });
+        });
+      }
+
+      step(0).then(function () {
+        els.build.classList.remove('is-busy');
+        els.build.disabled = false;
+        els.progress.hidden = true;
+        render();
+
+        if (!results.length) {
+          els.status.textContent = 'Nothing could be added — every image failed to open.';
+          return;
+        }
+
+        pdfBlob = buildPdf(results);
+        pdfUrl = URL.createObjectURL(pdfBlob);
+        els.status.textContent = failed
+          ? results.length + ' page' + (results.length === 1 ? '' : 's') + ' built, ' + failed + ' image' + (failed === 1 ? '' : 's') + ' failed.'
+          : results.length + ' page' + (results.length === 1 ? '' : 's') + ' ready.';
+        els.resultNote.textContent = PB.formatBytes(pdfBlob.size);
+        els.resultActions.hidden = false;
+        els.previewPanel.hidden = false;
+        els.previewFrame.src = pdfUrl;
+      });
+    });
+
+    els.download.addEventListener('click', function () {
+      if (pdfBlob) PB.downloadBlob(pdfBlob, 'pixelbench.pdf');
+    });
+
+    /* ---- Input ---- */
+
+    PB.createDropzone(els.drop, {
+      multiple: true,
+      onReject: function (message) {
+        els.dropError.textContent = message;
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.dropError.hidden = true;
+        add(files);
+      }
+    });
+
+    PB.takeHandoff().then(function (files) {
+      if (files.length) add(files);
+    });
+
+    window.addEventListener('pagehide', function () {
+      queue.forEach(function (it) { if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl); });
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    });
+
+    render();
+  });
 })();
 </script>
 </body>

@@ -3,35 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixelbench — Image tools that run in your browser</title>
-<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
-<link rel="canonical" href="https://example.pages.dev/">
+<title>Base64 &amp; data URI converter — image to base64 and back | Pixelbench</title>
+<meta name="description" content="Convert an image to a base64 data URI, or paste a data URI back into an image and download it. Runs entirely in your browser, nothing is uploaded.">
+<link rel="canonical" href="https://example.pages.dev/base64.html">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
 
-<!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pixelbench">
-<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
-<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
-<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:title" content="Base64 & data URI converter — image to base64 and back">
+<meta property="og:description" content="Convert an image to a base64 data URI or decode one back into a file, entirely in the browser.">
+<meta property="og:url" content="https://example.pages.dev/base64.html">
 <meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Icons (files come later in the build) -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/styles.css">
 
-<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<!-- Page-specific: output textarea + preview -->
+<style>
+  .uri-output { position: relative; }
+  .uri-output textarea { min-height: 10rem; padding-right: 4.5rem; }
+  .uri-output .btn { position: absolute; top: 0.55rem; right: 0.55rem; }
+  .uri-preview {
+    margin-top: 1rem; display: grid; place-items: center;
+    padding: 1rem; min-height: 8rem;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    background:
+      conic-gradient(var(--check-b) 25%, transparent 0 50%, var(--check-b) 0 75%, transparent 0)
+      0 0 / 16px 16px, var(--check-a);
+  }
+  .uri-preview img { max-width: 100%; max-height: 16rem; }
+</style>
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 -->
 
@@ -40,25 +54,34 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebApplication",
-      "name": "Pixelbench",
-      "url": "https://example.pages.dev/",
+      "@type": "SoftwareApplication",
+      "name": "Base64 and data URI converter",
+      "url": "https://example.pages.dev/base64.html",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any modern browser",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
-      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+      "description": "Convert an image to a base64 data URI, or decode a data URI back into a downloadable image, entirely in the browser."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Base64 & data URI", "item": "https://example.pages.dev/base64.html" }
+      ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Are my images uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
-        { "@type": "Question", "name": "Is there a file size limit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
-        { "@type": "Question", "name": "Does it work offline?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
-        { "@type": "Question", "name": "Which formats can I convert between?",
-          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+        { "@type": "Question", "name": "What is a data URI?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A data URI embeds a file's contents directly inside a URL as base64 text, in the form data:<mime-type>;base64,<data>. It can be used anywhere a normal image URL is used, including in an <img> src, a CSS background-image, or an email." } },
+        { "@type": "Question", "name": "Why is the base64 text bigger than the original file?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Base64 encodes each group of three raw bytes as four text characters, so the encoded text runs about 33% larger than the file it represents." } },
+        { "@type": "Question", "name": "Does converting to base64 re-compress or change the image?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The original file's exact bytes are read and encoded as-is, with no re-drawing or re-encoding, so the decoded image is byte-for-byte identical to what you started with." } },
+        { "@type": "Question", "name": "Can I paste base64 text without the data: prefix?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. If the pasted text looks like plain base64 without a data: header, the decoder assumes image/png and adds the header for you automatically before decoding." } },
+        { "@type": "Question", "name": "Is a large data URI a good idea for a real website?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Only for very small images, like icons under a few kilobytes. Inlining a large photo bloats the HTML or CSS file it lives in and defeats browser caching, since the image can no longer be cached separately from the page." } }
       ]
     }
   ]
@@ -83,10 +106,10 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
+      <a href="/#tools">Tools</a>
       <a href="/convert.html">Convert</a>
       <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
-      <a href="#faq">FAQ</a>
+      <a href="/#faq">FAQ</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
@@ -107,37 +130,239 @@
 
 <main id="main">
 
-        <div class="wrap">
-            <header class="page-head">
-                <h1>Base64 & Data URI</h1>
-                <p>Turn an image into a data URI for CSS or HTML.</p>
-            </header>
-            <div class="tool-layout">
-                <div>
-                    <section class="panel">
-                        <div class="panel-head"><h2>Settings</h2></div>
-                        <div class="panel-body">
-                            <div class='field'><label>Base64 Output</label><textarea readonly></textarea></div>
-                            <button class="btn btn-primary btn-block" style="margin-top:1rem;">Process</button>
-                        </div>
-                    </section>
-                </div>
-                <div>
-                    <div class="drop" data-drop>
-                        <div class="drop-idle">
-                            <p class="drop-lede">Drop images here</p>
-                        </div>
-                    </div>
-                    <section class="panel" style="margin-top:1rem">
-                        <div class="panel-head"><h2>Queue</h2></div>
-                        <div class="panel-body">
-                            <div class="empty">No images yet</div>
-                        </div>
-                    </section>
-                </div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <span>Base64 &amp; data URI</span>
+    </nav>
+    <header class="page-head">
+      <h1>Base64 &amp; data URI converter</h1>
+      <p>
+        Turn an image into a base64 data URI for embedding in CSS or HTML, or paste a
+        data URI back in to decode and download the original image. Two-way, no queue.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Direction</h2></div>
+          <div class="panel-body">
+            <div class="field">
+              <div class="seg" data-mode role="group" aria-label="Conversion direction">
+                <button type="button" data-mode-btn="encode" aria-pressed="true">Image → Data&nbsp;URI</button>
+                <button type="button" data-mode-btn="decode" aria-pressed="false">Data&nbsp;URI → Image</button>
+              </div>
             </div>
+            <p class="field-note" data-mode-note>Drop an image on the right to get its base64 data URI.</p>
+          </div>
+        </section>
+
+        <section class="panel" data-encode-stats hidden>
+          <div class="panel-head"><h2>Size</h2></div>
+          <div class="panel-body">
+            <dl class="stats">
+              <div class="stat"><dt>Original</dt><dd data-stat-original>—</dd></div>
+              <div class="stat"><dt>Base64 text</dt><dd data-stat-encoded>—</dd></div>
+              <div class="stat"><dt>Overhead</dt><dd data-stat-overhead>—</dd></div>
+            </dl>
+            <p class="field-note">Base64 text runs roughly 33% larger than the raw bytes it encodes — three bytes become four characters.</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="/convert.html">Convert format</a>
+              <a href="/compress.html">Compress</a>
+              <a href="/metadata.html">Metadata</a>
+              <a href="/favicon.html">Favicon maker</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+
+        <!-- Encode mode -->
+        <div data-encode-panel>
+          <div class="drop" data-drop>
+            <input type="file" id="pick" accept="image/*" hidden data-drop-input>
+            <div class="drop-idle">
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+                <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+              </svg>
+              <p class="drop-lede">Drop an image here</p>
+              <p class="drop-hint">or <label class="link-btn" for="pick">choose a file</label> · one at a time</p>
+            </div>
+            <p class="drop-error" data-drop-error role="alert" hidden></p>
+          </div>
+
+          <section class="panel" style="margin-top:1rem">
+            <div class="panel-head"><h2>Data URI</h2></div>
+            <div class="panel-body">
+              <div class="empty" data-encode-empty>
+                <strong>Nothing loaded yet</strong>
+                <p>Drop an image above and its exact original bytes are read and shown here as a base64 data URI, ready to copy.</p>
+              </div>
+
+              <div data-encode-result hidden>
+                <div class="field uri-output">
+                  <label for="encode-output">Data URI</label>
+                  <textarea id="encode-output" data-encode-output readonly spellcheck="false"></textarea>
+                  <button class="btn btn-sm" type="button" data-copy-uri>Copy</button>
+                </div>
+                <div class="uri-preview">
+                  <img data-encode-preview alt="Preview of the loaded image">
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
-        
+
+        <!-- Decode mode -->
+        <div data-decode-panel hidden>
+          <section class="panel">
+            <div class="panel-head"><h2>Paste data URI</h2></div>
+            <div class="panel-body">
+              <div class="field">
+                <label for="decode-input">Data URI or bare base64</label>
+                <textarea id="decode-input" data-decode-input spellcheck="false" placeholder="data:image/png;base64,iVBORw0KGgo…"></textarea>
+                <p class="field-note">Paste a full <code>data:image/…;base64,…</code> string, or just the base64 text — a <code>image/png</code> header is assumed if none is given.</p>
+              </div>
+              <button class="btn btn-primary btn-block" type="button" data-decode>Decode</button>
+              <p class="field-note" data-decode-status role="status" aria-live="polite"></p>
+              <p class="notice notice-error" data-decode-error hidden></p>
+            </div>
+          </section>
+
+          <section class="panel" style="margin-top:1rem">
+            <div class="panel-head"><h2>Result</h2></div>
+            <div class="panel-body">
+              <div class="empty" data-decode-empty>
+                <strong>Nothing decoded yet</strong>
+                <p>Paste a data URI above and click Decode. The image previews here and can be downloaded.</p>
+              </div>
+
+              <div data-decode-result hidden>
+                <div class="uri-preview">
+                  <img data-decode-preview alt="Decoded image">
+                </div>
+                <dl class="stats" style="margin-top:1rem">
+                  <div class="stat"><dt>Type</dt><dd data-decode-type>—</dd></div>
+                  <div class="stat"><dt>Size</dt><dd data-decode-size>—</dd></div>
+                  <div class="stat"><dt>Pixels</dt><dd data-decode-dims>—</dd></div>
+                </dl>
+                <button class="btn btn-primary btn-block" type="button" data-download-decoded style="margin-top:1rem">Download image</button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="base64-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <!-- ── Written content ───────────────────────────────── -->
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>What a data URI actually is</h2>
+        <p>
+          A data URI packs a file's raw bytes directly into a URL, using base64 to turn
+          arbitrary binary data into plain text made only of letters, digits and a
+          handful of symbols. The result looks like
+          <code>data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA…</code> — a MIME type, a
+          flag saying the payload is base64, and the encoded bytes themselves. Anywhere
+          a browser accepts an image URL, it will accept this instead: an
+          <code>&lt;img src&gt;</code>, a CSS <code>background-image</code>, or an SVG
+          <code>&lt;image&gt;</code> element.
+        </p>
+        <p>
+          Because the whole file rides inside the URL, no separate request is needed to
+          fetch it — useful for a handful of tiny icons, and actively harmful for
+          anything larger, since it bloats whatever document it's embedded in and can't
+          be cached independently the way a normal image file can.
+        </p>
+
+        <h3>Why base64 specifically</h3>
+        <p>
+          URLs and most text formats can't safely carry arbitrary binary bytes — some
+          byte values would be misread as control characters or syntax. Base64 sidesteps
+          that by re-encoding every three raw bytes as four printable characters drawn
+          from a 64-symbol alphabet, which is where the fixed 33% size increase comes
+          from: four characters take more space than the three bytes they represent.
+        </p>
+
+        <hr>
+
+        <h2>Encoding versus decoding here</h2>
+        <p>
+          Image → Data URI reads the file you drop with the browser's
+          <code>FileReader</code>, which returns the exact original bytes re-encoded as
+          base64 — not a re-drawn copy. That matters if the source already has specific
+          compression artefacts or metadata you want preserved exactly, unlike the
+          convert or compress tools, which always redraw onto a canvas and therefore
+          always produce a fresh file.
+        </p>
+        <p>
+          Data URI → Image does the reverse: it validates the pasted string looks like a
+          real data URI, decodes the base64 back into raw bytes, and hands you the result
+          as a downloadable file with the right extension for its MIME type.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>What is a data URI?</summary>
+          <p>A data URI embeds a file's contents directly inside a URL as base64 text, in the form data:&lt;mime-type&gt;;base64,&lt;data&gt;. It can be used anywhere a normal image URL is used, including in an &lt;img&gt; src, a CSS background-image, or an email.</p>
+        </details>
+        <details>
+          <summary>Why is the base64 text bigger than the original file?</summary>
+          <p>Base64 encodes each group of three raw bytes as four text characters, so the encoded text runs about 33% larger than the file it represents.</p>
+        </details>
+        <details>
+          <summary>Does converting to base64 re-compress or change the image?</summary>
+          <p>No. The original file's exact bytes are read and encoded as-is, with no re-drawing or re-encoding, so the decoded image is byte-for-byte identical to what you started with.</p>
+        </details>
+        <details>
+          <summary>Can I paste base64 text without the data: prefix?</summary>
+          <p>Yes. If the pasted text looks like plain base64 without a data: header, the decoder assumes image/png and adds the header for you automatically before decoding.</p>
+        </details>
+        <details>
+          <summary>Is a large data URI a good idea for a real website?</summary>
+          <p>Only for very small images, like icons under a few kilobytes. Inlining a large photo bloats the HTML or CSS file it lives in and defeats browser caching, since the image can no longer be cached separately from the page.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-foot">
@@ -183,19 +408,230 @@
 </footer>
 
 <noscript>
-  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+  <div class="noscript">This converter needs JavaScript, because the base64 encoding and decoding run in your browser rather than on a server. Nothing is sent anywhere either way.</div>
 </noscript>
 
-<script src="/assets/js/app.js" defer></script>
+<script src="/assets/js/app.js"></script>
 
 <script>
-(function() {
-    var PB = window.Pixelbench;
-    if (!PB) return;
-    PB.ready(function() {
-        var drop = document.querySelector('[data-drop]');
-        if (drop) PB.createDropzone(drop, { onFiles: function(f) { PB.toast('Files loaded!'); }});
+/* ============================================================
+   Base64 & data URI — page logic
+   Depends on window.Pixelbench from /assets/js/app.js
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  var DATA_URI_RE = /^data:([a-zA-Z0-9.+-]+\/[a-zA-Z0-9.+-]+)?;base64,([A-Za-z0-9+/=\s]+)$/;
+  var BARE_BASE64_RE = /^[A-Za-z0-9+/=\s]+$/;
+
+  var mode = 'encode';
+  var encodeObjectUrl = null;
+  var decodeObjectUrl = null;
+
+  PB.ready(function () {
+    var els = {
+      modeWrap: document.querySelector('[data-mode]'),
+      modeNote: document.querySelector('[data-mode-note]'),
+      encodePanel: document.querySelector('[data-encode-panel]'),
+      decodePanel: document.querySelector('[data-decode-panel]'),
+      encodeStats: document.querySelector('[data-encode-stats]'),
+
+      drop: document.querySelector('[data-drop]'),
+      dropError: document.querySelector('[data-drop-error]'),
+      encodeEmpty: document.querySelector('[data-encode-empty]'),
+      encodeResult: document.querySelector('[data-encode-result]'),
+      encodeOutput: document.querySelector('[data-encode-output]'),
+      encodePreview: document.querySelector('[data-encode-preview]'),
+      copyUri: document.querySelector('[data-copy-uri]'),
+      statOriginal: document.querySelector('[data-stat-original]'),
+      statEncoded: document.querySelector('[data-stat-encoded]'),
+      statOverhead: document.querySelector('[data-stat-overhead]'),
+
+      decodeInput: document.querySelector('[data-decode-input]'),
+      decodeBtn: document.querySelector('[data-decode]'),
+      decodeStatus: document.querySelector('[data-decode-status]'),
+      decodeError: document.querySelector('[data-decode-error]'),
+      decodeEmpty: document.querySelector('[data-decode-empty]'),
+      decodeResult: document.querySelector('[data-decode-result]'),
+      decodePreview: document.querySelector('[data-decode-preview]'),
+      decodeType: document.querySelector('[data-decode-type]'),
+      decodeSize: document.querySelector('[data-decode-size]'),
+      decodeDims: document.querySelector('[data-decode-dims]'),
+      downloadDecoded: document.querySelector('[data-download-decoded]')
+    };
+
+    var decodedBlob = null;
+    var decodedName = 'image';
+
+    /* ---- Mode toggle ---- */
+
+    function syncMode() {
+      els.encodePanel.hidden = mode !== 'encode';
+      els.decodePanel.hidden = mode !== 'decode';
+      els.encodeStats.hidden = mode !== 'encode' || !els.encodeOutput.value;
+      els.modeNote.textContent = mode === 'encode'
+        ? 'Drop an image on the right to get its base64 data URI.'
+        : 'Paste a data URI or bare base64 text on the right to decode it back into a file.';
+    }
+
+    els.modeWrap.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-mode-btn]');
+      if (!btn) return;
+      mode = btn.getAttribute('data-mode-btn');
+      Array.prototype.forEach.call(els.modeWrap.querySelectorAll('button'), function (b) {
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+      });
+      syncMode();
     });
+
+    /* ---- Encode: image -> data URI ---- */
+
+    function loadForEncode(file) {
+      if (encodeObjectUrl) { URL.revokeObjectURL(encodeObjectUrl); encodeObjectUrl = null; }
+
+      var reader = new FileReader();
+      reader.onload = function () {
+        var dataUri = reader.result;
+        els.encodeOutput.value = dataUri;
+        encodeObjectUrl = URL.createObjectURL(file);
+        els.encodePreview.src = encodeObjectUrl;
+
+        var encodedLength = dataUri.length - dataUri.indexOf(',') - 1;
+        els.statOriginal.textContent = PB.formatBytes(file.size);
+        els.statEncoded.textContent = PB.formatBytes(encodedLength);
+        var overhead = file.size ? Math.round((encodedLength / file.size - 1) * 100) : 0;
+        els.statOverhead.textContent = '+' + overhead + '%';
+
+        els.encodeEmpty.hidden = true;
+        els.encodeResult.hidden = false;
+        els.encodeStats.hidden = false;
+      };
+      reader.onerror = function () {
+        els.dropError.textContent = 'Couldn\'t read that file.';
+        els.dropError.hidden = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    els.copyUri.addEventListener('click', function () {
+      if (!els.encodeOutput.value) return;
+      PB.copyText(els.encodeOutput.value).then(function () {
+        PB.toast('Data URI copied');
+      });
+    });
+
+    PB.createDropzone(els.drop, {
+      multiple: false,
+      onReject: function (message) {
+        els.dropError.textContent = message;
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.dropError.hidden = true;
+        if (files.length) loadForEncode(files[0]);
+      }
+    });
+
+    PB.takeHandoff().then(function (files) {
+      if (files.length) loadForEncode(files[0]);
+    });
+
+    /* ---- Decode: data URI -> image ---- */
+
+    function normaliseInput(raw) {
+      var text = (raw || '').trim();
+      if (!text) return null;
+
+      if (/^data:/i.test(text)) return text;
+
+      // Bare base64 — accept it if it only contains base64 alphabet characters
+      // (whitespace allowed, often introduced by copy/paste line wrapping).
+      var stripped = text.replace(/\s+/g, '');
+      if (stripped && BARE_BASE64_RE.test(stripped)) {
+        return 'data:image/png;base64,' + stripped;
+      }
+      return null;
+    }
+
+    function decodeBase64ToBlob(dataUri, mimeFallback) {
+      var match = DATA_URI_RE.exec(dataUri.replace(/\s+/g, ''));
+      if (!match) return null;
+      var mime = match[1] || mimeFallback || 'image/png';
+      var b64 = match[2];
+
+      var binary;
+      try {
+        binary = atob(b64);
+      } catch (err) {
+        return null;
+      }
+      var bytes = new Uint8Array(binary.length);
+      for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new Blob([bytes], { type: mime });
+    }
+
+    function runDecode() {
+      els.decodeError.hidden = true;
+      els.decodeStatus.textContent = '';
+
+      var normalised = normaliseInput(els.decodeInput.value);
+      if (!normalised) {
+        els.decodeError.textContent = 'That doesn\'t look like a data URI or base64 text. Expected something like "data:image/png;base64,…".';
+        els.decodeError.hidden = false;
+        return;
+      }
+
+      var blob = decodeBase64ToBlob(normalised);
+      if (!blob || !blob.size) {
+        els.decodeError.textContent = 'Couldn\'t decode that as base64. Check for missing characters or an incomplete paste.';
+        els.decodeError.hidden = false;
+        return;
+      }
+      if (!PB.isImage({ type: blob.type, name: 'x' })) {
+        els.decodeError.textContent = 'That decoded to a "' + (blob.type || 'unknown') + '" file, not an image.';
+        els.decodeError.hidden = false;
+        return;
+      }
+
+      if (decodeObjectUrl) { URL.revokeObjectURL(decodeObjectUrl); decodeObjectUrl = null; }
+      decodeObjectUrl = URL.createObjectURL(blob);
+      els.decodePreview.src = decodeObjectUrl;
+
+      var file = new File([blob], 'decoded.' + PB.extFor(blob.type), { type: blob.type });
+      PB.decodeImage(file).then(function (img) {
+        els.decodeDims.textContent = img.width.toLocaleString() + ' × ' + img.height.toLocaleString();
+        img.release();
+      }).catch(function () {
+        els.decodeDims.textContent = '—';
+      });
+
+      els.decodeType.textContent = PB.typeLabel({ type: blob.type, name: '' });
+      els.decodeSize.textContent = PB.formatBytes(blob.size);
+      decodedBlob = blob;
+      decodedName = 'decoded-image.' + PB.extFor(blob.type);
+
+      els.decodeEmpty.hidden = true;
+      els.decodeResult.hidden = false;
+      els.decodeStatus.textContent = 'Decoded successfully.';
+    }
+
+    els.decodeBtn.addEventListener('click', runDecode);
+
+    els.downloadDecoded.addEventListener('click', function () {
+      if (decodedBlob) PB.downloadBlob(decodedBlob, decodedName);
+    });
+
+    window.addEventListener('pagehide', function () {
+      if (encodeObjectUrl) URL.revokeObjectURL(encodeObjectUrl);
+      if (decodeObjectUrl) URL.revokeObjectURL(decodeObjectUrl);
+    });
+
+    syncMode();
+  });
 })();
 </script>
 </body>
