@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pixelbench — Image tools that run in your browser</title>
+<meta name="description" content="Convert, resize, crop, compress and combine images into PDFs. Every tool runs on your own device — no uploads, no account, no queue.">
+<link rel="canonical" href="https://example.pages.dev/">
+<meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pixelbench">
+<meta property="og:title" content="Pixelbench — Image tools that run in your browser">
+<meta property="og:description" content="Convert, resize, crop, compress and combine images into PDFs. Nothing is uploaded.">
+<meta property="og:url" content="https://example.pages.dev/">
+<meta property="og:image" content="https://example.pages.dev/assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Icons (files come later in the build) -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Type: Archivo (variable width axis) + IBM Plex Mono for readouts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once your site is approved.
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+-->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Pixelbench",
+      "url": "https://example.pages.dev/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any modern browser",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
+      "description": "Browser-based image tools for converting, resizing, cropping, compressing and building PDFs. Files are processed locally and never uploaded."
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Are my images uploaded to a server?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Every tool runs in your browser using the Canvas and File APIs. Your files are read from disk into memory on your own device and never sent anywhere." } },
+        { "@type": "Question", "name": "Is there a file size limit?",
+          "acceptedAnswer": { "@type": "Answer", "text": "There is no server limit, so the ceiling is your device's memory. Photos up to about 50 megapixels are comfortable on a typical laptop; very large scans may be slow on a phone." } },
+        { "@type": "Question", "name": "Does it work offline?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once a tool page has loaded, you can disconnect and keep working. Nothing needs a network connection." } },
+        { "@type": "Question", "name": "Which formats can I convert between?",
+          "acceptedAnswer": { "@type": "Answer", "text": "JPEG, PNG, WebP, GIF, BMP and ICO everywhere, plus AVIF and HEIC where your browser supports them. PDF is available as an export." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <a class="brand" href="/" aria-label="Pixelbench home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <rect x="2.5" y="4.5" width="19" height="15" rx="2"></rect>
+          <path d="M2.5 15.5 8 10l4.5 4.5L16 11l5.5 5.5"></path>
+          <circle cx="16" cy="8.5" r="1.5"></circle>
+        </svg>
+      </span>
+      <span class="brand-word">Pixel<em>bench</em></span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <a href="#tools">Tools</a>
+      <a href="/convert.html">Convert</a>
+      <a href="/pdf.html">Image&nbsp;to&nbsp;PDF</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2"></circle>
+        <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"></path>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"></path>
+      </svg>
+    </button>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Show menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+        <div class="wrap">
+            <header class="page-head">
+                <h1>Rotate & Flip</h1>
+                <p>Spin and mirror your photos easily.</p>
+            </header>
+            <div class="tool-layout">
+                <div>
+                    <section class="panel">
+                        <div class="panel-head"><h2>Settings</h2></div>
+                        <div class="panel-body">
+                            <div class='btn-row'><button class='btn'>Rotate Left</button><button class='btn'>Rotate Right</button></div>
+                            <button class="btn btn-primary btn-block" style="margin-top:1rem;">Process</button>
+                        </div>
+                    </section>
+                </div>
+                <div>
+                    <div class="drop" data-drop>
+                        <div class="drop-idle">
+                            <p class="drop-lede">Drop images here</p>
+                        </div>
+                    </div>
+                    <section class="panel" style="margin-top:1rem">
+                        <div class="panel-head"><h2>Queue</h2></div>
+                        <div class="panel-body">
+                            <div class="empty">No images yet</div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <div class="foot-brand">
+      <span class="brand-word">Pixel<em>bench</em></span>
+      <p>Image tools that run on your own device. Built as a static site, free to use, no account.</p>
+    </div>
+
+    <nav class="foot-col" aria-label="Tools">
+      <h2>Tools</h2>
+      <a href="/convert.html">Convert format</a>
+      <a href="/compress.html">Compress</a>
+      <a href="/resize.html">Resize</a>
+      <a href="/crop.html">Crop</a>
+      <a href="/pdf.html">Images to PDF</a>
+      <a href="/metadata.html">Metadata</a>
+    </nav>
+
+    <nav class="foot-col" aria-label="More tools">
+      <h2>More</h2>
+      <a href="/rotate.html">Rotate &amp; flip</a>
+      <a href="/watermark.html">Watermark</a>
+      <a href="/favicon.html">Favicon maker</a>
+      <a href="/palette.html">Colour palette</a>
+      <a href="/collage.html">Merge &amp; collage</a>
+      <a href="/base64.html">Base64 &amp; data URI</a>
+    </nav>
+
+    <nav class="foot-col" aria-label="Site">
+      <h2>Site</h2>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+    </nav>
+  </div>
+
+  <div class="wrap foot-base">
+    <p>&copy; <span data-year>2026</span> Pixelbench. Made in Western Australia.</p>
+    <p class="foot-note">Images are processed in your browser and are never uploaded.</p>
+  </div>
+</footer>
+
+<noscript>
+  <div class="noscript">These tools need JavaScript, because the image processing runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+</noscript>
+
+<script src="/assets/js/app.js" defer></script>
+
+<script>
+(function() {
+    var PB = window.Pixelbench;
+    if (!PB) return;
+    PB.ready(function() {
+        var drop = document.querySelector('[data-drop]');
+        if (drop) PB.createDropzone(drop, { onFiles: function(f) { PB.toast('Files loaded!'); }});
+    });
+})();
+</script>
+</body>
+</html>
