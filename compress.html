@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compress images — shrink JPEG, PNG and WebP files | Pixelbench</title>
+<meta name="description" content="Compress images in your browser with a live before-and-after comparison, or aim at a target file size in kilobytes. Nothing is uploaded.">
+<link rel="canonical" href="https://example.pages.dev/compress.html">
+<meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pixelbench">
+<meta property="og:title" content="Compress images — with a live before-and-after view">
+<meta property="og:description" content="Shrink photos to a target size without uploading them anywhere.">
+<meta property="og:url" content="https://example.pages.dev/compress.html">
+<meta property="og:image" content="assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script>try{var t=localStorage.getItem('pb-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<!-- Page-specific: the before/after comparison viewer -->
+<style>
+  .compare { position: relative; display: inline-block; max-width: 100%; line-height: 0; touch-action: none; }
+  .compare img { display: block; max-width: 100%; max-height: 62vh; width: auto; }
+  .compare-overlay { position: absolute; inset: 0; overflow: hidden; }
+  .compare-overlay img { width: 100%; height: 100%; max-height: none; object-fit: fill; }
+  .compare[data-ready] .compare-overlay { clip-path: inset(0 calc(100% - var(--split, 50%)) 0 0); }
+  .compare-divider {
+    position: absolute; top: 0; bottom: 0; left: var(--split, 50%);
+    width: 2px; background: var(--accent); pointer-events: none; transform: translateX(-1px);
+  }
+  .compare-divider::after {
+    content: ""; position: absolute; top: 50%; left: 50%;
+    width: 2rem; height: 2rem; margin: -1rem 0 0 -1rem;
+    border: 2px solid var(--accent); border-radius: 50%;
+    background: var(--surface);
+  }
+  .compare-tag {
+    position: absolute; top: .6rem; z-index: 2;
+    padding: .2rem .55rem; border-radius: 999px;
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .1em; text-transform: uppercase;
+    background: color-mix(in srgb, var(--key) 72%, transparent); color: #fff; line-height: 1.6;
+  }
+  .compare-tag-a { left: .6rem; }
+  .compare-tag-b { right: .6rem; }
+  .compare-range {
+    position: absolute; inset: auto 0 0 0; z-index: 3;
+    width: 100%; margin: 0; height: 100%; opacity: 0; cursor: ew-resize;
+  }
+  .compare-range:focus-visible + .compare-divider { box-shadow: 0 0 0 3px var(--focus); }
+</style>
+
+<!-- AdSense loader. Paste your publisher ID and uncomment once approved.
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+-->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Image compressor",
+      "url": "https://example.pages.dev/compress.html",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any modern browser",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
+      "description": "Compress images to a chosen quality or a target file size, entirely in the browser."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Pixelbench", "item": "https://example.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Compress", "item": "https://example.pages.dev/compress.html" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What quality setting should I use?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For photographs, 75 to 85 is the usual sweet spot. Below about 65 you start to see blocking in skies and around hard edges. Above 90 the file grows quickly for very little visible gain." } },
+        { "@type": "Question", "name": "How do I compress an image to a specific file size?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Switch to target size mode and enter a limit in kilobytes. The tool re-encodes at several quality levels to find the highest quality that fits under your limit." } },
+        { "@type": "Question", "name": "Can I compress a PNG without losing quality?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Not meaningfully in a browser. The largest saving for a photographic PNG comes from converting it to WebP or JPEG, which this tool does by default when the source is not already a lossy format." } },
+        { "@type": "Question", "name": "Why does resizing shrink the file more than lowering quality?",
+          "acceptedAnswer": { "@type": "Answer", "text": "File size scales with pixel count. Halving the width and height removes three quarters of the pixels, which usually beats any quality reduction and looks better at normal viewing sizes." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <a class="brand" href="index.html" aria-label="Pixelbench home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <rect x="2.5" y="4.5" width="19" height="15" rx="2"></rect>
+          <path d="M2.5 15.5 8 10l4.5 4.5L16 11l5.5 5.5"></path>
+          <circle cx="16" cy="8.5" r="1.5"></circle>
+        </svg>
+      </span>
+      <span class="brand-word">Pixel<em>bench</em></span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <a href="index.html#tools">Tools</a>
+      <a href="convert.html">Convert</a>
+      <a href="pdf.html">Image&nbsp;to&nbsp;PDF</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2"></circle>
+        <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"></path>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"></path>
+      </svg>
+    </button>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Show menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="index.html">Home</a> <span aria-hidden="true">/</span> <span>Compress</span>
+    </nav>
+    <header class="page-head">
+      <h1>Compress images</h1>
+      <p>
+        Drag the divider to see exactly what you're giving up before you commit.
+        Set a quality level, or name a file size and let the tool find the best
+        quality that fits under it.
+      </p>
+    </header>
+  </div>
+
+  <div class="control-strip" role="presentation">
+    <span class="bar bar-c"></span><span class="bar bar-m"></span><span class="bar bar-y"></span><span class="bar bar-k"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="tool-layout">
+
+      <!-- ── Controls ────────────────────────────────────── -->
+      <div>
+        <section class="panel">
+          <div class="panel-head"><h2>Compression</h2></div>
+          <div class="panel-body">
+
+            <div class="field">
+              <span class="field-label">Aim for</span>
+              <div class="seg" data-mode role="group" aria-label="Compression mode">
+                <button type="button" data-mode-btn="quality" aria-pressed="true">A quality level</button>
+                <button type="button" data-mode-btn="size" aria-pressed="false">A file size</button>
+              </div>
+            </div>
+
+            <div class="field" data-quality-field>
+              <label for="quality">Quality <output for="quality" data-quality-out>80</output></label>
+              <input type="range" id="quality" data-quality min="10" max="100" step="1" value="80">
+              <p class="field-note">75–85 suits most photographs. Below 65, skies and hard edges start to block up.</p>
+            </div>
+
+            <div class="field" data-target-field hidden>
+              <label for="target">Target size</label>
+              <div class="field-row">
+                <input type="number" id="target" data-target min="5" max="50000" step="5" value="200">
+                <select data-target-unit style="flex:0 0 6rem">
+                  <option value="1024" selected>KB</option>
+                  <option value="1048576">MB</option>
+                </select>
+              </div>
+              <p class="field-note">The tool tries several quality levels and keeps the best one that fits underneath.</p>
+            </div>
+
+            <div class="field">
+              <label for="format">Save as</label>
+              <select id="format" data-format>
+                <option value="image/jpeg">JPEG (.jpg)</option>
+                <option value="image/webp" selected>WebP (.webp)</option>
+                <option value="image/avif">AVIF (.avif)</option>
+              </select>
+              <p class="field-note" data-format-note>WebP is typically 25–35% smaller than JPEG at the same visual quality.</p>
+            </div>
+
+            <div class="field">
+              <label class="check">
+                <input type="checkbox" data-limit-toggle>
+                Limit the longest edge
+              </label>
+              <div class="field-row" data-limit-field hidden style="margin-top:.5rem">
+                <input type="number" data-limit-value min="16" max="20000" step="1" value="1920" aria-label="Maximum pixels on the longest edge">
+              </div>
+              <p class="field-note">Usually the biggest saving available. A 4000&nbsp;px photo shown at 1000&nbsp;px is carrying 16× the pixels it needs.</p>
+            </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-apply-all disabled>Compress all</button>
+
+            <div class="progress" data-progress hidden style="margin-top:.9rem">
+              <div class="progress-bar" data-progress-bar></div>
+            </div>
+            <p class="field-note" data-status role="status" aria-live="polite"></p>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Result</h2></div>
+          <div class="panel-body">
+            <dl class="stats">
+              <div class="stat"><dt>Original</dt><dd data-stat-before>—</dd></div>
+              <div class="stat"><dt>Compressed</dt><dd data-stat-after>—</dd></div>
+              <div class="stat"><dt>Saved</dt><dd data-stat-saved>—</dd></div>
+              <div class="stat"><dt>Quality used</dt><dd data-stat-quality>—</dd></div>
+              <div class="stat"><dt>Pixels</dt><dd data-stat-dims>—</dd></div>
+            </dl>
+            <button class="btn btn-primary btn-block" type="button" data-save style="margin-top:1rem" disabled>Save this image</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Related tools</h2></div>
+          <div class="panel-body">
+            <div class="related">
+              <a href="convert.html">Convert format</a>
+              <a href="resize.html">Resize</a>
+              <a href="crop.html">Crop</a>
+              <a href="metadata.html">Strip metadata</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── Work area ───────────────────────────────────── -->
+      <div>
+        <div class="drop" data-drop>
+          <input type="file" id="pick" accept="image/*" multiple hidden data-drop-input>
+          <div class="drop-idle">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
+              <path d="M3.5 14.5v3a2.5 2.5 0 0 0 2.5 2.5h12a2.5 2.5 0 0 0 2.5-2.5v-3"></path>
+            </svg>
+            <p class="drop-lede">Drop images here</p>
+            <p class="drop-hint">or <label class="link-btn" for="pick">choose files</label> · add a batch and compare them one at a time</p>
+          </div>
+          <p class="drop-error" data-drop-error role="alert" hidden></p>
+        </div>
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2>Before and after</h2></div>
+          <div class="panel-body">
+            <div class="stage" data-stage>
+              <div class="empty" data-stage-empty>
+                <strong>Nothing loaded yet</strong>
+                <p>Drop an image above and it appears here split down the middle — original on the left, compressed on the right. Drag the divider to compare.</p>
+              </div>
+
+              <div class="compare" data-compare hidden style="--split:50%">
+                <img data-compare-original alt="Original image">
+                <div class="compare-overlay">
+                  <img data-compare-result alt="Compressed image">
+                </div>
+                <span class="compare-tag compare-tag-a">Original</span>
+                <span class="compare-tag compare-tag-b">Compressed</span>
+                <input type="range" class="compare-range" data-split min="0" max="100" step="0.1" value="50" aria-label="Comparison position">
+                <div class="compare-divider" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" style="margin-top:1rem">
+          <div class="panel-head"><h2 data-queue-title>Queue</h2></div>
+          <div class="panel-body">
+            <div class="btn-row" data-queue-actions hidden style="margin-bottom:1rem">
+              <button class="btn btn-sm" type="button" data-download-all disabled>Download all</button>
+              <button class="btn btn-sm btn-ghost" type="button" data-clear-all>Remove all</button>
+            </div>
+
+            <div class="empty" data-queue-empty>
+              <strong>No images yet</strong>
+              <p>Files you add appear here. Select any row to preview and fine-tune it on its own.</p>
+            </div>
+
+            <ul class="filelist" data-queue hidden></ul>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="wrap ad-wrap">
+    <p class="ad-label">Advertisement</p>
+    <div class="ad-slot" data-ad-slot="compress-mid">
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+  </aside>
+
+  <section class="section section-alt">
+    <div class="wrap wrap-narrow">
+      <div class="prose">
+        <h2>Where the kilobytes actually go</h2>
+        <p>
+          People reach for the quality slider first, but it's rarely the biggest
+          lever. File size scales with the number of pixels, so a photo that's
+          4000&nbsp;px wide carries four times the data of the same photo at
+          2000&nbsp;px — before compression does anything at all. If an image is
+          going to be displayed at 800&nbsp;px on a page, shipping it at 4000&nbsp;px
+          wastes roughly 96% of what you're sending, and no quality setting will
+          claw that back.
+        </p>
+        <p>
+          The practical order is: resize to the size it will actually be displayed
+          at, then choose a modern format, then tune quality last. That sequence
+          routinely takes a 6&nbsp;MB phone photo to under 150&nbsp;KB with no
+          visible difference on screen.
+        </p>
+
+        <h2>Reading the comparison honestly</h2>
+        <p>
+          The divider view is showing you both images at whatever size fits your
+          screen, which is usually smaller than full resolution. Compression damage
+          hides at reduced size and reappears when someone zooms in or prints. If the
+          image matters, check it at 100% before you commit, and pay particular
+          attention to three places: smooth gradients like skies, where banding shows
+          first; hard edges against flat colour, where you'll see a halo; and areas of
+          fine repeated detail like foliage or fabric, which turn mushy.
+        </p>
+
+        <h2>Lossy, lossless, and why re-saving hurts</h2>
+        <p>
+          JPEG, WebP and AVIF are lossy: they discard information the eye is unlikely
+          to miss, and they can't get it back. Each time you open and re-save a lossy
+          file, the encoder makes fresh guesses about data that was already an
+          approximation, and errors accumulate — the same way a photocopy of a
+          photocopy degrades.
+        </p>
+        <p>
+          Keep your originals somewhere untouched and compress a copy. If you need to
+          make another edit later, go back to the original rather than re-compressing
+          the compressed version.
+        </p>
+
+        <hr>
+
+        <h2>A note on PNG</h2>
+        <p>
+          PNG is lossless, so there's no quality dial to turn — the only ways to make
+          one smaller are to reduce its dimensions, reduce its colour count, or stop
+          using PNG. For photographs, converting to WebP is usually a saving of
+          80% or more. For screenshots, logos and diagrams, PNG is genuinely the right
+          format and is already close to as small as it gets. That's why this tool
+          defaults to WebP output when you feed it a PNG.
+        </p>
+      </div>
+
+      <div class="faq" style="margin-top:2.5rem">
+        <details>
+          <summary>What quality number should I use?</summary>
+          <p>Start at 80 and look at the comparison. For photos destined for a website, most people can't pick 80 from the original at normal viewing size. Drop to 70 if size matters more than fidelity, and stay above 85 only when the image will be printed or examined closely.</p>
+        </details>
+        <details>
+          <summary>Target size mode says it couldn't reach my limit. Why?</summary>
+          <p>Because even at the lowest quality the encoder can't fit that many pixels into that many bytes. Turn on the longest-edge limit and try again — reducing dimensions frees up far more room than quality alone.</p>
+        </details>
+        <details>
+          <summary>Will compressing repeatedly make a file smaller each time?</summary>
+          <p>Slightly smaller and noticeably worse. Every pass throws away more detail while the format's overhead stays put, so you lose quality much faster than bytes. Compress once, from the original.</p>
+        </details>
+        <details>
+          <summary>Does this keep my photo's EXIF and GPS data?</summary>
+          <p>No. The image is redrawn from raw pixels, so all metadata is dropped from the output. If you want to inspect what was in there first, use the metadata tool before compressing.</p>
+        </details>
+        <details>
+          <summary>Why is AVIF sometimes missing from the list?</summary>
+          <p>Because your browser can't write AVIF, even if it can display it. Encoding support is still uneven, so the option is hidden rather than silently handing you a mislabelled file.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <div class="foot-brand">
+      <span class="brand-word">Pixel<em>bench</em></span>
+      <p>Image tools that run on your own device. Built as a static site, free to use, no account.</p>
+    </div>
+
+    <nav class="foot-col" aria-label="Tools">
+      <h2>Tools</h2>
+      <a href="convert.html">Convert format</a>
+      <a href="compress.html">Compress</a>
+      <a href="resize.html">Resize</a>
+      <a href="crop.html">Crop</a>
+      <a href="pdf.html">Images to PDF</a>
+      <a href="metadata.html">Metadata</a>
+    </nav>
+
+    <nav class="foot-col" aria-label="More tools">
+      <h2>More</h2>
+      <a href="rotate.html">Rotate &amp; flip</a>
+      <a href="watermark.html">Watermark</a>
+      <a href="favicon.html">Favicon maker</a>
+      <a href="palette.html">Colour palette</a>
+      <a href="collage.html">Merge &amp; collage</a>
+      <a href="base64.html">Base64 &amp; data URI</a>
+    </nav>
+
+    <nav class="foot-col" aria-label="Site">
+      <h2>Site</h2>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </nav>
+  </div>
+
+  <div class="wrap foot-base">
+    <p>&copy; <span data-year>2026</span> Pixelbench. Made in Western Australia.</p>
+    <p class="foot-note">Images are processed in your browser and are never uploaded.</p>
+  </div>
+</footer>
+
+<noscript>
+  <div class="noscript">This compressor needs JavaScript, because the encoding runs in your browser rather than on a server. Nothing is sent anywhere either way.</div>
+</noscript>
+
+<script src="assets/js/app.js" defer></script>
+
+<script>
+/* ============================================================
+   Compress — page logic
+   Depends on window.Pixelbench from assets/js/app.js
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var PB = window.Pixelbench;
+  if (!PB) return;
+
+  var NOTES = {
+    'image/jpeg': 'Universally supported. Choose it when the file leaves your control.',
+    'image/webp': 'Typically 25–35% smaller than JPEG at the same visual quality.',
+    'image/avif': 'Smallest of the three, but slower to encode.'
+  };
+
+  var queue = [];
+  var seq = 0;
+  var selected = null;
+  var working = null;      // { canvas, width, height } for the selected image
+  var mode = 'quality';
+  var running = false;
+
+  PB.ready(function () {
+    var els = {
+      drop: document.querySelector('[data-drop]'),
+      dropError: document.querySelector('[data-drop-error]'),
+      modeWrap: document.querySelector('[data-mode]'),
+      qualityField: document.querySelector('[data-quality-field]'),
+      quality: document.querySelector('[data-quality]'),
+      qualityOut: document.querySelector('[data-quality-out]'),
+      targetField: document.querySelector('[data-target-field]'),
+      target: document.querySelector('[data-target]'),
+      targetUnit: document.querySelector('[data-target-unit]'),
+      format: document.querySelector('[data-format]'),
+      formatNote: document.querySelector('[data-format-note]'),
+      limitToggle: document.querySelector('[data-limit-toggle]'),
+      limitField: document.querySelector('[data-limit-field]'),
+      limitValue: document.querySelector('[data-limit-value]'),
+      applyAll: document.querySelector('[data-apply-all]'),
+      progress: document.querySelector('[data-progress]'),
+      progressBar: document.querySelector('[data-progress-bar]'),
+      status: document.querySelector('[data-status]'),
+      save: document.querySelector('[data-save]'),
+      statBefore: document.querySelector('[data-stat-before]'),
+      statAfter: document.querySelector('[data-stat-after]'),
+      statSaved: document.querySelector('[data-stat-saved]'),
+      statQuality: document.querySelector('[data-stat-quality]'),
+      statDims: document.querySelector('[data-stat-dims]'),
+      stageEmpty: document.querySelector('[data-stage-empty]'),
+      compare: document.querySelector('[data-compare]'),
+      imgOriginal: document.querySelector('[data-compare-original]'),
+      imgResult: document.querySelector('[data-compare-result]'),
+      split: document.querySelector('[data-split]'),
+      queueTitle: document.querySelector('[data-queue-title]'),
+      queueActions: document.querySelector('[data-queue-actions]'),
+      queueEmpty: document.querySelector('[data-queue-empty]'),
+      list: document.querySelector('[data-queue]'),
+      downloadAll: document.querySelector('[data-download-all]'),
+      clearAll: document.querySelector('[data-clear-all]')
+    };
+
+    /* ---- Format availability ---- */
+    Array.prototype.forEach.call(els.format.options, function (opt) {
+      PB.canEncode(opt.value).then(function (ok) {
+        if (ok) return;
+        opt.disabled = true;
+        opt.textContent = opt.textContent + ' — not supported here';
+        if (els.format.value === opt.value) {
+          els.format.value = 'image/jpeg';
+          syncFormat();
+          preview();
+        }
+      });
+    });
+
+    function syncFormat() {
+      els.formatNote.textContent = NOTES[els.format.value] || '';
+    }
+    syncFormat();
+
+    /* ---- Controls ---- */
+
+    els.modeWrap.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-mode-btn]');
+      if (!btn) return;
+      mode = btn.getAttribute('data-mode-btn');
+      Array.prototype.forEach.call(els.modeWrap.querySelectorAll('button'), function (b) {
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+      });
+      els.qualityField.hidden = mode !== 'quality';
+      els.targetField.hidden = mode !== 'size';
+      preview();
+    });
+
+    var preview = PB.debounce(runPreview, 280);
+
+    els.quality.addEventListener('input', function () {
+      els.qualityOut.textContent = els.quality.value;
+      preview();
+    });
+    els.target.addEventListener('input', preview);
+    els.targetUnit.addEventListener('change', preview);
+    els.format.addEventListener('change', function () { syncFormat(); preview(); });
+    els.limitValue.addEventListener('input', function () { rebuildWorking().then(preview); });
+    els.limitToggle.addEventListener('change', function () {
+      els.limitField.hidden = !els.limitToggle.checked;
+      rebuildWorking().then(preview);
+    });
+
+    els.split.addEventListener('input', function () {
+      els.compare.style.setProperty('--split', els.split.value + '%');
+    });
+
+    /* ---- Encoding helpers ---- */
+
+    function encode(canvas, mime, q) {
+      return PB.canvasToBlob(canvas, mime, q);
+    }
+
+    // Highest quality that still fits under the target, found by bisection.
+    function encodeToTarget(canvas, mime, targetBytes) {
+      var lo = 0.05, hi = 0.98, best = null, steps = 8;
+
+      function step(i) {
+        if (i >= steps) return Promise.resolve();
+        var mid = (lo + hi) / 2;
+        return encode(canvas, mime, mid).then(function (blob) {
+          if (blob.size > targetBytes) {
+            hi = mid;
+          } else {
+            best = { blob: blob, quality: mid };
+            lo = mid;
+          }
+          return step(i + 1);
+        });
+      }
+
+      return step(0).then(function () {
+        if (best) return best;
+        // Nothing fitted; hand back the smallest we can make and say so.
+        return encode(canvas, mime, 0.05).then(function (blob) {
+          return { blob: blob, quality: 0.05, missed: true };
+        });
+      });
+    }
+
+    function compressCanvas(canvas) {
+      var mime = els.format.value;
+      if (mode === 'size') {
+        var unit = parseInt(els.targetUnit.value, 10);
+        var bytes = Math.max(1, parseFloat(els.target.value) || 0) * unit;
+        return encodeToTarget(canvas, mime, bytes);
+      }
+      var q = parseInt(els.quality.value, 10) / 100;
+      return encode(canvas, mime, q).then(function (blob) {
+        return { blob: blob, quality: q };
+      });
+    }
+
+    /* ---- Working canvas for the selected image ---- */
+
+    function buildCanvas(file) {
+      return PB.decodeImage(file).then(function (img) {
+        var w = img.width, h = img.height;
+        if (!w || !h) { img.release(); throw new Error('This file has no fixed pixel size.'); }
+
+        var limit = els.limitToggle.checked ? parseInt(els.limitValue.value, 10) : 0;
+        if (limit && Math.max(w, h) > limit) {
+          var s = limit / Math.max(w, h);
+          w = Math.max(1, Math.round(w * s));
+          h = Math.max(1, Math.round(h * s));
+        }
+
+        var cv = document.createElement('canvas');
+        cv.width = w; cv.height = h;
+        var ctx = cv.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        // Lossy formats have no usable alpha, so flatten onto white.
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img.source, 0, 0, w, h);
+        img.release();
+        return { canvas: cv, width: w, height: h };
+      });
+    }
+
+    function rebuildWorking() {
+      if (!selected) return Promise.resolve();
+      return buildCanvas(selected.file).then(function (w) {
+        working = w;
+      }).catch(function () { working = null; });
+    }
+
+    /* ---- Preview ---- */
+
+    function runPreview() {
+      if (!selected || !working) return;
+      var item = selected;
+
+      compressCanvas(working.canvas).then(function (out) {
+        if (selected !== item) return; // selection changed mid-encode
+        setResult(item, out, working.width, working.height);
+        showCompare(item);
+        render();
+      }).catch(function (err) {
+        els.status.textContent = err.message || 'Encoding failed.';
+      });
+    }
+
+    function setResult(item, out, w, h) {
+      if (item.resultUrl) URL.revokeObjectURL(item.resultUrl);
+      item.blob = out.blob;
+      item.quality = out.quality;
+      item.missed = !!out.missed;
+      item.outName = PB.renameExt(item.file.name, PB.extFor(els.format.value));
+      item.outW = w; item.outH = h;
+      item.resultUrl = URL.createObjectURL(out.blob);
+    }
+
+    function showCompare(item) {
+      els.stageEmpty.hidden = true;
+      els.compare.hidden = false;
+      els.imgOriginal.src = item.thumbUrl;
+      els.imgResult.src = item.resultUrl;
+      els.compare.setAttribute('data-ready', '');
+
+      var delta = Math.round((1 - item.blob.size / item.file.size) * 100);
+      els.statBefore.textContent = PB.formatBytes(item.file.size);
+      els.statAfter.textContent = PB.formatBytes(item.blob.size);
+      els.statSaved.textContent = delta > 0 ? delta + '%' : delta + '% (larger)';
+      els.statQuality.textContent = Math.round(item.quality * 100) +
+        (item.missed ? ' · target missed' : '');
+      els.statDims.textContent = item.outW.toLocaleString() + ' × ' + item.outH.toLocaleString();
+      els.save.disabled = false;
+
+      els.status.textContent = item.missed
+        ? 'Couldn\'t get under the target at these dimensions. Try limiting the longest edge.'
+        : '';
+    }
+
+    function select(item) {
+      selected = item;
+      els.status.textContent = '';
+      rebuildWorking().then(function () {
+        if (working) runPreview();
+      });
+      render();
+    }
+
+    /* ---- Queue ---- */
+
+    function render() {
+      els.queueEmpty.hidden = queue.length > 0;
+      els.list.hidden = queue.length === 0;
+      els.queueActions.hidden = queue.length === 0;
+      els.queueTitle.textContent = queue.length
+        ? 'Queue — ' + queue.length + ' image' + (queue.length === 1 ? '' : 's')
+        : 'Queue';
+      els.applyAll.disabled = queue.length === 0 || running;
+      els.downloadAll.disabled = !queue.some(function (it) { return it.blob; });
+      els.save.disabled = !(selected && selected.blob);
+
+      els.list.innerHTML = '';
+      queue.forEach(function (item) {
+        var li = document.createElement('li');
+        li.className = 'filerow';
+        if (item === selected) li.style.borderColor = 'var(--accent)';
+
+        var thumb = document.createElement('button');
+        thumb.type = 'button';
+        thumb.className = 'filerow-thumb';
+        thumb.style.cursor = 'pointer';
+        thumb.style.padding = '0';
+        thumb.setAttribute('aria-label', 'Preview ' + item.file.name);
+        var img = document.createElement('img');
+        img.src = item.thumbUrl;
+        img.alt = '';
+        thumb.appendChild(img);
+        thumb.addEventListener('click', function () { select(item); });
+
+        var meta = document.createElement('div');
+        meta.className = 'filerow-meta';
+        var name = document.createElement('strong');
+        name.textContent = item.file.name;
+        var detail = document.createElement('span');
+        detail.textContent = item.blob
+          ? PB.formatBytes(item.file.size) + ' → ' + PB.formatBytes(item.blob.size) +
+            '  ·  ' + Math.round((1 - item.blob.size / item.file.size) * 100) + '% smaller'
+          : PB.typeLabel(item.file) + '  ·  ' + PB.formatBytes(item.file.size) +
+            (item.error ? '  ·  ' + item.error : '');
+        meta.appendChild(name);
+        meta.appendChild(detail);
+        meta.style.cursor = 'pointer';
+        meta.addEventListener('click', function () { select(item); });
+
+        var actions = document.createElement('div');
+        actions.className = 'filerow-actions';
+
+        if (item.blob) {
+          var dl = document.createElement('button');
+          dl.type = 'button';
+          dl.className = 'btn btn-sm btn-primary';
+          dl.textContent = 'Save';
+          dl.addEventListener('click', function () { PB.downloadBlob(item.blob, item.outName); });
+          actions.appendChild(dl);
+        }
+
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn btn-sm btn-ghost';
+        rm.textContent = '✕';
+        rm.setAttribute('aria-label', 'Remove ' + item.file.name);
+        rm.addEventListener('click', function () { remove(item); });
+        actions.appendChild(rm);
+
+        li.appendChild(thumb);
+        li.appendChild(meta);
+        li.appendChild(actions);
+        els.list.appendChild(li);
+      });
+    }
+
+    function add(files) {
+      var first = null;
+      files.forEach(function (file) {
+        var item = {
+          id: ++seq,
+          file: file,
+          thumbUrl: URL.createObjectURL(file),
+          blob: null,
+          resultUrl: null,
+          quality: 0,
+          outName: '',
+          error: ''
+        };
+        queue.push(item);
+        if (!first) first = item;
+      });
+
+      // Default the output format sensibly the first time round.
+      if (!selected && first && first.file.type === 'image/jpeg') {
+        els.format.value = 'image/jpeg';
+        syncFormat();
+      }
+
+      render();
+      if (!selected && first) select(first);
+    }
+
+    function remove(item) {
+      if (item.thumbUrl) URL.revokeObjectURL(item.thumbUrl);
+      if (item.resultUrl) URL.revokeObjectURL(item.resultUrl);
+      queue = queue.filter(function (it) { return it !== item; });
+      if (selected === item) {
+        selected = null;
+        working = null;
+        els.compare.hidden = true;
+        els.stageEmpty.hidden = false;
+        resetStats();
+        if (queue.length) select(queue[0]);
+      }
+      render();
+    }
+
+    function resetStats() {
+      els.statBefore.textContent = '—';
+      els.statAfter.textContent = '—';
+      els.statSaved.textContent = '—';
+      els.statQuality.textContent = '—';
+      els.statDims.textContent = '—';
+      els.save.disabled = true;
+    }
+
+    els.clearAll.addEventListener('click', function () {
+      queue.forEach(function (it) {
+        if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl);
+        if (it.resultUrl) URL.revokeObjectURL(it.resultUrl);
+      });
+      queue = [];
+      selected = null;
+      working = null;
+      els.compare.hidden = true;
+      els.stageEmpty.hidden = false;
+      els.status.textContent = '';
+      resetStats();
+      render();
+    });
+
+    els.save.addEventListener('click', function () {
+      if (selected && selected.blob) PB.downloadBlob(selected.blob, selected.outName);
+    });
+
+    els.downloadAll.addEventListener('click', function () {
+      var ready = queue.filter(function (it) { return it.blob; });
+      ready.forEach(function (item, i) {
+        setTimeout(function () { PB.downloadBlob(item.blob, item.outName); }, i * 320);
+      });
+      PB.toast('Saving ' + ready.length + ' file' + (ready.length === 1 ? '' : 's'));
+    });
+
+    /* ---- Batch ---- */
+
+    els.applyAll.addEventListener('click', function () {
+      if (running || !queue.length) return;
+      running = true;
+      els.applyAll.classList.add('is-busy');
+      els.applyAll.disabled = true;
+      els.progress.hidden = false;
+      els.progressBar.style.width = '0%';
+
+      var done = 0, failed = 0;
+
+      function step(i) {
+        if (i >= queue.length) return Promise.resolve();
+        var item = queue[i];
+        return buildCanvas(item.file)
+          .then(function (w) {
+            return compressCanvas(w.canvas).then(function (out) {
+              setResult(item, out, w.width, w.height);
+            });
+          })
+          .catch(function (err) {
+            failed++;
+            item.error = err.message || 'Compression failed.';
+          })
+          .then(function () {
+            done++;
+            els.progressBar.style.width = Math.round((done / queue.length) * 100) + '%';
+            els.status.textContent = 'Compressing ' + done + ' of ' + queue.length + '…';
+            render();
+            return new Promise(function (r) { setTimeout(r, 0); }).then(function () { return step(i + 1); });
+          });
+      }
+
+      step(0).then(function () {
+        running = false;
+        els.applyAll.classList.remove('is-busy');
+        els.progress.hidden = true;
+        var ok = queue.length - failed;
+        els.status.textContent = failed
+          ? ok + ' compressed, ' + failed + ' failed.'
+          : ok + ' image' + (ok === 1 ? '' : 's') + ' compressed.';
+        if (selected && selected.blob) showCompare(selected);
+        render();
+      });
+    });
+
+    /* ---- Input ---- */
+
+    PB.createDropzone(els.drop, {
+      multiple: true,
+      onReject: function (message) {
+        els.dropError.textContent = message;
+        els.dropError.hidden = false;
+        setTimeout(function () { els.dropError.hidden = true; }, 6000);
+      },
+      onFiles: function (files) {
+        els.dropError.hidden = true;
+        add(files);
+      }
+    });
+
+    PB.takeHandoff().then(function (files) {
+      if (files.length) add(files);
+    });
+
+    window.addEventListener('pagehide', function () {
+      queue.forEach(function (it) {
+        if (it.thumbUrl) URL.revokeObjectURL(it.thumbUrl);
+        if (it.resultUrl) URL.revokeObjectURL(it.resultUrl);
+      });
+    });
+
+    render();
+  });
+})();
+</script>
+</body>
+</html>
