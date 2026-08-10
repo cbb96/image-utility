@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-    <!-- Homepage -->
     <url>
         <loc>https://pixelbench.cc/</loc>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
 
-    <!-- Image Tools -->
     <url>
         <loc>https://pixelbench.cc/convert.html</loc>
         <changefreq>monthly</changefreq>
@@ -87,7 +85,6 @@
         <priority>0.7</priority>
     </url>
 
-    <!-- Information -->
     <url>
         <loc>https://pixelbench.cc/about.html</loc>
         <changefreq>monthly</changefreq>
