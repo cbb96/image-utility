@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://pixelbench.cc/</loc></url>
-  <url><loc>https://pixelbench.cc/convert.html</loc></url>
-  <url><loc>https://pixelbench.cc/compress.html</loc></url>
-  <url><loc>https://pixelbench.cc/resize.html</loc></url>
-  <url><loc>https://pixelbench.cc/crop.html</loc></url>
-  <url><loc>https://pixelbench.cc/rotate.html</loc></url>
-  <url><loc>https://pixelbench.cc/watermark.html</loc></url>
-  <url><loc>https://pixelbench.cc/collage.html</loc></url>
-  <url><loc>https://pixelbench.cc/pdf.html</loc></url>
-  <url><loc>https://pixelbench.cc/metadata.html</loc></url>
-  <url><loc>https://pixelbench.cc/palette.html</loc></url>
-  <url><loc>https://pixelbench.cc/favicon.html</loc></url>
-  <url><loc>https://pixelbench.cc/placeholder.html</loc></url>
-  <url><loc>https://pixelbench.cc/base64.html</loc></url>
-  <url><loc>https://pixelbench.cc/about.html</loc></url>
-  <url><loc>https://pixelbench.cc/contact.html</loc></url>
-  <url><loc>https://pixelbench.cc/privacy.html</loc></url>
-  <url><loc>https://pixelbench.cc/terms.html</loc></url>
+  <url><loc>https://pixelbench.cc/convert</loc></url>
+  <url><loc>https://pixelbench.cc/compress</loc></url>
+  <url><loc>https://pixelbench.cc/resize</loc></url>
+  <url><loc>https://pixelbench.cc/crop</loc></url>
+  <url><loc>https://pixelbench.cc/rotate</loc></url>
+  <url><loc>https://pixelbench.cc/watermark</loc></url>
+  <url><loc>https://pixelbench.cc/collage</loc></url>
+  <url><loc>https://pixelbench.cc/pdf</loc></url>
+  <url><loc>https://pixelbench.cc/metadata</loc></url>
+  <url><loc>https://pixelbench.cc/palette</loc></url>
+  <url><loc>https://pixelbench.cc/favicon</loc></url>
+  <url><loc>https://pixelbench.cc/placeholder</loc></url>
+  <url><loc>https://pixelbench.cc/base64</loc></url>
+  <url><loc>https://pixelbench.cc/about</loc></url>
+  <url><loc>https://pixelbench.cc/contact</loc></url>
+  <url><loc>https://pixelbench.cc/privacy</loc></url>
+  <url><loc>https://pixelbench.cc/terms</loc></url>
 </urlset>
